@@ -443,7 +443,7 @@
       #btn-musik-header.playing .eq-b1{animation:eq-pulse .88s ease-in-out infinite}
       #btn-musik-header.playing .eq-b2{animation:eq-pulse .66s ease-in-out .12s infinite}
       #btn-musik-header.playing .eq-b3{animation:eq-pulse 1.1s ease-in-out .24s infinite}
-      @keyframes eq-pulse{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+      @keyframes eq-pulse{0%,100%{transform:scaleY(.2)}50%{transform:scaleY(1)}}
       #btn-musik-header .mute-x{transform-box:fill-box;transform-origin:center;opacity:0;transform:scale(.4) rotate(-30deg);transition:opacity .18s ease,transform .2s cubic-bezier(.34,1.56,.64,1)}
       #btn-musik-header.off .eq-b{opacity:0;transform:scaleY(.12);animation:none}
       #btn-musik-header.off .mute-x{opacity:1;transform:scale(1) rotate(0deg)}
@@ -595,7 +595,7 @@
         </div>
         <div class="appbar-lower">
           <div class="appbar-progress" aria-hidden="true"><span id="appbar-progress-fill"></span></div>
-          <button type="button" class="btn-music btn-music-header" id="btn-musik-header" aria-pressed="true"><svg class="ico-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z" fill="currentColor" stroke="none"/><line class="eq-b eq-b1" x1="15" y1="10" x2="15" y2="14"/><line class="eq-b eq-b2" x1="18" y1="8" x2="18" y2="16"/><line class="eq-b eq-b3" x1="21" y1="10.5" x2="21" y2="13.5"/><path class="mute-x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg><span id="musik-label">Musik: Hidup</span></button>
+          <button type="button" class="btn-music btn-music-header" id="btn-musik-header" aria-pressed="true"><svg class="ico-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z" fill="currentColor" stroke="none"/><line class="eq-b eq-b1" x1="15" y1="8" x2="15" y2="16" stroke-width="3"/><line class="eq-b eq-b2" x1="18" y1="5" x2="18" y2="19" stroke-width="3"/><line class="eq-b eq-b3" x1="21" y1="9" x2="21" y2="15" stroke-width="3"/><path class="mute-x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg><span id="musik-label">Musik: Hidup</span></button>
         </div>
         <audio id="musik-latar" src="https://assets.mixkit.co/music/973/973.mp3" loop preload="auto"></audio>
       </header>
