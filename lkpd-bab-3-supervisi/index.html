@@ -2251,7 +2251,14 @@
               var tmp = soal[i]; soal[i] = soal[j]; soal[j] = tmp;
             }
             soal.forEach(function(fs, idx){
-              blok.appendChild(fs);
+              /* 9 Nov — PERBAIKAN: appendChild memindahkan soal ke AKHIR blok,
+                 sehingga tombol "Kirim jawaban dari LKPD ini" (dan catatan di
+                 bawahnya) naik ke ATAS soal. Siswa harus scroll ke atas untuk
+                 menekan Kirim sesudah menjawab — tombol jadi "salah tempat".
+                 Perbaikan: sisipkan tiap soal SEBELUM tombol Kirim, jadi urutan
+                 tetap soal-soal dulu, tombol Kirim di bawah. */
+              var btnKirim = blok.querySelector(".btn-kirim-webgas");
+              if(btnKirim){ blok.insertBefore(fs, btnKirim); } else { blok.appendChild(fs); }
               var lg = fs.querySelector("legend");
               if(lg) lg.textContent = lg.textContent.replace(/^\d+\.\s*/, (idx + 1) + ". ");
             });
