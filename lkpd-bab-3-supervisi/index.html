@@ -1228,6 +1228,8 @@
               <li>Sunting seperlunya di HP (potong awal/akhir, tambah teks pesan utama).</li>
               <li>Simpan hasilnya dan siapkan untuk diputar saat presentasi.</li>
             </ol>
+            <p style="margin-top:14px"><button type="button" class="btn-kirim-webgas" id="btn-kumpul-video">📹 Kumpulkan videomu di sini</button></p>
+            <p class="hint" id="video-link-status" role="status" aria-live="polite"></p>
           </div>
         </div>
 
@@ -1821,6 +1823,35 @@
           if(guideGrid) guideGrid.classList.toggle("guide-satu", pilihPoster || pilihVideo);
         }
         terapkanGuideFormat();
+
+        /* ---------- Kumpul video via Form (prefilled Nama+Absen) ----------
+           Video HP terlalu besar untuk WebGAS (batas 50 MB) — dikumpul
+           lewat Form khusus. Tautan prefilled: Nama + Absen terisi
+           otomatis dari identitas Langkah 1, siswa tinggal unggah video.
+           Entry ID didapat via Apps Script FormApp.getId (9 Nov):
+           Nama entry.1239441081, Absen entry.912917052. ---------- */
+        var FORM_VIDEO_URL = "https://docs.google.com/forms/d/e/1FAIpQLScLCAqiIdkckLMEQxcin9NelFBN9WDNy6Nq9jR2rZLR0Hxhuw/viewform";
+        var ENTRY_NAMA_VIDEO = "1239441081";
+        var ENTRY_ABSEN_VIDEO = "912917052";
+        function tautanVideoPrefilled(){
+          var nama = val("nama").trim();
+          var absen = val("absen").trim();
+          if(!nama || !absen) return "";
+          return FORM_VIDEO_URL + "?usp=pp_url&entry." + ENTRY_NAMA_VIDEO + "=" + encodeURIComponent(nama) + "&entry." + ENTRY_ABSEN_VIDEO + "=" + encodeURIComponent(absen);
+        }
+        var btnVideo = $("btn-kumpul-video");
+        if(btnVideo){
+          btnVideo.addEventListener("click", function(){
+            var url = tautanVideoPrefilled();
+            var st = $("video-link-status");
+            if(!url){
+              if(st) st.textContent = "Pilih dulu namamu dan nomor absen di Langkah 1, lalu kembali ke sini.";
+              return;
+            }
+            if(st) st.textContent = "";
+            window.open(url, "_blank");
+          });
+        }
 
         /* ---------- Musik latar (file audio asli, satu elemen <audio> di header) ----------
            Toggle tunggal di header persisten. Keadaan awal NYALA; musik mulai berbunyi pada
