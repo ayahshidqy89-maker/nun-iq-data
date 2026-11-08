@@ -1,0 +1,2150 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#14402A" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="LKPD Bab 3" />
+    <meta name="description" content="LKPD Digital Bab 3 — Manfaat Menghindari Penyakit Sosial. PAI & Budi Pekerti Kelas XI, SMAN 4 Banjarmasin." />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="icon" href="data:," />
+    <title>LKPD Digital Bab 3 — Manfaat Menghindari Penyakit Sosial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --bg:#F5F0DF;
+        --bg-soft:#EFE8D2;
+        --surface:#FFFDF4;
+        --surface-2:#F3EDD8;
+        --ink:#22312A;
+        --muted:#5D6E62;
+        --line:#E0D8BE;
+        --green:#1E5B3C;
+        --green-deep:#14402A;
+        --green-mid:#2F7D52;
+        --sage:#DCE9D4;
+        --sage-ink:#2C5238;
+        --gold:#B8862B;
+        --gold-soft:#F6E7C3;
+        --ok:#1C7A44;
+        --ok-bg:#E2F2E4;
+        --bad:#B23A2A;
+        --bad-bg:#FBE7E1;
+        --radius:18px;
+        --shadow:0 10px 28px rgba(30,64,44,.10);
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#0F1812;
+          --bg-soft:#14211A;
+          --surface:#1A2A20;
+          --surface-2:#213528;
+          --ink:#F0EBD8;
+          --muted:#A9BBA9;
+          --line:#2E4636;
+          --green:#8FD3A8;
+          --green-deep:#0C2417;
+          --green-mid:#57A877;
+          --sage:#24402E;
+          --sage-ink:#CBE6CF;
+          --gold:#E3B95C;
+          --gold-soft:#3A2F14;
+          --ok:#7FD79E;
+          --ok-bg:#173A26;
+          --bad:#F09A8A;
+          --bad-bg:#472219;
+          --shadow:0 10px 28px rgba(0,0,0,.35);
+        }
+      }
+      *{box-sizing:border-box}
+      html{scroll-behavior:smooth}
+      body{
+        margin:0;background:var(--bg);color:var(--ink);
+        font-family:"Plus Jakarta Sans","Amiri Quran","Amiri","Noto Naskh Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
+        font-size:16.5px;line-height:1.6;-webkit-text-size-adjust:100%;
+      }
+      .wrap{max-width:760px;margin:0 auto;padding:0 16px 128px}
+      h1,h2,h3{line-height:1.25;margin:0}
+      p{margin:0}
+      .arabic{font-family:"Amiri Quran","Amiri","Noto Naskh Arabic","Traditional Arabic",serif;direction:rtl;text-align:right;line-height:2.15;font-size:1.38rem;text-rendering:optimizeLegibility}
+      .arabic.center{text-align:center}
+
+      /* ---------- BANNER HERO (GAMBAR CANVA) ---------- */
+      .hero-banner{margin:16px 0 0}
+      .hero-banner img{display:block;width:100%;height:auto;border-radius:var(--radius);box-shadow:var(--shadow)}
+
+      /* ---------- CONTOH POSTER KAMPANYE ---------- */
+      .poster-contoh{margin:20px 0 4px}
+      .poster-contoh img{display:block;width:100%;height:auto;border-radius:16px;border:1px solid var(--line)}
+      .poster-contoh figcaption{margin-top:9px;font-size:.9rem;color:var(--muted);text-align:center}
+
+      /* ---------- HERO ---------- */
+      .hero{
+        background:
+          radial-gradient(circle at 88% 12%, rgba(246,231,195,.20) 0 90px, transparent 91px),
+          radial-gradient(circle at 6% 96%, rgba(255,255,255,.08) 0 130px, transparent 131px),
+          linear-gradient(150deg,var(--green-deep),var(--green) 70%);
+        color:#F7F2DF;margin:18px -16px 0;padding:30px 20px 26px;border-radius:28px;
+      }
+      @media (prefers-color-scheme: dark){ .hero{color:#F0EBD8} }
+      .hero .kicker{font-size:.82rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-soft);opacity:.95}
+      .hero h1{font-size:1.72rem;font-weight:800;margin:8px 0 10px}
+      .hero .sub{font-size:1rem;opacity:.92;max-width:56ch}
+      .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+      .chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:inherit;
+        padding:7px 12px;border-radius:999px;font-size:.86rem;font-weight:600}
+      .hero-note{margin-top:16px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.22);
+        border-radius:14px;padding:12px 14px;font-size:.93rem}
+
+      /* ---------- APP BAR (cangkang aplikasi) ---------- */
+      .appbar{position:sticky;top:0;z-index:30;background:var(--bg);margin:0 -4px;padding:10px 4px 0;border-bottom:1px solid var(--line)}
+      .appbar-row{display:flex;align-items:center;gap:10px;padding:0 4px 10px}
+      .appbar-logo{flex:none;width:42px;height:42px;border-radius:13px;background:var(--green);color:#FFF6DC;display:flex;align-items:center;justify-content:center}
+      .appbar-logo svg{width:22px;height:22px}
+      .appbar-text{min-width:0;flex:1}
+      .appbar-title{font-weight:800;font-size:1rem;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .appbar-sub{font-size:.8rem;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .appbar-chip{flex:none;font-size:.8rem;font-weight:800;color:var(--green);background:var(--sage);border-radius:999px;padding:6px 12px}
+      .appbar-progress{height:4px;background:var(--line);border-radius:999px;overflow:hidden;margin:0 4px 10px}
+      .appbar-progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--gold));border-radius:999px;transition:width .35s ease}
+      /* ---------- BOTTOM TAB BAR (cangkang aplikasi) ---------- */
+      .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(7,1fr);
+        background:var(--surface);border-top:1px solid var(--line);
+        box-shadow:0 -8px 24px rgba(30,64,44,.12);padding-bottom:env(safe-area-inset-bottom,0px)}
+      .tabbar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+        padding:9px 2px 8px;min-height:58px;text-decoration:none;color:var(--muted);position:relative}
+      .tabbar a .tab-ico{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+      .tabbar a .tab-ico svg{width:22px;height:22px}
+      .tabbar a .tab-label{font-size:.64rem;font-weight:700;line-height:1.1;text-align:center}
+      .tabbar a[aria-current="true"]{color:var(--green)}
+      .tabbar a[aria-current="true"] .tab-ico{background:var(--sage)}
+      .tabbar a.done .tab-ico::after{content:"✓";position:absolute;top:1px;right:calc(50% - 17px);width:15px;height:15px;border-radius:50%;
+        background:var(--gold);color:#FFFDF4;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+      @media (prefers-color-scheme: dark){ .tabbar{box-shadow:0 -8px 24px rgba(0,0,0,.4)} }
+      /* ---------- Umpan balik sentuhan ---------- */
+      button,.tabbar a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+      .btn,.bigchoices button,.tabs button,.btn-music,.tabbar a{transition:transform .12s ease,background-color .15s ease,border-color .15s ease,filter .15s ease}
+      .btn:active{transform:scale(.97)}
+      .bigchoices button:active,.tabs button:active,.btn-music:active{transform:scale(.96);filter:brightness(.96)}
+      .tabbar a:active{transform:scale(.93)}
+      /* ---------- Sorotan & kemunculan halus antar langkah ---------- */
+      section.card{transition:box-shadow .3s ease,border-color .3s ease}
+      section.card.spotlight{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft),var(--shadow)}
+      @keyframes appFadeUp{from{opacity:.01;transform:translateY(12px)}to{opacity:1;transform:none}}
+      section.card.arrive{animation:appFadeUp .4s ease both}
+      /* ---------- CARDS / SECTIONS ---------- */
+      section.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+        box-shadow:var(--shadow);padding:22px 18px;margin-top:22px;scroll-margin-top:118px}
+      .sec-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:6px}
+      .sec-badge{flex:none;width:46px;height:46px;border-radius:14px;background:var(--sage);color:var(--sage-ink);
+        display:flex;align-items:center;justify-content:center}
+      .sec-badge svg{width:24px;height:24px}
+      .sec-head h2{font-size:1.28rem;font-weight:800}
+      .sec-head .fase{font-size:.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gold)}
+      .lead{color:var(--muted);margin:6px 0 4px}
+      .mindful{background:var(--gold-soft);border-radius:14px;padding:12px 14px;margin-top:14px;font-size:.95rem}
+      .mindful strong{color:var(--ink)}
+      label.flabel{display:block;font-weight:700;margin:18px 0 8px;font-size:1rem}
+      .hint{font-size:.88rem;color:var(--muted);font-weight:500}
+      input[type=text],textarea,select{
+        width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);
+        border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;min-height:52px}
+      textarea{min-height:84px;resize:vertical}
+      input:focus,textarea:focus{outline:3px solid var(--sage);border-color:var(--green-mid)}
+      .grid2{display:grid;grid-template-columns:1fr;gap:0}
+      @media(min-width:620px){ .grid2{grid-template-columns:1fr 1fr;gap:0 16px} }
+
+      /* pilihan besar (radio gaya tombol) */
+      .bigchoices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+      .bigchoices.two{grid-template-columns:1fr 1fr}
+      .bigchoices button{
+        font:inherit;font-weight:800;font-size:1.05rem;cursor:pointer;min-height:64px;border-radius:14px;
+        border:2px solid var(--line);background:var(--surface-2);color:var(--ink);padding:10px 6px}
+      .bigchoices button small{display:block;font-weight:600;font-size:.8rem;color:var(--muted);margin-top:2px}
+      .bigchoices button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#FFF6DC}
+      .bigchoices button[aria-pressed="true"] small{color:#EDE3BC}
+
+      .btn{
+        font:inherit;font-weight:800;cursor:pointer;border:none;border-radius:14px;min-height:56px;
+        padding:14px 22px;font-size:1.02rem;display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%}
+      .btn.primary{background:var(--green);color:#FFF6DC}
+      .btn.gold{background:var(--gold);color:#FFFDF4}
+      .btn.ghost{background:var(--surface-2);color:var(--ink);border:1.5px solid var(--line)}
+      .btnrow{display:grid;gap:10px;margin-top:16px}
+      @media(min-width:620px){ .btnrow.two{grid-template-columns:1fr 1fr} }
+      #btn-bagikan{grid-column:1/-1}
+      .share-hint{font-size:.88rem;color:var(--muted);margin-top:10px;text-align:center}
+
+      /* ---------- KASUS ---------- */
+      .case{border-radius:16px;padding:18px 16px;margin-top:16px;border:1.5px solid var(--line);background:var(--surface-2)}
+      .case.green{background:var(--sage);border-color:transparent}
+      .case h3{font-size:1.08rem;font-weight:800;display:flex;gap:10px;align-items:center}
+      .case h3 .tag{font-size:.72rem;background:var(--green);color:#FFF6DC;border-radius:999px;padding:3px 10px;letter-spacing:.04em}
+      .case p{margin-top:8px}
+      .case .tanya{margin-top:12px;background:var(--surface);border-radius:12px;padding:12px 14px;font-size:.95rem}
+      .case .tanya strong{color:var(--green)}
+      @media (prefers-color-scheme: dark){ .case .tanya strong{color:var(--green)} }
+
+      /* ---------- AYAT ---------- */
+      .ayat{background:var(--surface-2);border:1px solid var(--line);border-radius:16px;padding:18px 16px;margin-top:14px}
+      .ayat .ref{font-weight:800;color:var(--green);font-size:.92rem;margin-bottom:8px}
+      .ayat .arti{margin-top:10px;font-size:.97rem}
+      .ayat .arti em{color:var(--muted)}
+
+      /* ---------- TABS AHLI ---------- */
+      .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:16px}
+      .tabs button{font:inherit;font-weight:800;cursor:pointer;min-height:58px;border-radius:14px;
+        border:2px solid var(--line);background:var(--surface-2);color:var(--ink);padding:8px 4px;font-size:.98rem}
+      .tabs button small{display:block;font-weight:600;font-size:.76rem;color:var(--muted)}
+      .tabs button[aria-selected="true"]{background:var(--green);border-color:var(--green);color:#FFF6DC}
+      .tabs button[aria-selected="true"] small{color:#EDE3BC}
+      .panel{display:none}
+      .panel.show{display:block}
+      .materi{margin-top:14px}
+      .materi h3{font-size:1.12rem;font-weight:800;margin-top:16px}
+      .materi ul{margin:8px 0 0;padding-left:20px}
+      .materi li{margin:4px 0}
+      table.analisis{width:100%;border-collapse:separate;border-spacing:0;margin-top:16px}
+      table.analisis th,table.analisis td{border:1px solid var(--line);padding:12px;vertical-align:top;text-align:left}
+      table.analisis th{background:var(--sage);color:var(--sage-ink);width:38%;font-size:.95rem;border-radius:0}
+      table.analisis tr:first-child th{border-radius:12px 0 0 0}
+      table.analisis tr:first-child td{border-radius:0 12px 0 0}
+      table.analisis tr:last-child th{border-radius:0 0 0 12px}
+      table.analisis tr:last-child td{border-radius:0 0 12px 0}
+      table.analisis td textarea{border:none;background:transparent;padding:2px;min-height:64px;border-radius:8px}
+      table.analisis td textarea:focus{outline:3px solid var(--sage)}
+      @media(max-width:560px){
+        table.analisis th,table.analisis td{display:block;width:100%}
+        table.analisis tr{display:block;margin-bottom:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+        table.analisis th,table.analisis td{border:none}
+        table.analisis tr:first-child th,table.analisis tr:first-child td,
+        table.analisis tr:last-child th,table.analisis tr:last-child td{border-radius:0}
+      }
+
+      /* ---------- KOMITMEN & RINGKASAN ---------- */
+      .janji{display:grid;gap:10px;margin-top:14px}
+      .janji .item{display:flex;gap:12px;background:var(--surface-2);border:1.5px solid var(--line);
+        border-radius:14px;padding:14px;align-items:flex-start}
+      .janji .item svg{flex:none;width:26px;height:26px;color:var(--green-mid);margin-top:2px}
+      #summary{display:none;margin-top:18px;background:var(--surface-2);border:2px dashed var(--green-mid);border-radius:16px;padding:18px 16px}
+      #summary.show{display:block}
+      #summary h3{font-size:1.1rem;margin-bottom:10px}
+      #summary dl{margin:0}
+      #summary dt{font-weight:800;margin-top:12px;color:var(--green)}
+      #summary dd{margin:2px 0 0;white-space:pre-wrap}
+      .alur{display:grid;gap:8px;margin-top:14px}
+      .alur .step{display:flex;gap:12px;align-items:flex-start;background:var(--surface-2);border-radius:12px;padding:11px 13px}
+      .alur .step b{flex:none;background:var(--green);color:#FFF6DC;width:28px;height:28px;border-radius:50%;
+        display:inline-flex;align-items:center;justify-content:center;font-size:.85rem}
+      /* ---------- KARTU PEMETAAN OTOMATIS ---------- */
+      .kartu-kelompok{display:none;margin-top:18px;border:2px solid var(--green-mid);border-radius:16px;overflow:hidden}
+      .kartu-kelompok.show{display:block}
+      .kartu-kelompok .kk-head{background:var(--green);color:#FFF6DC;padding:12px 16px;font-weight:800}
+      .kartu-kelompok .kk-grid{display:grid;gap:0}
+      @media(min-width:620px){ .kartu-kelompok .kk-grid{grid-template-columns:1fr 1fr} }
+      .kartu-kelompok .kk-cell{padding:14px 16px;background:var(--surface)}
+      .kartu-kelompok .kk-cell + .kk-cell{border-top:1px solid var(--line)}
+      @media(min-width:620px){ .kartu-kelompok .kk-cell + .kk-cell{border-top:none;border-left:1px solid var(--line)} }
+      .kartu-kelompok .kk-label{font-size:.78rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--gold)}
+      .kartu-kelompok .kk-value{font-size:1.22rem;font-weight:800;margin:2px 0}
+      .kartu-kelompok .kk-sub{font-size:.9rem;color:var(--muted)}
+      .absen-error{display:none;margin-top:8px;color:var(--bad);font-size:.9rem;font-weight:600}
+      .absen-error.show{display:block}
+      input[type=number]{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;min-height:52px}
+      input[type=number]:focus{outline:3px solid var(--sage);border-color:var(--green-mid)}
+      select:focus{outline:3px solid var(--sage);border-color:var(--green-mid)}
+
+      /* ---------- MUSIK LATAR ---------- */
+      .musicbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--gold-soft);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:16px}
+      .musicbar p{font-size:.93rem;font-weight:600;max-width:46ch}
+      .musicbar p span{display:block;font-weight:500;color:var(--muted);font-size:.86rem}
+      .btn-music{font:inherit;font-weight:800;cursor:pointer;border-radius:999px;min-height:48px;padding:10px 18px;border:2px solid var(--green);background:var(--surface);color:var(--ink);white-space:nowrap}
+      .btn-music[aria-pressed="true"]{background:var(--green);color:#FFF6DC;border-color:var(--green)}
+
+      /* ---------- KARTU GOOGLE FORM LIVE ---------- */
+      .form-card{border:2px solid var(--green-mid);border-radius:16px;padding:20px 16px;margin-top:16px;background:var(--surface-2);text-align:center}
+      .form-card h3{font-size:1.22rem;font-weight:800;margin-bottom:8px}
+      .form-card p{font-size:.97rem;color:var(--muted);max-width:56ch;margin:0 auto}
+      .form-card p strong{color:var(--ink)}
+      .form-card .form-points{list-style:none;margin:14px auto 0;padding:0;display:grid;gap:8px;max-width:52ch;text-align:left}
+      .form-card .form-points li{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:.94rem}
+      .form-card .form-points li svg{flex:none;width:20px;height:20px;color:var(--green-mid);margin-top:2px}
+      .btn-form{margin-top:18px;text-decoration:none}
+      .form-card .form-note{margin-top:12px;font-size:.88rem}
+      /* ---------- SOAL INLINE di LKPD + tautan biasa ke Google Form (tanpa pengiriman data) ---------- */
+      .hyb-blok{margin-top:18px;text-align:left}
+      .hyb-soal{border:1.5px solid var(--line);background:var(--surface);border-radius:14px;padding:14px;margin:0 0 12px;min-width:0}
+      .hyb-soal legend{font-weight:800;font-size:1rem;line-height:1.45;padding:0 6px;color:var(--ink)}
+      .hyb-opsi{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border:1.5px solid var(--line);border-radius:12px;margin-top:8px;cursor:pointer;background:var(--surface-2);font-size:.97rem;line-height:1.45;color:var(--ink)}
+      .hyb-opsi input[type=radio]{flex:none;width:22px;height:22px;margin:1px 0 0;accent-color:var(--green);cursor:pointer}
+      .hyb-opsi input[type=radio]:focus-visible{outline:3px solid var(--sage);outline-offset:2px}
+      .hyb-opsi:has(input[type=radio]:checked){border-color:var(--green-mid);background:var(--sage)}
+      .hyb-kirim{margin-top:2px}
+      .btn-kirim-webgas{margin-top:2px}
+      .skor-blok{margin:14px auto 0;padding:14px 16px;border-radius:12px;background:#ECFDF5;border:2px solid #047857;font-size:1rem;line-height:1.55;text-align:center}
+      .skor-blok .skor-angka{font-size:1.7rem;font-weight:800;color:#065F46}
+      .skor-blok.skor-gagal{background:#FEF2F2;border-color:#DC2626}
+      .skor-blok .skor-judul{font-weight:800}
+      .form-cadangan{margin-top:10px;font-size:.88rem}
+      .form-card .hyb-note{margin:10px auto 0;font-size:.88rem}
+      /* ---------- CHECKPOINT PROGRES: kartu tautan biasa ke Form Progres (opsional, boleh dilewati) ---------- */
+      .checkpoint-card{border:2px dashed var(--gold);border-radius:16px;padding:18px 16px;margin-top:18px;background:var(--surface-2);text-align:center}
+      .checkpoint-card h3{font-size:1.15rem;font-weight:800;margin-bottom:6px}
+      .checkpoint-card p{font-size:.97rem;color:var(--muted);max-width:56ch;margin:0 auto}
+      .checkpoint-card p strong{color:var(--ink)}
+      .checkpoint-card .checkpoint-link{margin-top:14px;text-decoration:none}
+      .checkpoint-card .checkpoint-hint{margin-top:10px;font-size:.88rem}
+
+      /* ---------- PANDUAN KAMPANYE & PERAN ---------- */
+      .notice-satu{background:var(--sage);color:var(--sage-ink);border-radius:14px;padding:14px 16px;margin-top:14px;font-size:.98rem}
+      .guide-grid{display:grid;gap:12px;margin-top:12px}
+      @media(min-width:620px){ .guide-grid{grid-template-columns:1fr 1fr} }
+      .guide{background:var(--surface-2);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px}
+      .guide h4{margin:0 0 8px;font-size:1rem}
+      .guide ol{margin:0;padding-left:20px;font-size:.93rem}
+      .guide li{margin:4px 0}
+      .role-row{display:grid;gap:6px;margin-top:12px}
+      @media(min-width:620px){ .role-row{grid-template-columns:190px 1fr;align-items:center} }
+      .role-row label{font-weight:700;font-size:.96rem}
+      footer{margin-top:28px;text-align:center;color:var(--muted);font-size:.88rem;padding:0 8px}
+      .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%) translateY(80px);background:var(--green-deep);pointer-events:none;opacity:0;
+        color:#FFF6DC;padding:13px 20px;border-radius:999px;font-weight:700;box-shadow:var(--shadow);
+        transition:transform .3s ease,opacity .3s ease;z-index:50;max-width:92vw;text-align:center;font-size:.95rem}
+      .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+      /* ---------- JALUR PENDAMPINGAN (aktif diam-diam bila absen 33) ---------- */
+      .supian-only{display:none}
+      .supian-only-inline{display:none}
+      body.supian .supian-only{display:block}
+      body.supian .supian-only-inline{display:inline}
+      body.supian .normal-only{display:none}
+      body.supian .normal-only-inline{display:none}
+      body.supian a.supian-only.btn{display:inline-flex} /* tombol Form Supian tetap tampil seperti tombol */
+      .pendamping-box{background:var(--gold-soft);border-radius:14px;padding:12px 14px;margin-top:14px;font-size:.95rem;text-align:left}
+      .pendamping-box strong{color:var(--ink)}
+      /* ---------- PENANDA PDPD (biru — beda keluarga dari tema hijau-emas) ---------- */
+      .lencana-pdpd{display:none}
+      body.supian .lencana-pdpd{display:inline-block;vertical-align:middle;background:#2563EB;color:#FFFFFF;font-size:.72rem;font-weight:800;letter-spacing:.04em;border-radius:999px;padding:4px 11px;margin:0 0 8px 0}
+      .pdpd-box{display:none}
+      body.supian .pdpd-box{display:block;background:#EAF3FF;border:2px solid #2563EB;border-left:6px solid #2563EB;border-radius:14px;padding:14px 16px;margin-top:14px;text-align:left}
+      body.supian .pdpd-box strong{color:#1E3A8A}
+      body.supian .kartu-sederhana,body.supian article.case.supian-only{border:2px solid #2563EB;border-left:6px solid #2563EB;background:#EAF3FF}
+      body.supian .kartu-sederhana h4 .tag,body.supian article.case.supian-only h3 .tag{background:#2563EB}
+      .pdpd-banner{display:none}
+      body.supian .pdpd-banner{display:block;position:static;background:#2563EB;color:#FFFFFF;text-align:center;font-weight:800;font-size:.95rem;border-radius:0 0 14px 14px;padding:10px 14px;margin:0 -4px;box-shadow:0 6px 18px rgba(37,99,235,.35)}
+      @media (prefers-color-scheme: dark){body.supian .pdpd-box{background:#172554;border-color:#60A5FA;border-left-color:#60A5FA}body.supian .pdpd-box strong{color:#BFDBFE}body.supian .kartu-sederhana,body.supian article.case.supian-only{background:#172554;border-color:#60A5FA;border-left-color:#60A5FA}body.supian .kartu-sederhana h4 .tag,body.supian article.case.supian-only h3 .tag{background:#2563EB}body.supian .pdpd-banner{background:#1D4ED8}}
+      .kartu-sederhana{border:1.5px solid var(--line);background:var(--surface);border-radius:14px;padding:14px 16px;margin-top:12px}
+      .kartu-sederhana h4{margin:0 0 6px;font-size:1rem}
+      .kartu-sederhana h4 .tag{font-size:.72rem;background:var(--green);color:#FFF6DC;border-radius:999px;padding:3px 10px;letter-spacing:.04em;margin-right:6px}
+      .kartu-sederhana p{margin:6px 0}
+      .kartu-sederhana .tanya{margin-top:10px;font-size:.95rem}
+      .kartu-sederhana textarea{margin-top:10px}
+      @media (prefers-reduced-motion: reduce){
+        html{scroll-behavior:auto}
+        .toast{transition:none}
+        .btn:active{transform:none}
+        .appbar-progress span{transition:none}
+        .btn,.bigchoices button,.tabs button,.btn-music,.tabbar a{transition:none}
+        section.card.arrive{animation:none}
+        section.card{transition:none}
+      }
+    </style>
+    <style>
+      /* ============ PREMIUM REDESIGN — 7 Nov 2026 (hanya CSS; isi & JS tidak disentuh) ============ */
+      :root{
+        --radius:20px;
+        --em-900:#14402A; --em-800:#065F46; --em-700:#047857; --em-600:#0F766E;
+        --gold-500:#D97706; --gold-300:#E3C07A; --gold-100:#F6E7C3;
+        --cream:#FFFBEB; --cream-2:#FEF3C7; --mint:#ECFDF5;
+        --shadow-soft:0 1px 2px rgba(20,64,42,.06),0 10px 30px rgba(20,64,42,.09);
+        --shadow-lift:0 2px 4px rgba(20,64,42,.07),0 18px 44px rgba(20,64,42,.14);
+        --hairline-gold:1px solid rgba(217,119,6,.38);
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --shadow-soft:0 1px 2px rgba(0,0,0,.25),0 10px 30px rgba(0,0,0,.35);
+          --shadow-lift:0 2px 4px rgba(0,0,0,.3),0 18px 44px rgba(0,0,0,.5);
+          --hairline-gold:1px solid rgba(227,192,122,.35);
+        }
+      }
+      body{line-height:1.65}
+      /* ---------- Tipografi display: Fraunces (serif elegan), cadangan Georgia bila offline ---------- */
+      h1,h2,h3{font-family:"Fraunces","Plus Jakarta Sans",Georgia,"Times New Roman",serif}
+      .kartu-kelompok .kk-value{font-family:"Fraunces",Georgia,serif}
+      /* ---------- Banner hero Canva: bingkai emas + bayangan terangkat ---------- */
+      .hero-banner img{border:var(--hairline-gold);box-shadow:var(--shadow-lift)}
+      /* ---------- HERO: gradien berlapis + ornamen geometri Islami + garis emas ---------- */
+      .hero{
+        background:
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23E3C07A' stroke-opacity='0.16' stroke-width='1'%3E%3Cpath d='M36 6 L42 30 L66 36 L42 42 L36 66 L30 42 L6 36 L30 30 Z'/%3E%3Ccircle cx='36' cy='36' r='7'/%3E%3C/g%3E%3C/svg%3E"),
+          radial-gradient(130px 130px at 88% 6%, rgba(227,192,122,.34), transparent 70%),
+          radial-gradient(220px 170px at 2% 102%, rgba(15,118,110,.55), transparent 70%),
+          linear-gradient(155deg,#0B2E1E 0%,#14402A 34%,#065F46 68%,#047857 100%);
+        border:1px solid rgba(227,192,122,.45);
+        box-shadow:0 24px 48px rgba(20,64,42,.28), inset 0 1px 0 rgba(255,255,255,.14);
+        padding:38px 22px 30px; position:relative;
+      }
+      .hero::before{content:"";position:absolute;left:22px;right:22px;top:0;height:3px;border-radius:0 0 6px 6px;
+        background:linear-gradient(90deg,transparent,#E3C07A 18%,#D97706 50%,#E3C07A 82%,transparent)}
+      .hero .kicker{color:#E3C07A;letter-spacing:.07em;font-size:.78rem;white-space:nowrap}
+      .hero h1{font-size:2.05rem;line-height:1.18;font-weight:700;letter-spacing:-.01em;margin:10px 0 12px}
+      .hero .sub{font-size:1.02rem;line-height:1.65}
+      .chip{background:rgba(255,255,255,.10);border:1px solid rgba(227,192,122,.5);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+      .hero-note{background:linear-gradient(90deg,rgba(227,192,122,.20),rgba(227,192,122,.06));
+        border:1px solid rgba(227,192,122,.35);border-left:3px solid #E3C07A}
+      /* ---------- APP BAR: kaca buram + logo gradien + progres emas ---------- */
+      .appbar{background:var(--bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+        box-shadow:0 6px 20px rgba(20,64,42,.07)}
+      .appbar-logo{background:linear-gradient(135deg,#047857,#065F46);border:1px solid rgba(227,192,122,.55);
+        box-shadow:0 6px 14px rgba(6,95,70,.30)}
+      .appbar-chip{background:linear-gradient(135deg,var(--gold-soft),var(--cream-2));color:#7C4A03;
+        border:1px solid rgba(217,119,6,.4)}
+      .appbar-progress{height:5px}
+      .appbar-progress span{background:linear-gradient(90deg,#047857,#D97706,#E3C07A);box-shadow:0 0 8px rgba(217,119,6,.55)}
+      /* ---------- Baris bawah appbar: progres + toggle musik persisten ---------- */
+      .appbar-lower{display:flex;align-items:center;gap:12px;padding:0 4px 10px}
+      .appbar-lower .appbar-progress{flex:1;margin:0}
+      .btn-music-header{display:inline-flex;align-items:center;gap:7px;flex:none;min-height:40px;padding:7px 14px;font-size:.86rem}
+      .btn-music-header svg{width:19px;height:19px;flex:none}
+      #btn-musik-header .ico-music .eq-b{transform-box:fill-box;transform-origin:bottom;transition:opacity .18s ease,transform .18s ease}
+      #btn-musik-header.playing .eq-b1{animation:eq-pulse .88s ease-in-out infinite}
+      #btn-musik-header.playing .eq-b2{animation:eq-pulse .66s ease-in-out .12s infinite}
+      #btn-musik-header.playing .eq-b3{animation:eq-pulse 1.1s ease-in-out .24s infinite}
+      @keyframes eq-pulse{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+      #btn-musik-header .mute-x{transform-box:fill-box;transform-origin:center;opacity:0;transform:scale(.4) rotate(-30deg);transition:opacity .18s ease,transform .2s cubic-bezier(.34,1.56,.64,1)}
+      #btn-musik-header.off .eq-b{opacity:0;transform:scaleY(.12);animation:none}
+      #btn-musik-header.off .mute-x{opacity:1;transform:scale(1) rotate(0deg)}
+      @media (prefers-reduced-motion: reduce){#btn-musik-header .eq-b{animation:none}#btn-musik-header .mute-x{transition:none}}
+      /* ---------- Petunjuk tab baru di kartu checkpoint ---------- */
+      .checkpoint-card .checkpoint-tabnote{margin-top:8px;font-size:.88rem}
+      /* ---------- DROPDOWN CUSTOM PEMILIH PERAN ---------- */
+      .peran-dd{position:relative}
+      .peran-native{position:absolute !important;top:0;left:0;width:1px !important;height:1px !important;min-height:0 !important;margin:0;padding:0;border:0;opacity:0;pointer-events:none}
+      .peran-trigger{width:100%;min-height:56px;display:flex;align-items:center;gap:12px;font:inherit;text-align:left;cursor:pointer;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:10px 14px;box-shadow:var(--shadow-soft);transition:border-color .15s ease,box-shadow .15s ease,transform .12s ease}
+      .peran-trigger:hover{border-color:var(--gold)}
+      .peran-trigger:active{transform:scale(.985)}
+      .peran-trigger:focus-visible{outline:3px solid rgba(227,192,122,.55);border-color:#D97706;box-shadow:0 0 0 4px rgba(227,192,122,.18)}
+      .peran-trigger.has-value{border-color:var(--green-mid);background:linear-gradient(135deg,var(--sage),var(--surface))}
+      .peran-trigger-ico{flex:none;width:42px;height:42px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:1.35rem}
+      .peran-trigger.has-value .peran-trigger-ico{background:linear-gradient(135deg,#047857,#065F46);border-color:rgba(227,192,122,.55)}
+      .peran-trigger-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+      .peran-trigger-label{font-weight:800;font-size:1rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .peran-trigger:not(.has-value) .peran-trigger-label{color:var(--muted);font-weight:600}
+      .peran-trigger-sub{font-size:.85rem;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .peran-chevron{flex:none;width:22px;height:22px;color:var(--gold);transition:transform .2s ease}
+      .peran-dd.open .peran-chevron{transform:rotate(180deg)}
+      .peran-dd.open .peran-trigger{border-color:#D97706;outline:3px solid rgba(227,192,122,.55);box-shadow:0 0 0 4px rgba(227,192,122,.18)}
+      .peran-list{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:60;list-style:none;margin:0;padding:6px;max-height:320px;overflow-y:auto;background:var(--surface);border:1.5px solid rgba(217,119,6,.5);border-radius:16px;box-shadow:var(--shadow-lift)}
+      .peran-dd.open-up .peran-list{top:auto;bottom:calc(100% + 8px)}
+      .peran-dd.open .peran-list{animation:peranPop .18s ease both}
+      @keyframes peranPop{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
+      .peran-dd.open-up.open .peran-list{animation-name:peranPopUp}
+      @keyframes peranPopUp{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+      .peran-list li{margin:0}
+      .peran-list [role="option"]{width:100%;min-height:60px;display:flex;align-items:center;gap:12px;font:inherit;text-align:left;cursor:pointer;color:var(--ink);background:transparent;border:none;border-radius:12px;padding:8px 10px}
+      .peran-list [role="option"]:hover{background:var(--surface-2)}
+      .peran-list [role="option"]:focus-visible{outline:3px solid rgba(227,192,122,.55);outline-offset:-1px}
+      .peran-list [role="option"][aria-selected="true"]{background:var(--sage)}
+      .peran-opt-ico{flex:none;width:40px;height:40px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:1.25rem}
+      .peran-list [role="option"][aria-selected="true"] .peran-opt-ico{background:linear-gradient(135deg,#047857,#065F46);border-color:rgba(227,192,122,.55)}
+      .peran-opt-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+      .peran-opt-label{font-weight:800;font-size:.98rem;line-height:1.3}
+      .peran-opt-sub{font-size:.85rem;color:var(--muted);font-weight:500;line-height:1.35}
+      .peran-check{flex:none;width:22px;height:22px;color:var(--gold);opacity:0;transform:scale(.6);transition:opacity .15s ease,transform .15s ease}
+      .peran-list [role="option"][aria-selected="true"] .peran-check{opacity:1;transform:scale(1)}
+      @media (prefers-reduced-motion: reduce){.peran-trigger,.peran-chevron,.peran-check{transition:none}.peran-dd.open .peran-list,.peran-dd.open-up.open .peran-list{animation:none}}
+      @media (prefers-color-scheme: dark){ .appbar-chip{color:#E3C07A} }
+      /* ---------- TAB BAR: kaca buram + ikon aktif gradien ---------- */
+      .tabbar{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+      .tabbar a[aria-current="true"] .tab-ico{background:linear-gradient(135deg,#047857,#065F46);color:#FEF3C7;
+        box-shadow:0 6px 14px rgba(6,95,70,.35)}
+      /* ---------- KARTU: garis aksen emas di atas + bayangan berlapis ---------- */
+      section.card{border-radius:20px;box-shadow:var(--shadow-soft);padding:26px 20px;position:relative}
+      section.card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;border-radius:20px 20px 0 0;
+        background:linear-gradient(90deg,#D97706,#E3C07A 30%,#047857 65%,#0F766E)}
+      .sec-badge{background:linear-gradient(135deg,#047857,#065F46);color:#FEF3C7;
+        border:1px solid rgba(227,192,122,.55);box-shadow:0 6px 16px rgba(6,95,70,.30)}
+      .sec-head h2{font-size:1.5rem;font-weight:700;letter-spacing:-.01em}
+      .sec-head .fase{color:#B45309;letter-spacing:.09em}
+      @media (prefers-color-scheme: dark){ .sec-head .fase{color:#E3C07A} }
+      .mindful{background:linear-gradient(135deg,var(--gold-soft),#FFF7D6);border-left:3px solid #D97706;box-shadow:var(--shadow-soft)}
+      @media (prefers-color-scheme: dark){ .mindful{background:linear-gradient(135deg,var(--gold-soft),#2A2410)} }
+      /* ---------- TOMBOL: pill gradien emas/zamrud + bayangan lembut ---------- */
+      .btn{border-radius:16px;box-shadow:0 10px 24px rgba(20,64,42,.16)}
+      .btn.primary{background:linear-gradient(135deg,#047857,#065F46 70%);box-shadow:0 10px 24px rgba(6,95,70,.35)}
+      .btn.gold{background:linear-gradient(135deg,#E3C07A,#D97706);color:#2E2003;box-shadow:0 10px 24px rgba(217,119,6,.35)}
+      .btn.ghost{background:var(--surface);border:1.5px solid rgba(217,119,6,.45)}
+      .bigchoices button[aria-pressed="true"],.tabs button[aria-selected="true"]{
+        background:linear-gradient(135deg,#047857,#065F46);box-shadow:0 8px 20px rgba(6,95,70,.35)}
+      .btn-music[aria-pressed="true"]{background:linear-gradient(135deg,#047857,#065F46)}
+      .bigchoices button,.tabs button{box-shadow:var(--shadow-soft)}
+      @media (hover:hover){
+        .btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
+        .bigchoices button:hover,.tabs button:hover,.btn-music:hover{transform:translateY(-1px)}
+        section.card:hover{box-shadow:var(--shadow-lift)}
+      }
+      /* ---------- INPUT: cincin fokus emas ---------- */
+      input[type=text]:focus,textarea:focus,input[type=number]:focus,select:focus{
+        outline:3px solid rgba(227,192,122,.55);border-color:#D97706;box-shadow:0 0 0 4px rgba(227,192,122,.18)}
+      /* ---------- KASUS: kartu terangkat + tag emas + garis tanya ---------- */
+      .case{border-radius:18px;box-shadow:var(--shadow-soft)}
+      .case.green{background:linear-gradient(160deg,#DCE9D4,#ECFDF5)}
+      @media (prefers-color-scheme: dark){ .case.green{background:linear-gradient(160deg,#24402E,#123527)} }
+      .case h3 .tag{background:linear-gradient(135deg,#D97706,#B8862B);box-shadow:0 4px 10px rgba(217,119,6,.35)}
+      .case .tanya{border-left:3px solid #D97706}
+      /* ---------- AYAT: gradien lembut + garis emas ---------- */
+      .ayat{background:linear-gradient(180deg,var(--surface-2),var(--surface));border-left:3px solid #D97706;box-shadow:var(--shadow-soft)}
+      .ayat .ref{color:#B45309;letter-spacing:.04em}
+      @media (prefers-color-scheme: dark){ .ayat .ref{color:#E3C07A} }
+      /* ---------- KARTU KELOMPOK & FORM: bingkai emas + kepala gradien ---------- */
+      .kartu-kelompok{box-shadow:var(--shadow-lift);border:2px solid #D97706}
+      .kartu-kelompok .kk-head{background:linear-gradient(135deg,#047857,#065F46)}
+      .form-card{background:linear-gradient(180deg,var(--surface-2),var(--surface));box-shadow:var(--shadow-soft)}
+      .musicbar{background:linear-gradient(135deg,var(--gold-soft),var(--cream-2));
+        border:1.5px solid rgba(217,119,6,.4);box-shadow:var(--shadow-soft)}
+      @media (prefers-color-scheme: dark){ .musicbar{background:linear-gradient(135deg,var(--gold-soft),#2A2410)} }
+      /* ---------- PANDUAN / JANJI / ALUR: bayangan lembut ---------- */
+      .guide,.janji .item,.alur .step{box-shadow:var(--shadow-soft)}
+      .janji .item{border:1.5px solid rgba(217,119,6,.3)}
+      .alur .step b{background:linear-gradient(135deg,#047857,#065F46);box-shadow:0 4px 10px rgba(6,95,70,.3)}
+      .notice-satu{background:linear-gradient(135deg,var(--sage),#ECFDF5);border:1px solid rgba(4,120,87,.25);box-shadow:var(--shadow-soft)}
+      @media (prefers-color-scheme: dark){ .notice-satu{background:linear-gradient(135deg,var(--sage),#123527)} }
+      /* ---------- JALUR SUPIAN: kartu sederhana terangkat + kotak pendamping emas ---------- */
+      .kartu-sederhana{box-shadow:var(--shadow-soft);border-left:3px solid #047857}
+      .kartu-sederhana h4 .tag{background:linear-gradient(135deg,#D97706,#B8862B);box-shadow:0 4px 10px rgba(217,119,6,.35)}
+      .pendamping-box{background:linear-gradient(135deg,var(--gold-soft),#FFF7D6);
+        border:1.5px solid rgba(217,119,6,.45);box-shadow:var(--shadow-soft)}
+      @media (prefers-color-scheme: dark){ .pendamping-box{background:linear-gradient(135deg,var(--gold-soft),#2A2410)} }
+      /* ---------- POSTER & RINGKASAN ---------- */
+      .poster-contoh img{box-shadow:var(--shadow-lift);border:var(--hairline-gold)}
+      #summary{box-shadow:var(--shadow-soft)}
+      #summary dt{color:#B45309}
+      @media (prefers-color-scheme: dark){ #summary dt{color:#E3C07A} }
+      footer::before{content:"";display:block;width:120px;height:3px;margin:0 auto 16px;border-radius:99px;
+        background:linear-gradient(90deg,transparent,#D97706,#E3C07A,transparent)}
+      @media (prefers-reduced-motion: reduce){
+        .btn:hover,.bigchoices button:hover,.tabs button:hover,.btn-music:hover{transform:none}
+        section.card:hover{box-shadow:var(--shadow-soft)}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ================= BANNER HERO ================= -->
+      <figure class="hero-banner">
+        <img src="assets/hero.png" onerror="this.style.display='none'" width="1584" height="396" alt="Sekolahku Aman — Bab 3 Manfaat Menghindari Penyakit Sosial" />
+      </figure>
+
+      <!-- ================= HERO ================= -->
+      <header class="hero">
+        <p class="kicker">LKPD Digital &middot; PAI &amp; Budi Pekerti &middot; Kelas XI</p>
+        <h1 id="hero-judul">Manfaat Menghindari Penyakit Sosial: Perundungan, Perkelahian, dan Perjudian</h1>
+        <p class="sub" id="hero-sub">Bab 3 &middot; Buku Siswa PAI Kemenag 2024 (hlm. 57&ndash;88). Hari ini kita belajar dengan cara memecahkan masalah nyata di sekitar kita &mdash; bukan sekadar menghafal.</p>
+        <div class="chips">
+          <span class="chip">SMAN 4 Banjarmasin</span>
+          <span class="chip">Selasa, 10 November 2026</span>
+          <span class="chip" id="chip-durasi">2 JP &middot; 2 &times; 45 menit</span>
+          <span class="chip normal-only">Model: PBL + Jigsaw</span>
+        </div>
+        <div class="hero-note" id="hero-note">
+          <strong>Cara pakai:</strong> kerjakan dari atas ke bawah mengikuti nomor langkah. Buka halaman ini sekali saat ada sinyal &mdash; setelah terbuka, halaman tetap bisa diisi walaupun sinyal terputus. Di akhir, tunjukkan <strong>Ringkasan Jawaban</strong> kepada gurumu.
+        </div>
+      </header>
+
+      <!-- ================= APP BAR ================= -->
+      <header class="appbar" id="appbar">
+        <div class="appbar-row">
+          <span class="appbar-logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 1 2-2h13"/></svg></span>
+          <div class="appbar-text">
+            <p class="appbar-title">LKPD Digital Bab 3</p>
+            <p class="appbar-sub" id="appbar-step">Pembuka &middot; Tujuan</p>
+          </div>
+          <span class="appbar-chip" id="appbar-count">Mulai</span>
+        </div>
+        <div class="appbar-lower">
+          <div class="appbar-progress" aria-hidden="true"><span id="appbar-progress-fill"></span></div>
+          <button type="button" class="btn-music btn-music-header" id="btn-musik-header" aria-pressed="true"><svg class="ico-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z" fill="currentColor" stroke="none"/><line class="eq-b eq-b1" x1="15" y1="10" x2="15" y2="14"/><line class="eq-b eq-b2" x1="18" y1="8" x2="18" y2="16"/><line class="eq-b eq-b3" x1="21" y1="10.5" x2="21" y2="13.5"/><path class="mute-x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg><span id="musik-label">Musik: Hidup</span></button>
+        </div>
+        <audio id="musik-latar" src="https://assets.mixkit.co/music/973/973.mp3" loop preload="auto"></audio>
+      </header>
+      <div class="pdpd-banner" role="status">⭐ Kamu memakai Versi Bahasa Sederhana</div>
+
+      <!-- ================= TUJUAN & ALUR ================= -->
+      <section class="card" id="tujuan" aria-labelledby="tujuan-judul">
+        <div class="sec-head">
+          <div class="sec-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg></div>
+          <div>
+            <p class="fase" id="fase-tujuan">Pembuka &middot; Tujuan Pembelajaran</p>
+            <h2 id="tujuan-judul">Apa yang akan kita capai?</h2>
+          </div>
+        </div>
+        <p class="lead" id="tujuan-lead">Setelah pembelajaran ini, kamu diharapkan mampu <strong>menerapkan manfaat menghindari penyakit sosial</strong> &mdash; perundungan, perkelahian, dan perjudian &mdash; dengan <strong>merefleksikan adab bermasyarakat dan etika digital dalam Islam</strong>, serta berani menjadi bagian dari solusinya di sekolah.</p>
+        <p class="hint normal-only" style="margin-top:8px">Capaian Pembelajaran: Fase F, Elemen Akhlak &mdash; Keputusan Kepala BKPDM Nomor 020 Tahun 2026.</p>
+        <div class="alur" aria-label="Alur pembelajaran hari ini">
+          <div class="step"><b>1</b><p id="alur-1"><strong>Memahami</strong> &mdash; membaca kasus nyata dan menjadi ahli di satu topik bersama kelompokmu.</p></div>
+          <div class="step"><b>2</b><p id="alur-2"><strong>Mengaplikasi</strong> &mdash; memecahkan kasus dan membuat kampanye digital &ldquo;Sekolahku Aman&rdquo;.</p></div>
+          <div class="step"><b>3</b><p id="alur-3"><strong>Merefleksi</strong> &mdash; menilai solusi, mengerjakan kuis, dan membuat komitmen pribadi.</p></div>
+        </div>
+        <div class="mindful" id="jeda"><strong>Jeda sadar diri:</strong> sebelum mulai, tarik napas perlahan. Niatkan belajar hari ini sebagai ibadah dan bekal menjaga teman-temanmu. Apa satu harapanmu dari pelajaran hari ini?</div>
+      </section>
+
+      <!-- ================= 1. IDENTITAS ================= -->
+      <section class="card" id="identitas" aria-labelledby="identitas-judul">
+        <div class="sec-head">
+          <div class="sec-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></div>
+          <div>
+            <p class="fase">Langkah 1</p>
+            <h2 id="identitas-judul">Identitas Siswa</h2>
+          </div>
+        </div>
+        <label class="flabel" id="label-nama" for="nama">Nama lengkap</label>
+        <input type="text" id="nama" placeholder="Tulis namamu di sini" autocomplete="name" />
+        <div class="grid2">
+          <div>
+            <label class="flabel" id="label-kelas" for="kelas">Kelas</label>
+            <input type="text" id="kelas" placeholder="Contoh: XI-4" />
+          </div>
+          <div>
+            <label class="flabel" id="label-absen" for="absen">Nomor Absen <span class="hint">(angka 1–36)</span></label>
+            <input type="number" id="absen" min="1" max="36" step="1" inputmode="numeric" placeholder="Contoh: 14" />
+          </div>
+        </div>
+        <p class="absen-error" id="absen-error" role="alert">Nomor absen harus diisi angka 1 sampai 36. Cek lagi nomor absenmu, ya.</p>
+        <p class="hint" id="hint-kelompok" style="margin-top:12px">Cukup isi nomor absenmu — kelompokmu ditentukan <strong>otomatis</strong>, tidak perlu memilih sendiri. Kelompok ahli dibentuk menjadi 6 kelompok, tiap kelompok 6 orang, supaya semua kebagian bicara dan tidak ada yang hanya menumpang nama.</p>
+
+        <div class="kartu-kelompok" id="kartu-kelompok" role="status" aria-live="polite">
+          <p class="kk-head"><span id="kartu-head">Kartu Kelompok Saya — otomatis dari Nomor Absen</span> <span id="kk-absen"></span></p>
+          <div class="kk-grid">
+            <div class="kk-cell">
+              <p class="kk-label" id="label-kelompok-ahli">Kelompok Ahli Saya</p>
+              <p class="kk-value" id="kk-ahli">—</p>
+              <p class="kk-sub" id="kk-ahli-sub">—</p>
+            </div>
+            <div class="kk-cell">
+              <p class="kk-label" id="label-kelompok-asal">Kelompok Asal Saya</p>
+              <p class="kk-value" id="kk-asal">—</p>
+              <p class="kk-sub" id="kk-asal-sub">—</p>
+            </div>
+          </div>
+        </div>
+        <div class="mindful" id="mindful-kelompok"><strong> Cara kelompok dibentuk:</strong> Kelompok Ahli untuk belajar mendalam satu topik (absen 1–6 = A1, 7–12 = A2, 13–18 = B1, 19–24 = B2, 25–30 = C1, 31–36 = C2). Kelompok Asal untuk kembali berkumpul dan saling mengajar — tiap Kelompok Asal berisi 1 siswa dari tiap Kelompok Ahli, jadi semua topik terwakili. Tab materi ahlimu di Langkah 4 sudah terbuka otomatis mengikuti nomor absenmu.</div>
+      </section>
+
+      <!-- ================= 2. DIAGNOSTIK ================= -->
+      <section class="card" id="diagnostik" aria-labelledby="diagnostik-judul">
+        <div class="sec-head">
+          <div class="sec-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5a5.5 5.5 0 1 1 2 4.2"/><path d="M12 17v4"/><circle cx="12" cy="11" r=".6" fill="currentColor"/></svg></div>
+          <div>
+            <p class="fase" id="fase-diag">Langkah 2 &middot; Asesmen Awal</p>
+            <h2 id="diagnostik-judul">Cek Pemahaman Awal</h2>
+          </div>
+        </div>
+        <p class="lead" id="lead-diag">Jawab 3 soal di bawah ini — jawabanmu dikirim dari LKPD ini dan skormu langsung masuk ke pantauan guru secara live.</p>
+        <div class="form-card">
+          <h3 id="diag-form-judul">Jawab Diagnostik di Sini</h3>
+          <p class="normal-only"><strong>3 soal</strong> untuk mengukur titik awalmu &mdash; <strong>bukan untuk nilai rapor</strong>.</p>
+          <p class="supian-only"><span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span><br /><strong>3 soal mudah.</strong> Khusus untukmu. Kerjakan sama-sama dengan guru. <strong>Bukan untuk nilai rapor.</strong></p>
+          <div class="supian-only pendamping-box"><span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span><br /><strong>Guru bacakan soal.</strong> Kamu jawab dengan bicara. Waktu lebih lama.</div>
+          <ul class="form-points">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span id="fp-diag-1">Jawaban dan skormu <strong>masuk live ke pantauan guru</strong> begitu kamu menekan Kirim.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span id="fp-diag-2">Sesudah menekan <strong>Kirim</strong> di bawah ini, lanjut ke <strong>Langkah 3</strong>.</span></li>
+          </ul>
+          <div class="hyb-blok normal-only" data-hyb="diag-normal">
+            <fieldset class="hyb-soal">
+              <legend>1. Perilaku manakah yang paling tepat disebut perundungan?</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q1" value="A. Dua teman setara sekali saling mengejek lalu berdamai."><span>A. Dua teman setara sekali saling mengejek lalu berdamai.</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q1" value="B. Kelompok yang lebih kuat berulang kali mengejek dan mengucilkan satu siswa yang tidak mampu membela diri."><span>B. Kelompok yang lebih kuat berulang kali mengejek dan mengucilkan satu siswa yang tidak mampu membela diri.</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q1" value="C. Guru menegur siswa yang terlambat."><span>C. Guru menegur siswa yang terlambat.</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q1" value="D. Teman memberi kritik tugas dengan sopan."><span>D. Teman memberi kritik tugas dengan sopan.</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>2. Makna QS al-Hujuraat ayat 10 bagi perkelahian antarpelajar adalah…</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q2" value="A. Perselisihan harus dimenangkan kelompok sendiri."><span>A. Perselisihan harus dimenangkan kelompok sendiri.</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q2" value="B. Orang mukmin bersaudara sehingga yang berselisih harus didamaikan."><span>B. Orang mukmin bersaudara sehingga yang berselisih harus didamaikan.</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q2" value="C. Perkelahian dibolehkan bila tidak terekam."><span>C. Perkelahian dibolehkan bila tidak terekam.</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q2" value="D. Penonton wajib merekam kejadian."><span>D. Penonton wajib merekam kejadian.</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>3. Suatu permainan digolongkan perjudian apabila memenuhi unsur…</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q3" value="A. Seru, ramai, dan viral."><span>A. Seru, ramai, dan viral.</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q3" value="B. Ada hadiah dari guru."><span>B. Ada hadiah dari guru.</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q3" value="C. Ada permainan, untung-untungan, dan taruhan."><span>C. Ada permainan, untung-untungan, dan taruhan.</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-n-q3" value="D. Dimainkan di telepon genggam."><span>D. Dimainkan di telepon genggam.</span></label>
+            </fieldset>
+            <button type="button" class="btn primary btn-kirim-webgas" data-jenis="diagnostik">Kirim jawaban dari LKPD ini</button>
+            <p class="hyb-note">Jawabanmu dikirim <strong>dari LKPD ini</strong> dan dinilai otomatis — skormu tampil di bawah tombol sesudah terkirim. Pastikan Nama dan Nomor Absen sudah diisi di atas.</p>
+            <p class="form-cadangan">Kalau pengiriman dari sini gagal, isi lewat <a href="https://docs.google.com/forms/d/e/1FAIpQLSdCWwLHGMG6jJhUcTncy4YO7ulbGEnU_y1DjJMYF1jmXvbCSg/viewform" target="_blank" rel="noopener">Google Form (cadangan)</a>.</p>
+          </div>
+          <div class="hyb-blok supian-only" data-hyb="diag-supian">
+            <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+            <fieldset class="hyb-soal">
+              <legend>Perundungan itu perbuatan yang...</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-s-q1" value="Baik"><span>Baik</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-s-q1" value="Tidak baik"><span>Tidak baik</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>Kalau ada teman berkelahi, yang sebaiknya kita lakukan adalah...</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-s-q2" value="Melerai dengan aman dan melapor ke guru"><span>Pisahkan dengan aman, lalu lapor guru</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-s-q2" value="Ikut menonton dan merekam"><span>Ikut menonton dan merekam</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>Judi (maisir) itu...</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-s-q3" value="Permainan untung-untungan yang memakai taruhan"><span>Permainan untung-untungan yang memakai taruhan</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-diag-s-q3" value="Permainan yang pasti menang"><span>Permainan yang pasti menang</span></label>
+            </fieldset>
+            <button type="button" class="btn primary btn-kirim-webgas" data-jenis="diagnostik">Kirim jawaban</button>
+            <p class="hyb-note" id="hyb-note-diag-s">Tekan tombol Kirim. Skormu muncul di bawah.</p>
+            <p class="form-cadangan">Kalau gagal, isi lewat <a href="https://docs.google.com/forms/d/e/1FAIpQLSf9YYnTwOYfpW0tHH_j5-pYCEfRDjEfsWaGNMB7bBJh99UgDA/viewform" target="_blank" rel="noopener">Google Form</a>.</p>
+          </div>
+          <div class="skor-blok" id="skor-diag" hidden role="status" aria-live="polite"></div>
+          <p class="form-note" id="form-note-diag">Jawaban dikirim dari LKPD ini — kamu tetap di sini; musik tetap berbunyi.</p>
+        </div>
+      </section>
+
+      <!-- ================= 3. KASUS ================= -->
+      <section class="card" id="kasus" aria-labelledby="kasus-judul">
+        <div class="sec-head">
+          <div class="sec-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 1 2-2h13"/></svg></div>
+          <div>
+            <p class="fase" id="fase-kasus">Langkah 3 &middot; Fase Memahami &mdash; Orientasi Masalah</p>
+            <h2 id="kasus-judul">Kasus Pemantik: Masalah Nyata di Sekitar Kita</h2>
+          </div>
+        </div>
+        <p class="lead" id="kasus-lead">Baca ketiga kasus berikut dengan saksama. Inilah masalah yang akan kita pecahkan bersama hari ini.</p>
+
+        <article class="case green normal-only">
+          <h3><span class="tag">KASUS 1</span> Kisah Andi: Dari Korban Menjadi Teladan</h3>
+          <p>Andi (nama samaran dalam buku) adalah siswa yang menjadi korban perundungan sejak duduk di bangku SD hingga SMA. Ia diejek, dikucilkan, dan diperlakukan tidak menyenangkan oleh teman-temannya dalam waktu yang lama. Perundungan itu membuatnya tertekan, tetapi Andi tidak membalas dengan kekerasan. Ia memilih bertahan, fokus belajar, dan membuktikan kemampuannya lewat prestasi.</p>
+          <p>Ketekunan Andi berbuah manis: ia berhasil meraih prestasi dan lolos mendapatkan <strong>dua beasiswa S2 ke Eropa</strong>. Kisah Andi membuktikan bahwa korban perundungan bisa bangkit &mdash; dan bahwa perundungan tidak pernah membuat pelakunya menjadi pemenang.</p>
+          <div class="tanya"><strong>Renungkan:</strong> Apa yang membuat Andi bisa bangkit? Dukungan apa yang sebenarnya paling ia butuhkan dari teman dan lingkungannya?</div>
+        </article>
+
+        <article class="case supian-only">
+          <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+          <h3><span class="tag">KASUS 1</span> Kisah Andi</h3>
+          <p>Andi diejek teman-temannya sejak SD sampai SMA. Andi dikucilkan. Andi tidak membalas. Andi tetap belajar. Andi dapat beasiswa ke Eropa.</p>
+          <div class="tanya"><strong>Renungkan:</strong> Kenapa Andi bisa berhasil?</div>
+        </article>
+
+        <article class="case normal-only">
+          <h3><span class="tag">KASUS 2</span> Perkelahian Antar Pelajar</h3>
+          <p>Sepulang sekolah, dua kelompok pelajar dari sekolah berbeda terlibat perkelahian di pinggir jalan. Berawal dari saling ejek di media sosial dan rasa tidak terima, mereka janjian bertemu. Perkelahian itu membuat warga resah, beberapa siswa terluka, dan nama baik kedua sekolah tercoreng. Padahal, persoalan awalnya hanyalah kesalahpahaman kecil yang sebenarnya bisa diselesaikan dengan bicara baik-baik.</p>
+          <div class="tanya"><strong>Renungkan:</strong> Di titik mana perkelahian ini sebenarnya masih bisa dicegah? Siapa saja yang berperan menghentikannya?</div>
+        </article>
+
+        <article class="case normal-only">
+          <h3><span class="tag">KASUS 3</span> Terjebak Judi Online</h3>
+          <p>Seorang siswa awalnya hanya iseng mencoba permainan di sebuah situs yang ternyata adalah judi online. Sekali menang kecil, ia ketagihan dan terus bermain dengan harapan menang besar. Uang jajannya habis, ia mulai berbohong kepada orang tua, meminjam uang teman, dan prestasinya di sekolah menurun drastis. Ia malu bercerita, padahal jebakan itu dirancang memang untuk membuat pemainnya terus kalah dan kecanduan.</p>
+          <div class="tanya"><strong>Renungkan:</strong> Mengapa &ldquo;menang kecil di awal&rdquo; justru berbahaya? Apa langkah pertama yang harus diambil siswa ini?</div>
+        </article>
+
+        <article class="case supian-only">
+          <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+          <h3><span class="tag">KASUS 3</span> Terjebak Judi Online</h3>
+          <p>Teman mengajak taruhan uang jajan di HP. Yang menang dapat uang temannya. Uang jajan bisa habis. Jangan ikut.</p>
+          <div class="tanya"><strong>Renungkan:</strong> Apa yang harus dilakukan siswa itu?</div>
+        </article>
+
+        <label class="flabel" id="label-analisis-kasus" for="analisis-kasus">Analisis awal kelompokmu</label>
+        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+        <p class="hint" id="hint-analisis-kasus">Pilih satu kasus. Tulis: (1) masalah utamanya, (2) siapa yang dirugikan, (3) perkiraan penyebabnya, (4) satu solusi awal menurut kelompokmu.</p>
+        <textarea id="analisis-kasus" placeholder="Tulis hasil diskusi awal kelompokmu di sini…"></textarea>
+      </section>
+
+      <!-- ============ CHECKPOINT PROGRES (tautan biasa ke Form Progres — BUKAN pengiriman latar) ============ -->
+      <aside class="checkpoint-card" data-langkah="Langkah 3 — Kasus">
+        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+        <h3>&#10003; Sudah sampai sini?</h3>
+        <p class="normal-only">Tekan tombol di bawah ini untuk membuka Form Progres. Di Form, isi Nama, Nomor Absen, dan langkah yang baru selesai ini, lalu tekan <strong>Kirim</strong> dan kembali ke LKPD ini.</p>
+        <p class="supian-only">Tekan tombol ini sama-sama dengan guru. Isi Nama dan Nomor Absen di Form. Lalu tekan <strong>Kirim</strong>.</p>
+        <a class="btn primary btn-form checkpoint-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfn34q5JpOYu3pLseknylzBG04FWEe2H7og5tonpFv1mqzUlA/viewform" target="_blank" rel="noopener">Kirim progres: Langkah 3 — Kasus</a>
+        <p class="checkpoint-tabnote">Form terbuka di tab baru &mdash; musik tetap berbunyi; sesudah mengirim, kembali ke tab LKPD ini.</p>
+        <p class="checkpoint-hint">Di Form: tulis Nama dan Nomor Absen. Lalu tekan Kirim.</p>
+      </aside>
+
+      <!-- ================= 4. KELOMPOK AHLI ================= -->
+      <section class="card" id="ahli" aria-labelledby="ahli-judul">
+        <div class="sec-head">
+          <div class="sec-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="10" r="2.6"/><path d="M3.5 20c.6-3.4 2.8-5 5.5-5s4.9 1.6 5.5 5"/><path d="M14.5 15.6c2.9-.3 5.3 1.2 6 4.4"/></svg></div>
+          <div>
+            <p class="fase" id="fase-ahli">Langkah 4 &middot; Fase Memahami &mdash; Kelompok Ahli (Jigsaw)</p>
+            <h2 id="ahli-judul">Tugas Kelompok Ahli</h2>
+          </div>
+        </div>
+        <p class="lead" id="lead-ahli">Tab materi di bawah ini <strong>sudah terbuka otomatis</strong> mengikuti nomor absenmu di Langkah 1 (A1 &amp; A2 membaca materi Perundungan, B1 &amp; B2 Perkelahian, C1 &amp; C2 Perjudian). Baca ringkasan materinya, pelajari dalilnya, lalu isi <strong>tabel analisis</strong> bersama kelompok ahli. Setelah itu kamu akan kembali ke kelompok asal dan mengajarkan hasilmu &mdash; jadi pastikan pemahamanmu benar-benar utuh.</p>
+
+        <div class="tabs" role="tablist" aria-label="Kelompok ahli">
+          <button type="button" role="tab" data-tab="A" class="normal-only" aria-selected="true">A1 &amp; A2<small>Perundungan</small></button>
+          <button type="button" role="tab" data-tab="B" class="normal-only" aria-selected="false">B1 &amp; B2<small>Perkelahian</small></button>
+          <button type="button" role="tab" data-tab="C" aria-selected="false">C1 &amp; C2<small>Perjudian</small></button>
+        </div>
+
+        <!-- ===== PANEL A ===== -->
+        <div class="panel show normal-only" id="panel-A" role="tabpanel">
+          <div class="materi">
+            <h3>A. Perundungan (Bullying)</h3>
+            <p><strong>Pengertian.</strong> Perundungan adalah perilaku tidak menyenangkan, baik secara verbal, fisik, maupun sosial, yang dilakukan secara sengaja dan berulang oleh seseorang atau sekelompok orang yang merasa lebih kuat terhadap pihak yang lebih lemah, dengan tujuan menyakiti.</p>
+            <h3>Jenis-jenis perundungan</h3>
+            <ul>
+              <li><strong>Fisik:</strong> memukul, menendang, mendorong, merusak barang milik korban.</li>
+              <li><strong>Verbal:</strong> mengejek, menghina, memanggil dengan julukan yang menyakitkan, mengancam.</li>
+              <li><strong>Nonverbal:</strong> memandang sinis, mengucilkan lewat sikap, gestur mengancam.</li>
+              <li><strong>Sosial:</strong> mengucilkan dari pergaulan, menyebar gosip, mempermalukan di depan orang lain.</li>
+              <li><strong>Cyber (siber):</strong> merundung melalui media sosial dan pesan digital, misalnya komentar jahat dan menyebar foto tanpa izin.</li>
+            </ul>
+            <h3>Penyebab dari tiga sisi</h3>
+            <ul>
+              <li><strong>Pelaku:</strong> ingin menunjukkan kekuatan/kekuasaan, kurang empati, meniru perilaku yang dilihat, mencari perhatian.</li>
+              <li><strong>Korban:</strong> dianggap berbeda atau lebih lemah, pendiam, sulit membela diri &mdash; padahal korban tidak pernah salah.</li>
+              <li><strong>Penonton (bystander):</strong> diam karena takut ikut menjadi korban, atau malah menonton dan tertawa sehingga pelaku merasa didukung.</li>
+            </ul>
+            <h3>Dampak</h3>
+            <p>Korban dapat merasa rendah diri, cemas, takut ke sekolah, menurun prestasinya, bahkan depresi. Pelaku berisiko menjadi pribadi kasar dan berhadapan dengan sanksi serta hukum. Lingkungan sekolah pun menjadi tidak aman dan tidak nyaman.</p>
+            <h3>Cara mengatasi</h3>
+            <p>Korban: berani bercerita kepada guru/orang tua, tidak membalas dengan kekerasan. Penonton: jangan ikut menonton atau merekam, bela korban dengan cara aman, laporkan. Sekolah dan teman: menegakkan aturan anti perundungan, menumbuhkan empati, dan merangkul korban.</p>
+          </div>
+          <div class="ayat">
+            <p class="ref">Dalil &middot; QS. al-Hujuraat [49]: 11</p>
+            <p class="arabic">يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا لَا يَسْخَرْ قَوْمٌ مِّن قَوْمٍ عَسَىٰٓ أَن يَكُونُوا خَيْرًا مِّنْهُمْ وَلَا نِسَآءٌ مِّن نِّسَآءٍ عَسَىٰٓ أَن يَكُنَّ خَيْرًا مِّنْهُنَّ  وَلَا تَلْمِزُوٓا أَنفُسَكُمْ وَلَا تَنَابَزُوا بِٱلْأَلْقَٰبِ  بِئْسَ ٱلِٱسْمُ ٱلْفُسُوقُ بَعْدَ ٱلْإِيمَٰنِ  وَمَن لَّمْ يَتُبْ فَأُولَٰٓئِكَ هُمُ ٱلظَّٰلِمُونَ</p>
+            <p class="arti"><em>Artinya:</em> &ldquo;Wahai orang-orang yang beriman, janganlah suatu kaum mengolok-olok kaum yang lain, (karena) boleh jadi mereka (yang diolok-olok) lebih baik daripada mereka (yang mengolok-olok), dan jangan pula wanita-wanita (mengolok-olok) wanita-wanita lain, (karena) boleh jadi mereka (yang diolok-olok) lebih baik daripada mereka (yang mengolok-olok). Janganlah kamu saling mencela dan saling memanggil dengan julukan yang buruk. Seburuk-buruk panggilan adalah (panggilan) fasik setelah beriman. Siapa yang tidak bertobat, mereka itulah orang-orang zalim.&rdquo;</p>
+          </div>
+          <h3 style="margin-top:20px;font-size:1.08rem">Tabel Analisis Kelompok A</h3>
+          <table class="analisis">
+            <tr><th>Pengertian perundungan menurut kelompok kami</th><td><textarea data-ahli="A1" placeholder="Tulis dengan bahasamu sendiri…"></textarea></td></tr>
+            <tr><th>Jenis perundungan yang paling sering terjadi di sekolah &amp; contohnya</th><td><textarea data-ahli="A2" placeholder="Fisik / verbal / nonverbal / sosial / cyber — beri contoh nyata tanpa menyebut nama…"></textarea></td></tr>
+            <tr><th>Penyebab: dari sisi pelaku, korban, dan penonton</th><td><textarea data-ahli="A3" placeholder="Tulis penyebab dari ketiga sisi…"></textarea></td></tr>
+            <tr><th>Dampak bagi korban, pelaku, dan sekolah</th><td><textarea data-ahli="A4" placeholder="Tulis dampaknya…"></textarea></td></tr>
+            <tr><th>Cara mengatasi &amp; mencegah</th><td><textarea data-ahli="A5" placeholder="Apa yang bisa dilakukan siswa, guru, dan sekolah…"></textarea></td></tr>
+            <tr><th>Pesan QS. al-Hujuraat 49:11 untuk kami</th><td><textarea data-ahli="A6" placeholder="Tulis pesan ayat ini dengan bahasamu sendiri…"></textarea></td></tr>
+          </table>
+        </div>
+
+        <!-- ===== PANEL B ===== -->
+        <div class="panel normal-only" id="panel-B" role="tabpanel">
+          <div class="materi">
+            <h3>B. Perkelahian dan Tawuran Antar Pelajar</h3>
+            <p><strong>Pengertian.</strong> Perkelahian antar pelajar adalah pertikaian fisik antara siswa atau kelompok siswa &mdash; di dalam maupun antar sekolah (tawuran) &mdash; yang biasanya berawal dari persoalan sepele: salah paham, saling ejek, atau gengsi kelompok, lalu membesar karena emosi yang tidak terkendali.</p>
+            <h3>Faktor penyebab</h3>
+            <ul>
+              <li><strong>Faktor individu:</strong> emosi labil, krisis identitas dan pencarian jati diri, kurang mampu mengendalikan diri.</li>
+              <li><strong>Faktor keluarga:</strong> kurang perhatian dan pengawasan, pola asuh yang keras atau terlalu bebas.</li>
+              <li><strong>Faktor sekolah:</strong> aturan yang lemah atau tidak konsisten, lingkungan sekolah yang kurang aman.</li>
+              <li><strong>Faktor lingkungan/masyarakat:</strong> pergaulan bebas, solidaritas kelompok yang salah arah, pengaruh tayangan kekerasan dan media sosial.</li>
+            </ul>
+            <p>Dari semua faktor itu, yang paling utama berakar pada <strong>diri individu dan lingkungannya</strong>: pribadi yang belum mampu mengendalikan emosi, ditambah lingkungan yang membiarkan kekerasan dianggap biasa.</p>
+            <h3>Pencegahan</h3>
+            <p>Memperkuat iman dan akhlak, belajar mengendalikan emosi, memilih pergaulan yang baik, mengisi waktu dengan kegiatan positif (ekstrakurikuler, olahraga, organisasi), serta menyelesaikan masalah dengan musyawarah, bukan kekerasan.</p>
+            <h3>Penanganan bila terjadi</h3>
+            <p>Melerai dengan cara aman dan segera melapor kepada guru/pihak sekolah, tidak ikut menonton apalagi memprovokasi atau merekam, membantu korban, lalu menyelesaikan persoalan lewat mediasi dan bimbingan &mdash; bukan balas dendam.</p>
+          </div>
+          <div class="ayat">
+            <p class="ref">Dalil &middot; QS. al-Hujuraat [49]: 10</p>
+            <p class="arabic">إِنَّمَا ٱلْمُؤْمِنُونَ إِخْوَةٌ فَأَصْلِحُوا بَيْنَ أَخَوَيْكُمْ  وَٱتَّقُوا ٱللَّهَ لَعَلَّكُمْ تُرْحَمُونَ</p>
+            <p class="arti"><em>Artinya:</em> &ldquo;Sesungguhnya orang-orang mukmin itu bersaudara, karena itu damaikanlah kedua saudaramu (yang bertikai) dan bertakwalah kepada Allah agar kamu dirahmati.&rdquo;</p>
+          </div>
+          <div class="ayat">
+            <p class="ref">Dalil &middot; QS. al-Anbiyaa' [21]: 107</p>
+            <p class="arabic">وَمَآ أَرْسَلْنَٰكَ إِلَّا رَحْمَةً لِّلْعَٰلَمِينَ</p>
+            <p class="arti"><em>Artinya:</em> &ldquo;Kami tidak mengutus engkau (Nabi Muhammad), melainkan sebagai rahmat bagi seluruh alam.&rdquo; Islam hadir membawa kasih sayang, bukan kekerasan.</p>
+          </div>
+          <h3 style="margin-top:20px;font-size:1.08rem">Tabel Analisis Kelompok B</h3>
+          <table class="analisis">
+            <tr><th>Pengertian perkelahian/tawuran menurut kelompok kami</th><td><textarea data-ahli="B1" placeholder="Tulis dengan bahasamu sendiri…"></textarea></td></tr>
+            <tr><th>Faktor penyebab &amp; faktor yang paling utama</th><td><textarea data-ahli="B2" placeholder="Individu, keluarga, sekolah, lingkungan — mana yang paling utama dan mengapa…"></textarea></td></tr>
+            <tr><th>Cara mencegah perkelahian antarpelajar</th><td><textarea data-ahli="B3" placeholder="Langkah pencegahan yang bisa dilakukan siswa…"></textarea></td></tr>
+            <tr><th>Cara menangani bila perkelahian terjadi</th><td><textarea data-ahli="B4" placeholder="Apa yang harus dan tidak boleh dilakukan…"></textarea></td></tr>
+            <tr><th>Pesan QS. al-Hujuraat 49:10 untuk kami</th><td><textarea data-ahli="B5" placeholder="Tulis pesan ayat ini dengan bahasamu sendiri…"></textarea></td></tr>
+            <tr><th>Makna &ldquo;rahmat bagi seluruh alam&rdquo; (QS. al-Anbiyaa' 21:107)</th><td><textarea data-ahli="B6" placeholder="Hubungkan dengan sikap anti kekerasan…"></textarea></td></tr>
+          </table>
+        </div>
+
+        <!-- ===== PANEL C ===== -->
+        <div class="panel" id="panel-C" role="tabpanel">
+          <div class="materi normal-only">
+            <h3>C. Perjudian (Maisir)</h3>
+            <p><strong>Pengertian.</strong> Perjudian (<em>al-maisir</em>) adalah segala bentuk permainan yang mengandung unsur untung-untungan dan taruhan, di mana pihak yang menang mengambil harta pihak yang kalah. Dalam bentuk modern, perjudian banyak menyusup lewat <strong>judi online</strong>: situs dan aplikasi permainan berbayar yang menjanjikan kemenangan instan.</p>
+            <h3>Tiga unsur perjudian</h3>
+            <ul>
+              <li><strong>Ada permainan</strong> yang diikuti para pemain.</li>
+              <li><strong>Ada untung-untungan</strong> &mdash; hasil tidak pasti dan tidak bergantung pada keahlian yang wajar.</li>
+              <li><strong>Ada taruhan</strong> &mdash; harta (uang/barang) yang dipertaruhkan; yang menang mengambil milik yang kalah.</li>
+            </ul>
+            <h3>Dampak perjudian</h3>
+            <p>Merusak hubungan dengan keluarga, menghabiskan harta dan menimbulkan utang, memicu kebohongan dan tindak kriminal, menimbulkan permusuhan dan kebencian antarpemain, melalaikan dari mengingat Allah dan shalat, serta merusak masa depan pelajar.</p>
+            <h3>Cara menghindari</h3>
+            <p>Memperkuat iman dan takwa, memahami bahaya dan hukum haramnya, memilih teman dan lingkungan yang baik, mengisi waktu luang dengan kegiatan bermanfaat, serta menjauhi segala situs/aplikasi dan ajakan yang mengarah pada judi.</p>
+            <h3>Hikmah larangan</h3>
+            <p>Allah melarang perjudian untuk menjaga harta, akal, dan keharmonisan masyarakat; mencegah permusuhan dan kebencian; serta melindungi manusia dari kemalasan dan ketergantungan pada untung-untungan, menggantinya dengan kerja keras yang halal.</p>
+          </div>
+          <div class="ayat normal-only">
+            <p class="ref">Dalil &middot; QS. al-Maa'idah [5]: 90&ndash;91</p>
+            <p class="arabic">يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوٓا إِنَّمَا ٱلْخَمْرُ وَٱلْمَيْسِرُ وَٱلْأَنصَابُ وَٱلْأَزْلَٰمُ رِجْسٌ مِّنْ عَمَلِ ٱلشَّيْطَٰنِ فَٱجْتَنِبُوهُ لَعَلَّكُمْ تُفْلِحُونَ (90) إِنَّمَا يُرِيدُ ٱلشَّيْطَٰنُ أَن يُوقِعَ بَيْنَكُمُ ٱلْعَدَٰوَةَ وَٱلْبَغْضَآءَ فِى ٱلْخَمْرِ وَٱلْمَيْسِرِ وَيَصُدَّكُم عَن ذِكْرِ ٱللَّهِ وَعَنِ ٱلصَّلَوٰةِ  فَهَلْ أَنتُم مُّنتَهُونَ</p>
+            <p class="arti"><em>Artinya:</em> &ldquo;Wahai orang-orang yang beriman, sesungguhnya minuman keras, berjudi, (berkurban untuk) berhala, dan mengundi nasib dengan anak panah adalah perbuatan keji yang termasuk perbuatan setan. Maka jauhilah (perbuatan-perbuatan) itu agar kamu beruntung. Sesungguhnya setan hanya bermaksud menimbulkan permusuhan dan kebencian di antara kamu melalui minuman keras dan judi, serta (bermaksud) menghalangi kamu dari mengingat Allah dan (melaksanakan) shalat. Maka, tidakkah kamu mau berhenti?&rdquo;</p>
+          </div>
+          <h3 class="normal-only" style="margin-top:20px;font-size:1.08rem">Tabel Analisis Kelompok C</h3>
+          <table class="analisis normal-only">
+            <tr><th>Pengertian maisir (perjudian) menurut kelompok kami</th><td><textarea data-ahli="C1" placeholder="Tulis dengan bahasamu sendiri…"></textarea></td></tr>
+            <tr><th>Bukti unsur perjudian pada judi online (permainan, untung-untungan, taruhan)</th><td><textarea data-ahli="C2" placeholder="Jelaskan ketiga unsurnya pada contoh judi online…"></textarea></td></tr>
+            <tr><th>Dampak perjudian bagi diri, keluarga, dan masyarakat</th><td><textarea data-ahli="C3" placeholder="Tulis dampaknya…"></textarea></td></tr>
+            <tr><th>Cara menghindari perjudian</th><td><textarea data-ahli="C4" placeholder="Langkah nyata yang bisa dilakukan pelajar…"></textarea></td></tr>
+            <tr><th>Hikmah dilarangnya perjudian</th><td><textarea data-ahli="C5" placeholder="Kebaikan apa yang dijaga oleh larangan ini…"></textarea></td></tr>
+            <tr><th>Pesan QS. al-Maa'idah 5:90&ndash;91 untuk kami</th><td><textarea data-ahli="C6" placeholder="Tulis pesan ayat ini dengan bahasamu sendiri…"></textarea></td></tr>
+          </table>
+
+        <div class="supian-only" id="supian-kartu">
+          <div class="materi">
+            <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+            <h3>C. Perjudian (Maisir)</h3>
+            <p><strong>Judi (maisir)</strong> adalah permainan untung-untungan yang memakai taruhan. Yang menang dapat uang yang kalah.</p>
+            <p><strong>Judi itu ada 3 hal:</strong> ada permainan, ada untung-untungan, ada taruhan.</p>
+            <p><strong>Kalau ikut judi:</strong> uang jajan habis. Suka bohong. Nilai turun.</p>
+            <p><strong>Supaya tidak ikut:</strong> jauhi aplikasi judi. Isi waktu dengan hal yang baik.</p>
+            <p><strong>Dalil — QS al-Maa'idah [5]: 90:</strong> khamar, maisir, berhala, dan undian nasib adalah perbuatan keji dari setan. Maka jauhilah.</p>
+          </div>
+          <div class="kartu-sederhana">
+            <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+            <h4><span class="tag">KARTU 1</span> Kasus</h4>
+            <p>Teman mengajak taruhan uang jajan di HP. Yang menang dapat uang temannya.</p>
+            <p class="tanya"><strong>Ini namanya apa?</strong></p>
+            <textarea id="supian-k1" placeholder="Jawab 1 kata…"></textarea>
+          </div>
+          <div class="kartu-sederhana">
+            <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+            <h4><span class="tag">KARTU 2</span> Dalil</h4>
+            <p>QS al-Maa'idah ayat 90: khamar, <strong>maisir</strong>, berhala, dan undian nasib adalah perbuatan keji dari setan. Maka jauhilah.</p>
+            <p class="tanya"><strong>Tunjuk kata &ldquo;maisir&rdquo;. Artinya apa?</strong></p>
+            <textarea id="supian-k2" placeholder="Artinya: …"></textarea>
+          </div>
+          <div class="kartu-sederhana">
+            <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+            <h4><span class="tag">KARTU 3</span> Solusi</h4>
+            <p>Tolak dengan 1 kalimat: <strong>&ldquo;Saya tidak ikut, itu judi.&rdquo;</strong> Hapus aplikasinya. Isi waktu dengan hal yang baik.</p>
+            <p class="tanya"><strong>Katakan kalimat ini 1 kali:</strong></p>
+            <textarea id="supian-k3" placeholder="Tulis: Saya tidak ikut, itu judi."></textarea>
+          </div>
+          <div class="mindful"><strong>Kerjakan satu kartu dulu,</strong> baru lanjut ke kartu berikutnya. Boleh lihat kartumu lagi kapan saja.</div>
+        </div>
+        </div>
+
+        <div class="mindful" id="mindful-ahli"><strong>Selesai menjadi ahli?</strong> Kembali ke kelompok asalmu dan ajarkan topikmu kepada teman-temanmu. Mengajarkan adalah cara belajar yang paling dalam &mdash; pastikan temanmu paham, bukan sekadar mendengar.</div>
+      </section>
+
+      <!-- ============ CHECKPOINT PROGRES (tautan biasa ke Form Progres — BUKAN pengiriman latar) ============ -->
+      <aside class="checkpoint-card" data-langkah="Langkah 4 — Kelompok Ahli">
+        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+        <h3>&#10003; Sudah sampai sini?</h3>
+        <p class="normal-only">Tekan tombol di bawah ini untuk membuka Form Progres. Di Form, isi Nama, Nomor Absen, dan langkah yang baru selesai ini, lalu tekan <strong>Kirim</strong> dan kembali ke LKPD ini.</p>
+        <p class="supian-only">Tekan tombol ini sama-sama dengan guru. Isi Nama dan Nomor Absen di Form. Lalu tekan <strong>Kirim</strong>.</p>
+        <a class="btn primary btn-form checkpoint-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfn34q5JpOYu3pLseknylzBG04FWEe2H7og5tonpFv1mqzUlA/viewform" target="_blank" rel="noopener">Kirim progres: Langkah 4 — Kelompok Ahli</a>
+        <p class="checkpoint-tabnote">Form terbuka di tab baru &mdash; musik tetap berbunyi; sesudah mengirim, kembali ke tab LKPD ini.</p>
+        <p class="checkpoint-hint">Di Form: tulis Nama dan Nomor Absen. Lalu tekan Kirim.</p>
+      </aside>
+
+      <!-- ================= REFLEKSI 1 ================= -->
+      <section class="card" id="refleksi1" aria-labelledby="refleksi1-judul">
+        <div class="sec-head">
+          <div class="sec-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-4.5-2.3-8-5.6-8-10a5 5 0 0 1 8-3.6A5 5 0 0 1 20 11c0 4.4-3.5 7.7-8 10z" transform="scale(.92) translate(1,0)"/></svg></div>
+          <div>
+            <p class="fase" id="fase-r1">Refleksi Cepat 1 &middot; Setelah Fase Memahami</p>
+            <h2 id="refleksi1-judul">Berhenti Sejenak, Rasakan</h2>
+          </div>
+        </div>
+        <label class="flabel" id="label-r1a" for="r1a">Satu hal baru yang kupahami hari ini…</label>
+        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+        <textarea id="r1a" placeholder="Tulis satu hal yang paling berkesan dari topik kelompok ahlimu…"></textarea>
+        <label class="flabel" id="label-r1b" for="r1b">Perasaanku setelah membaca kasus dan dalil tadi…</label>
+        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+        <textarea id="r1b" placeholder="Jujurlah — sedih, prihatin, termotivasi? Tulis apa adanya…"></textarea>
+      </section>
+
+      <!-- ================= 5. KAMPANYE ================= -->
+      <section class="card" id="kampanye" aria-labelledby="kampanye-judul">
+        <div class="sec-head">
+          <div class="sec-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v3l4 1 2 5h2l-1.8-5.4L21 18V5L7 10H3z"/><path d="M17 8.5a4 4 0 0 1 0 6"/></svg></div>
+          <div>
+            <p class="fase" id="fase-kampanye">Langkah 5 &middot; Fase Mengaplikasi &mdash; Menyajikan Hasil Karya</p>
+            <h2 id="kampanye-judul">Tugas Aplikasi: Kampanye Digital &ldquo;Sekolahku Aman&rdquo;</h2>
+          </div>
+        </div>
+        <p class="lead" id="lead-kampanye">Bersama kelompok asalmu, ubah pemahamanmu menjadi aksi. Buat rancangan kampanye digital yang benar-benar bisa dijalankan di sekolah kita untuk mencegah perundungan, perkelahian, dan perjudian.</p>
+
+        <div class="notice-satu" id="notice-kampanye"><strong>SATU produk per Kelompok Asal — bukan per siswa.</strong> Setiap Kelompok Asal (6 siswa) hanya membuat <strong>satu</strong> poster digital <em>atau</em> satu video 60 detik bersama-sama. Formulir di bawah ini diisi sebagai rancangan kelompok, jadi diskusikan dulu, baru tulis kesepakatan kelompokmu.</div>
+        <div class="supian-only pendamping-box"><span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span><br /><strong>Peranmu: Pembuat poster/video.</strong> Buat gambar poster. Katakan 1 kalimat saat presentasi.</div>
+        <div class="pdpd-box">
+          <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+          <p><strong>Tugasmu ada 2.</strong></p>
+          <p>1. Buat gambar poster.<br />2. Katakan 1 kalimat saat presentasi: &ldquo;Saya tidak ikut, itu judi.&rdquo;</p>
+        </div>
+
+        <h3 class="normal-only" style="margin-top:22px;font-size:1.08rem">Pembagian peran dalam Kelompok Asal</h3>
+        <p class="hint normal-only">Setiap anggota memegang satu peran. Pilih peranmu sendiri, lalu tulis nama anggota untuk tiap peran sesuai kesepakatan kelompok — supaya semua kebagian tugas, tidak ada yang hanya menonton.</p>
+        <label class="flabel normal-only" id="peran-label">Peran saya dalam kelompok</label>
+        <div class="peran-dd normal-only" id="peran-dd">
+          <select id="peran-saya" class="peran-native" tabindex="-1" aria-hidden="true">
+            <option value="">— Pilih peranmu —</option>
+            <option>Ketua</option>
+            <option>Penulis naskah</option>
+            <option>Desainer poster/video</option>
+            <option>Presenter</option>
+            <option>Pencatat tanggapan</option>
+          </select>
+          <button type="button" class="peran-trigger" id="peran-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="peran-label peran-trigger-label">
+            <span class="peran-trigger-ico" id="peran-trigger-ico" aria-hidden="true">🎭</span>
+            <span class="peran-trigger-text">
+              <span class="peran-trigger-label" id="peran-trigger-label">— Pilih peranmu —</span>
+              <span class="peran-trigger-sub" id="peran-trigger-sub">Ketuk untuk memilih peranmu</span>
+            </span>
+            <svg class="peran-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+          </button>
+          <ul class="peran-list" id="peran-list" role="listbox" aria-labelledby="peran-label" hidden>
+    <li><button type="button" role="option" data-value="Ketua" aria-selected="false"><span class="peran-opt-ico" aria-hidden="true">👑</span><span class="peran-opt-text"><span class="peran-opt-label">Ketua</span><span class="peran-opt-sub">Memimpin &amp; bagi tugas</span></span><svg class="peran-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></button></li>
+    <li><button type="button" role="option" data-value="Penulis naskah" aria-selected="false"><span class="peran-opt-ico" aria-hidden="true">✍️</span><span class="peran-opt-text"><span class="peran-opt-label">Penulis naskah</span><span class="peran-opt-sub">Menulis pesan &amp; slogan</span></span><svg class="peran-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></button></li>
+    <li><button type="button" role="option" data-value="Desainer poster/video" aria-selected="false"><span class="peran-opt-ico" aria-hidden="true">🎨</span><span class="peran-opt-text"><span class="peran-opt-label">Desainer poster/video</span><span class="peran-opt-sub">Membuat poster / video</span></span><svg class="peran-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></button></li>
+    <li><button type="button" role="option" data-value="Presenter" aria-selected="false"><span class="peran-opt-ico" aria-hidden="true">🎤</span><span class="peran-opt-text"><span class="peran-opt-label">Presenter</span><span class="peran-opt-sub">Menyampaikan hasil</span></span><svg class="peran-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></button></li>
+    <li><button type="button" role="option" data-value="Pencatat tanggapan" aria-selected="false"><span class="peran-opt-ico" aria-hidden="true">📝</span><span class="peran-opt-text"><span class="peran-opt-label">Pencatat tanggapan</span><span class="peran-opt-sub">Mencatat tanggapan</span></span><svg class="peran-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></button></li>
+          </ul>
+        </div>
+        <div class="role-row normal-only"><label for="peran-ketua">Ketua</label><input type="text" id="peran-ketua" placeholder="Nama — memimpin &amp; bagi tugas" /></div>
+        <div class="role-row normal-only"><label for="peran-penulis">Penulis naskah</label><input type="text" id="peran-penulis" placeholder="Nama — menulis pesan &amp; slogan" /></div>
+        <div class="role-row normal-only"><label for="peran-desainer">Desainer poster/video</label><input type="text" id="peran-desainer" placeholder="Nama — membuat poster / video" /></div>
+        <div class="role-row normal-only"><label for="peran-presenter">Presenter</label><input type="text" id="peran-presenter" placeholder="Nama — menyampaikan hasil" /></div>
+        <div class="role-row normal-only"><label for="peran-pencatat">Pencatat tanggapan</label><input type="text" id="peran-pencatat" placeholder="Nama — mencatat tanggapan" /></div>
+
+        <figure class="poster-contoh">
+          <img src="assets/poster.png" onerror="this.style.display='none'" width="794" height="1123" alt="Contoh poster kampanye &ldquo;Stop Bully, Mulai Peduli&rdquo; — Sekolahku Aman, Kelas XI-4" />
+          <figcaption id="caption-poster">Contoh poster — boleh ditiru strukturnya, isi dengan judul dan aksimu sendiri.</figcaption>
+        </figure>
+
+        <label class="flabel normal-only" for="kamp-judul">Judul kampanye</label>
+        <input type="text" id="kamp-judul" class="normal-only" placeholder="Contoh: Stop Bully, Mulai Peduli" />
+        <label class="flabel normal-only" for="kamp-slogan">Slogan kampanye</label>
+        <input type="text" id="kamp-slogan" class="normal-only" placeholder="Satu kalimat pendek yang mudah diingat…" />
+        <label class="flabel normal-only">Format karya</label>
+        <div class="bigchoices two normal-only" role="group" aria-label="Pilih format karya">
+          <button type="button" data-format="Poster digital" aria-pressed="false">Poster Digital<small>Dibuat di HP, siap dibagikan</small></button>
+          <button type="button" data-format="Video 60 detik" aria-pressed="false">Video 60 Detik<small>Direkam &amp; disunting di HP</small></button>
+        </div>
+
+        <h3 class="normal-only" style="margin-top:22px;font-size:1.08rem">Petunjuk membuat karya di HP (dalam waktu kelas)</h3>
+        <div class="guide-grid normal-only">
+          <div class="guide">
+            <h4>Jika memilih Poster Digital</h4>
+            <ol>
+              <li>Buka aplikasi desain yang ada di HP kelompokmu (aplikasi desain poster/foto apa saja yang sudah terpasang).</li>
+              <li>Tentukan <strong>satu pesan utama</strong> saja — misalnya &ldquo;Berhenti mengolok, mulai merangkul&rdquo; — jangan memuat tiga topik sekaligus.</li>
+              <li>Masukkan <strong>satu dalil</strong> yang paling sesuai (49:11 untuk perundungan, 49:10 untuk perkelahian, atau 5:90–91 untuk perjudian).</li>
+              <li>Pakai huruf besar yang terbaca dari jauh, maksimal 2–3 warna, dan satu gambar/ikon pendukung.</li>
+              <li>Simpan hasilnya dan siapkan untuk ditunjukkan saat presentasi.</li>
+            </ol>
+          </div>
+          <div class="guide">
+            <h4>Jika memilih Video 60 Detik</h4>
+            <ol>
+              <li>Tulis naskah pendek dulu: pembuka, <strong>satu pesan utama</strong>, satu dalil, dan ajakan menutup.</li>
+              <li>Rekam di HP dalam posisi tegak, cari tempat yang terang dan tidak bising.</li>
+              <li><strong>Durasi maksimal 60 detik</strong> — latih sekali sebelum merekam supaya pas.</li>
+              <li>Sunting seperlunya di HP (potong awal/akhir, tambah teks pesan utama).</li>
+              <li>Simpan hasilnya dan siapkan untuk diputar saat presentasi.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="pdpd-box">
+          <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+          <p><strong>Cara buat poster</strong></p>
+          <p>1. Buka aplikasi gambar di HP.<br />2. Tulis 1 pesan: &ldquo;Jangan judi.&rdquo;<br />3. Tulis: Judi (maisir) itu haram.</p>
+        </div>
+        <label class="flabel normal-only" for="aksi1">Tiga aksi nyata di sekolah</label>
+        <p class="hint normal-only">Tulis aksi yang benar-benar bisa dijalankan kelompokmu di sekolah — bukan sekadar slogan.</p>
+        <input type="text" id="aksi1" class="normal-only" placeholder="Aksi 1 — contoh: kotak curhat kelas" style="margin-bottom:9px" />
+        <input type="text" id="aksi2" class="normal-only" placeholder="Aksi 2 — contoh: jadi pendamping" style="margin-bottom:9px" />
+        <input type="text" id="aksi3" class="normal-only" placeholder="Aksi 3 — contoh: ajak jauhi judi" />
+        <label class="flabel normal-only" for="presentasi-sebelum">Sebelum presentasi — poin yang akan disampaikan dan siapa presenternya</label>
+        <p class="hint normal-only">Isi <em>sebelum</em> tampil: poin-poin utama kampanye kalian dan nama presenter yang akan menyampaikannya.</p>
+        <textarea id="presentasi-sebelum" class="normal-only" placeholder="Contoh: Poin 1 judul &amp; pesan utama kami… Poin 2 dalil yang kami pakai… Presenter: (nama)…"></textarea>
+        <label class="flabel normal-only" for="presentasi-sesudah">Sesudah presentasi — tanggapan dan pertanyaan dari kelompok lain yang kami terima</label>
+        <p class="hint normal-only">Isi <em>sesudah</em> tampil: tulis tanggapan, saran, dan pertanyaan dari kelompok lain — dicatat oleh Pencatat tanggapan.</p>
+        <textarea id="presentasi-sesudah" class="normal-only" placeholder="Contoh: Kelompok Asal 3 bertanya… Kelompok Asal 5 menyarankan…"></textarea>
+        <div class="mindful" id="mindful-kampanye"><strong>Ingat:</strong> kampanye terbaik bukan yang paling ramai, tetapi yang paling bisa dijalankan. Satu aksi kecil yang konsisten lebih berarti daripada slogan besar yang berhenti di poster.</div>
+      </section>
+
+      <!-- ============ CHECKPOINT PROGRES (tautan biasa ke Form Progres — BUKAN pengiriman latar) ============ -->
+      <aside class="checkpoint-card" data-langkah="Langkah 5 — Kelompok Asal">
+        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+        <h3>&#10003; Sudah sampai sini?</h3>
+        <p class="normal-only">Tekan tombol di bawah ini untuk membuka Form Progres. Di Form, isi Nama, Nomor Absen, dan langkah yang baru selesai ini, lalu tekan <strong>Kirim</strong> dan kembali ke LKPD ini.</p>
+        <p class="supian-only">Tekan tombol ini sama-sama dengan guru. Isi Nama dan Nomor Absen di Form. Lalu tekan <strong>Kirim</strong>.</p>
+        <a class="btn primary btn-form checkpoint-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfn34q5JpOYu3pLseknylzBG04FWEe2H7og5tonpFv1mqzUlA/viewform" target="_blank" rel="noopener">Kirim progres: Langkah 5 — Kelompok Asal</a>
+        <p class="checkpoint-tabnote">Form terbuka di tab baru &mdash; musik tetap berbunyi; sesudah mengirim, kembali ke tab LKPD ini.</p>
+        <p class="checkpoint-hint">Di Form: tulis Nama dan Nomor Absen. Lalu tekan Kirim.</p>
+      </aside>
+
+      <!-- ================= REFLEKSI 2 ================= -->
+      <section class="card" id="refleksi2" aria-labelledby="refleksi2-judul">
+        <div class="sec-head">
+          <div class="sec-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.1 1.1 2.2h5c.1-1.1.5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></svg></div>
+          <div>
+            <p class="fase" id="fase-r2">Refleksi 2 &middot; Setelah Presentasi &mdash; Menganalisis Solusi</p>
+            <h2 id="refleksi2-judul">Refleksi Solusi</h2>
+          </div>
+        </div>
+        <label class="flabel" id="label-r2a" for="r2a">Solusi terbaik yang kudengar dari presentasi hari ini…</label>
+        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+        <textarea id="r2a" placeholder="Boleh dari kelompokmu atau kelompok lain — tulis solusinya dan alasannya…"></textarea>
+        <label class="flabel" id="label-r2b" for="r2b">Apakah solusi itu sungguh bisa diterapkan di sekolah kita? Mengapa?</label>
+        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+        <textarea id="r2b" placeholder="Tulis penilaian jujurmu beserta alasannya…"></textarea>
+      </section>
+
+      <!-- ================= 6. KUIS AKHIR ================= -->
+      <section class="card" id="kuis" aria-labelledby="kuis-judul">
+        <div class="sec-head">
+          <div class="sec-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16l-2.3-1.6L14.4 20l-2.4-1.7L9.6 20l-2.3-1.6L5 20z"/><path d="M9 9l2 2 4-4"/></svg></div>
+          <div>
+            <p class="fase" id="fase-kuis">Langkah 6 &middot; Asesmen Akhir</p>
+            <h2 id="kuis-judul">Kuis Akhir &mdash; Uji Kompetensi Bab 3</h2>
+          </div>
+        </div>
+        <p class="lead" id="lead-kuis">Jawab 10 soal di bawah ini — jawabanmu dikirim dari LKPD ini dan skormu langsung tercatat dan bisa dipantau guru secara live.</p>
+        <div class="form-card">
+          <h3 id="kuis-form-judul">Jawab Kuis Akhir di Sini</h3>
+          <p class="normal-only"><strong>10 soal verbatim</strong> dari Uji Kompetensi Bab 3 (Buku Siswa hlm. 83&ndash;86). Tiap soal <strong>10 poin</strong>, skor maksimum <strong>100</strong>.</p>
+          <p class="supian-only"><span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span><br /><strong>5 soal mudah.</strong> Khusus untukmu. Kerjakan sama-sama dengan guru. Tiap soal <strong>20 poin</strong>. Nilai paling besar <strong>100</strong>. Sama seperti temanmu.</p>
+          <div class="supian-only pendamping-box"><span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span><br /><strong>Guru bacakan soal.</strong> Kamu jawab dengan bicara. Waktu lebih lama.</div>
+          <ul class="form-points">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span id="fp-kuis-1">Skormu <strong>tampil sesudah mengirim</strong> dan <strong>tercatat live di pantauan guru</strong>.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span id="fp-kuis-2">Sesudah menekan <strong>Kirim</strong> di bawah ini, lanjut ke <strong>Langkah 7</strong>.</span></li>
+          </ul>
+          <div class="hyb-blok normal-only" data-hyb="kuis-normal">
+            <fieldset class="hyb-soal">
+              <legend>1. Penyakit sosial merupakan kecenderungan yang timbul sebagai akibat dari penyimpangan sosial yang dilakukan. Salah satu faktor yang menjadi penyebab terjadinya penyimpangan di dalam masyarakat adalah.....</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q1" value="A. Masuknya budaya asing ke Indonesia"><span>A. Masuknya budaya asing ke Indonesia</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q1" value="B. Demoralisasi masyarakat"><span>B. Demoralisasi masyarakat</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q1" value="C. Pengaruh dari tradisi masyarakat"><span>C. Pengaruh dari tradisi masyarakat</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q1" value="D. Tidak memperbaharui norma yang ada"><span>D. Tidak memperbaharui norma yang ada</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q1" value="E. Ikut-ikutan dengan tradisi orang lain"><span>E. Ikut-ikutan dengan tradisi orang lain</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>2. Berikut merupakan upaya yang dapat dilakukan guna mengatasi penyakit sosial yang tumbuh dan berkembang di kalangan masyarakat, kecuali:</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q2" value="A. Menjalin hubungan baik dengan keluarga dan orang-orang terdekat lainnya"><span>A. Menjalin hubungan baik dengan keluarga dan orang-orang terdekat lainnya</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q2" value="B. Menciptakan lingkungan yang sehat, aman dan tenteram"><span>B. Menciptakan lingkungan yang sehat, aman dan tenteram</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q2" value="C. Melakukan semua hal sesuai dengan porsinya masing-masing"><span>C. Melakukan semua hal sesuai dengan porsinya masing-masing</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q2" value="D. Selalu mematuhi dan menghargai nilai, norma dan ketentuan yang berlaku"><span>D. Selalu mematuhi dan menghargai nilai, norma dan ketentuan yang berlaku</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q2" value="E. Tidak mau bergaul dengan orang-orang yang belum dikenal"><span>E. Tidak mau bergaul dengan orang-orang yang belum dikenal</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>3. Perhatikan ayat QS al-Hujuraat (49) ayat 11. Berdasarkan ayat tersebut, lafal yang bergaris bawah memiliki arti....</legend>
+              <p class="arabic">يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا۟ <u>لَا يَسْخَرْ</u> قَوْمٌ مِّن قَوْمٍ عَسَىٰٓ أَن يَكُونُوا۟ خَيْرًا مِّنْهُمْ وَلَا نِسَآءٌ مِّن نِّسَآءٍ عَسَىٰٓ أَن يَكُنَّ خَيْرًا مِّنْهُنَّ ….</p>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q3" value="A. Saling mengejek"><span>A. Saling mengejek</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q3" value="B. Memperolok-olok"><span>B. Memperolok-olok</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q3" value="C. Saling menghina"><span>C. Saling menghina</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q3" value="D. Memburukkan"><span>D. Memburukkan</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q3" value="E. Menggunjing"><span>E. Menggunjing</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>4. Dampak negatif dari perundungan yang dialami oleh seseorang dapat menyebabkan....</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q4" value="A. Lebih berhati-hati"><span>A. Lebih berhati-hati</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q4" value="B. Agresivitas"><span>B. Agresivitas</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q4" value="C. Rendah diri"><span>C. Rendah diri</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q4" value="D. Kurang empati"><span>D. Kurang empati</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q4" value="E. Kecanduan"><span>E. Kecanduan</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>5. Perkelahian antar pelajar adalah suatu bentuk tindakan kekerasan yang dilakukan oleh suatu kelompok pelajar dengan kelompok pelajar lain yang berusaha untuk menyingkirkan pihak lawan dengan menghancurkan atau membuat pihak mereka tidak berdaya. Islam sangat melarang perbuatan tersebut karena orang mukmin itu bersaudara dan tidak boleh menyakiti satu sama lain. Hal ini selaras dengan Ayat Al-Qur’an pada surat...</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q5" value="A. QS al-Baqarah ayat 219"><span>A. QS al-Baqarah ayat 219</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q5" value="B. QS al-Baqarah ayat 195"><span>B. QS al-Baqarah ayat 195</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q5" value="C. QS al-Maa’idah ayat 90"><span>C. QS al-Maa’idah ayat 90</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q5" value="D. QS al-Hujuraat ayat 10"><span>D. QS al-Hujuraat ayat 10</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q5" value="E. QS at-Taubah ayat 11"><span>E. QS at-Taubah ayat 11</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>6. Perilaku menyimpang yang biasanya dilakukan oleh pelajar salah satunya adalah perkelahian. Terjadinya perkelahian pelajar disebabkan adanya beberapa faktor, faktor yang paling utama adalah....</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q6" value="A. Faktor lingkungan"><span>A. Faktor lingkungan</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q6" value="B. Faktor tekanan dari luar"><span>B. Faktor tekanan dari luar</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q6" value="C. Faktor salah pergaulan"><span>C. Faktor salah pergaulan</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q6" value="D. Faktor pengaruh kawan"><span>D. Faktor pengaruh kawan</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q6" value="E. Faktor individu"><span>E. Faktor individu</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>7. Melakukan kegiatan yang bermanfaat dapat mencegah terjadinya perkelahian antar pelajar. Berikut ini kegiatan yang dapat dilakukan, kecuali....</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q7" value="A. Mengikuti majelis taklim"><span>A. Mengikuti majelis taklim</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q7" value="B. Ikut kegiatan rohis di sekolah"><span>B. Ikut kegiatan rohis di sekolah</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q7" value="C. Mencoret tembok dengan cat semprot"><span>C. Mencoret tembok dengan cat semprot</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q7" value="D. Aktif pada kegiatan pramuka"><span>D. Aktif pada kegiatan pramuka</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q7" value="E. Mengikuti ekstrakulikuler olahraga"><span>E. Mengikuti ekstrakulikuler olahraga</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>8. Perhatikan QS al-Maa’idah ayat 90. Arti dari kata yang bergaris bawah pada QS al-Maa’idah ayat 90 adalah.....</legend>
+              <p class="arabic">يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوٓا۟ إِنَّمَا ٱلْخَمْرُ <u>وَالْمَيْسِرُ</u> وَٱلْأَنصَابُ وَٱلْأَزْلَٰمُ رِجْسٌ مِّنْ عَمَلِ ٱلشَّيْطَٰنِ فَٱجْتَنِبُوهُ لَعَلَّكُمْ تُفْلِحُونَ</p>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q8" value="A. Minuman keras"><span>A. Minuman keras</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q8" value="B. Mengundi nasib"><span>B. Mengundi nasib</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q8" value="C. Berhala"><span>C. Berhala</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q8" value="D. Perjudian"><span>D. Perjudian</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q8" value="E. Memabukkan"><span>E. Memabukkan</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>9. Al-Qur’an menyebut perjudian sebagai “kekejian dari pekerjaan tangan setan”, karena banyak mudharat kerugian dari praktik perjudian. Salah satu dampak negatif dari judi adalah....</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q9" value="A. Merasa lebih tenang"><span>A. Merasa lebih tenang</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q9" value="B. Penjudi menjadi kurus"><span>B. Penjudi menjadi kurus</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q9" value="C. Cepat sakit dan meninggal"><span>C. Cepat sakit dan meninggal</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q9" value="D. Sulit makan dan minum"><span>D. Sulit makan dan minum</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q9" value="E. Merusak hubungan dengan keluarga"><span>E. Merusak hubungan dengan keluarga</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>10. Berikut ini adalah cara yang dapat dilakukan seseorang untuk menghindari diri dari praktik judi, kecuali....</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q10" value="A. Sibuk dengan diri sendiri"><span>A. Sibuk dengan diri sendiri</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q10" value="B. Bergaul dengan orang saleh"><span>B. Bergaul dengan orang saleh</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q10" value="C. Mencari rezeki yang halal"><span>C. Mencari rezeki yang halal</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q10" value="D. Memiliki sifat qana’ah"><span>D. Memiliki sifat qana’ah</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-n-q10" value="E. Istighfar"><span>E. Istighfar</span></label>
+            </fieldset>
+            <button type="button" class="btn primary btn-kirim-webgas" data-jenis="kuis">Kirim jawaban dari LKPD ini</button>
+            <p class="hyb-note">Jawabanmu dikirim <strong>dari LKPD ini</strong> dan dinilai otomatis — skormu tampil di bawah tombol sesudah terkirim. Pastikan Nama dan Nomor Absen sudah diisi di atas.</p>
+            <p class="form-cadangan">Kalau pengiriman dari sini gagal, isi lewat <a href="https://docs.google.com/forms/d/e/1FAIpQLScSda_5ZUhD9tT3zD9of0KkogWP_uUYm1Mh27iAdgZ5DqiPBA/viewform" target="_blank" rel="noopener">Google Form (cadangan)</a>.</p>
+          </div>
+          <div class="hyb-blok supian-only" data-hyb="kuis-supian">
+            <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+            <fieldset class="hyb-soal">
+              <legend>Apa itu perundungan?</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-s-q1" value="Mengejek dan mengucilkan teman"><span>Mengejek dan mengucilkan teman</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-s-q1" value="Menolong teman"><span>Menolong teman</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>Apa yang Andi lakukan waktu diejek teman?</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-s-q2" value="Bertahan dan fokus belajar"><span>Tetap belajar</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-s-q2" value="Membalas dengan kekerasan"><span>Membalas dengan memukul</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>Judi itu ada 3 hal: permainan, untung-untungan, dan...</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-s-q3" value="Taruhan"><span>Taruhan</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-s-q3" value="Hadiah"><span>Hadiah</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>Kalau diajak judi, katakan...</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-s-q4" value="Saya tidak ikut, itu judi."><span>Saya tidak ikut, itu judi.</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-s-q4" value="Saya ikut sebentar saja."><span>Saya ikut sebentar saja.</span></label>
+            </fieldset>
+            <fieldset class="hyb-soal">
+              <legend>Allah melarang judi karena...</legend>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-s-q5" value="Menimbulkan permusuhan dan melalaikan shalat"><span>Bikin bermusuhan dan lupa shalat</span></label>
+              <label class="hyb-opsi"><input type="radio" name="hyb-kuis-s-q5" value="Supaya kita kaya"><span>Supaya kita kaya</span></label>
+            </fieldset>
+            <button type="button" class="btn primary btn-kirim-webgas" data-jenis="kuis">Kirim jawaban</button>
+            <p class="hyb-note" id="hyb-note-kuis-s">Tekan tombol Kirim. Skormu muncul di bawah.</p>
+            <p class="form-cadangan">Kalau gagal, isi lewat <a href="https://docs.google.com/forms/d/e/1FAIpQLSfvNDx20oxb1j-oNE3NZH7mO4PFl1SwRIwfDtOStJTYK3CZ6Q/viewform" target="_blank" rel="noopener">Google Form</a>.</p>
+          </div>
+          <div class="skor-blok" id="skor-kuis" hidden role="status" aria-live="polite"></div>
+          <p class="form-note"><span id="form-note-kuis-1">Jawaban dikirim dari LKPD ini — kamu tetap di sini; musik tetap berbunyi.</span> <span class="normal-only-inline">Kerjakan sendiri, ya &mdash; ini cermin pemahamanmu hari ini.</span><span class="supian-only-inline">Kerjakan bersama guru.</span></p>
+        </div>
+      </section>
+
+      <!-- ================= 7. PENUTUP ================= -->
+      <section class="card" id="penutup" aria-labelledby="penutup-judul">
+        <div class="sec-head">
+          <div class="sec-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div>
+            <p class="fase" id="fase-penutup">Langkah 7 &middot; Refleksi Akhir &amp; Komitmen</p>
+            <h2 id="penutup-judul">Menutup dengan Hati</h2>
+          </div>
+        </div>
+
+        <label class="flabel" id="label-r3a" for="r3a">Apa yang kupelajari hari ini?</label>
+        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+        <textarea id="r3a" placeholder="Tulis pemahaman terpenting yang kamu bawa pulang…"></textarea>
+        <label class="flabel" id="label-r3b" for="r3b">Apa yang kurasakan?</label>
+        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+        <textarea id="r3b" placeholder="Perasaanmu setelah belajar tentang perundungan, perkelahian, dan perjudian…"></textarea>
+        <label class="flabel" id="label-r3c" for="r3c">Apa yang akan kulakukan mulai hari ini?</label>
+        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+        <textarea id="r3c" placeholder="Satu tindakan nyata dan spesifik yang akan kamu lakukan…"></textarea>
+
+        <h3 style="margin-top:26px;font-size:1.12rem" id="janji-judul">Janji Saya</h3>
+        <p class="lead" id="lead-janji">Baca baik-baik, resapi, lalu nyatakan janjimu dengan tombol di bawah.</p>
+        <div class="janji">
+          <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
+          <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C7 17.5 3 14.3 3 9.9A5 5 0 0 1 12 6a5 5 0 0 1 9 3.9c0 4.4-4 7.6-9 11.1z"/></svg><p id="janji-1"><strong>Anti perundungan.</strong> Saya tidak akan merundung siapa pun &mdash; dengan tangan, lisan, sikap, maupun lewat layar HP &mdash; dan saya akan membela teman yang dirundung dengan cara yang aman.</p></div>
+          <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h8"/><path d="M12 8v8"/><circle cx="12" cy="12" r="9"/></svg><p id="janji-2"><strong>Anti perkelahian.</strong> Saya akan menyelesaikan masalah dengan bicara dan musyawarah, mengendalikan emosi, dan melerai — bukan memanasi — bila melihat pertikaian.</p></div>
+          <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M9 9l6 6M15 9l-6 6"/></svg><p id="janji-3"><strong>Anti perjudian.</strong> Saya menjauhi segala bentuk judi, termasuk judi online, dan mengisi waktu saya dengan kegiatan yang bermanfaat dan halal.</p></div>
+        </div>
+        <div class="btnrow">
+          <button type="button" class="btn gold" id="btn-janji" aria-pressed="false">Saya Berjanji</button>
+        </div>
+        <p class="hint" id="janji-status" role="status" style="margin-top:10px;text-align:center"></p>
+
+        <h3 style="margin-top:26px;font-size:1.12rem" id="ringkasan-judul">Ringkasan Jawaban Saya</h3>
+        <p class="lead" id="lead-ringkasan">Tekan tombol ini untuk merangkum seluruh jawabanmu, lalu <strong>tunjukkan layar ini kepada gurumu</strong> sebagai bukti penyelesaian LKPD.</p>
+        <div class="btnrow two">
+          <button type="button" class="btn primary" id="btn-ringkasan">Tampilkan Ringkasan</button>
+          <button type="button" class="btn ghost" id="btn-unduh">Unduh Ringkasan (.txt)</button>
+          <button type="button" class="btn gold" id="btn-bagikan">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+            Bagikan Ringkasan ke Guru
+          </button>
+        </div>
+        <p class="share-hint" id="share-hint">Tekan <strong>Bagikan Ringkasan ke Guru</strong>, lalu pilih WhatsApp grup kelas atau WhatsApp gurumu untuk mengirim ringkasan lengkapmu. Jika menu bagikan tidak tersedia di HP-mu, ringkasan akan disalin otomatis — tinggal tempel ke grup WA kelas.</p>
+        <div id="summary" role="status"></div>
+      </section>
+
+      <footer>
+        <p id="footer-2">LKPD Digital Bab 3 &middot; PAI &amp; Budi Pekerti Kelas XI &middot; SMAN 4 Banjarmasin<br />
+        Materi berdasarkan Buku Siswa PAI Kemenag 2024, Bab 3 (hlm. 57&ndash;88) &middot; Model Problem-Based Learning + Jigsaw</p>
+      </footer>
+    </div>
+
+    <nav class="tabbar" aria-label="Navigasi langkah">
+      <a href="#identitas" data-step="identitas" aria-label="Langkah 1: Identitas"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></span><span class="tab-label">Identitas</span></a>
+      <a href="#diagnostik" data-step="diagnostik" aria-label="Langkah 2: Diagnostik"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5a5.5 5.5 0 1 1 2 4.2"/><path d="M12 17v4"/><circle cx="12" cy="11" r=".6" fill="currentColor"/></svg></span><span class="tab-label">Diagnostik</span></a>
+      <a href="#kasus" data-step="kasus" aria-label="Langkah 3: Kasus"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 1 2-2h13"/></svg></span><span class="tab-label">Kasus</span></a>
+      <a href="#ahli" data-step="ahli" aria-label="Langkah 4: Kelompok Ahli"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="10" r="2.6"/><path d="M3.5 20c.6-3.4 2.8-5 5.5-5s4.9 1.6 5.5 5"/><path d="M14.5 15.6c2.9-.3 5.3 1.2 6 4.4"/></svg></span><span class="tab-label">Ahli</span></a>
+      <a href="#kampanye" data-step="kampanye" aria-label="Langkah 5: Kampanye"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v3l4 1 2 5h2l-1.8-5.4L21 18V5L7 10H3z"/><path d="M17 8.5a4 4 0 0 1 0 6"/></svg></span><span class="tab-label">Kampanye</span></a>
+      <a href="#kuis" data-step="kuis" aria-label="Langkah 6: Kuis Akhir"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16l-2.3-1.6L14.4 20l-2.4-1.7L9.6 20l-2.3-1.6L5 20z"/><path d="M9 9l2 2 4-4"/></svg></span><span class="tab-label">Kuis</span></a>
+      <a href="#penutup" data-step="penutup" aria-label="Langkah 7: Refleksi dan Janji"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span class="tab-label">Refleksi</span></a>
+    </nav>
+
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+      (function(){
+        "use strict";
+        var $ = function(id){ return document.getElementById(id); };
+        var state = { group:"", ahliCode:"", ahliLabel:"", asal:"", absen:"", format:"", janji:false, supian:false };
+
+        function toast(msg){
+          var t = $("toast"); t.textContent = msg; t.classList.add("show");
+          setTimeout(function(){ t.classList.remove("show"); }, 2600);
+        }
+        function val(id){ var el = $(id); return el ? el.value.trim() : ""; }
+        function showTab(g){
+          ["A","B","C"].forEach(function(x){
+            $("panel-"+x).classList.toggle("show", x===g);
+            document.querySelectorAll(".tabs [data-tab]").forEach(function(b){
+              if(b.getAttribute("data-tab")===x) b.setAttribute("aria-selected", x===g ? "true":"false");
+            });
+          });
+        }
+
+        /* ---------- Pemetaan otomatis dari nomor absen ---------- */
+        var AHLI_MAP = [
+          { code:"A1", topic:"A", topik:"Perundungan", range:"Absen 1–6" },
+          { code:"A2", topic:"A", topik:"Perundungan", range:"Absen 7–12" },
+          { code:"B1", topic:"B", topik:"Perkelahian", range:"Absen 13–18" },
+          { code:"B2", topic:"B", topik:"Perkelahian", range:"Absen 19–24" },
+          { code:"C1", topic:"C", topik:"Perjudian", range:"Absen 25–30" },
+          { code:"C2", topic:"C", topik:"Perjudian", range:"Absen 31–36" }
+        ];
+        /* ---------- Jalur pendampingan diam-diam (absen 33) ---------- */
+        var SUPIAN_ABSEN = 33;
+        var supianRolePrev = null;
+        var SUPIAN_TEXT = {
+          "hero-judul": { text: "Tidak Mengejek Teman, Tidak Berkelahi, Tidak Berjudi" },
+          "hero-sub": { text: "Bab 3. Hari ini kita belajar dari masalah nyata di sekitar kita." },
+          "fase-tujuan": { text: "Pembuka" },
+          "tujuan-judul": { text: "Apa yang kita pelajari hari ini?" },
+          "identitas-judul": { text: "Nama Saya" },
+          "label-kelas": { text: "Kelas kamu" },
+          "label-absen": { text: "Nomor absen kamu" },
+          "nama": { ph: "Tulis namamu" },
+          "diag-form-judul": { text: "Soal Cek Awal" },
+          "ahli-judul": { text: "Tugas Kelompok" },
+          "kampanye-judul": { text: "Kampanye Sekolahku Aman" },
+          "refleksi2-judul": { text: "Solusi Terbaik" },
+          "kuis-form-judul": { text: "Soal Kuis Akhir" },
+          "penutup-judul": { text: "Refleksi dan Janji" },
+          "janji-judul": { text: "Janji" },
+          "ringkasan-judul": { text: "Jawaban Saya" },
+          "chip-durasi": { text: "2 jam pelajaran" },
+          "hero-note": { text: "Cara pakai: kerjakan dari atas ke bawah. Ikuti nomor langkah. Buka sekali saat ada sinyal. Sesudah terbuka, tetap bisa diisi walau sinyal hilang. Di akhir, tunjukkan Ringkasan Jawaban ke gurumu." },
+          "tujuan-lead": { text: "Hari ini kita belajar 3 hal. Satu: tidak mengejek teman. Dua: tidak berkelahi. Tiga: tidak berjudi." },
+          "alur-1": { text: "1. Memahami — baca kasus. Jadi ahli 1 topik." },
+          "alur-2": { text: "2. Mengaplikasi — pecahkan kasus. Buat kampanye \"Sekolahku Aman\"." },
+          "alur-3": { text: "3. Merefleksi — nilai solusi. Kerjakan kuis. Buat janji." },
+          "jeda": { text: "Tarik napas pelan. Niatkan belajar hari ini sebagai ibadah. Apa harapanmu hari ini?" },
+          "label-nama": { text: "Nama" },
+          "absen-error": { text: "Nomor absen 1 sampai 36. Cek lagi, ya." },
+          "hint-kelompok": { text: "Isi nomor absenmu saja. Kelompokmu langsung muncul." },
+          "kartu-head": { text: "Kelompok Saya" },
+          "label-kelompok-ahli": { text: "Kelompok Ahli" },
+          "label-kelompok-asal": { text: "Kelompok Asal" },
+          "mindful-kelompok": { text: "Kelompok Ahli: belajar 1 topik. Kelompok Asal: kembali dan saling mengajar." },
+          "fase-diag": { text: "Langkah 2 · Cek Awal" },
+          "diagnostik-judul": { text: "Cek Awal" },
+          "lead-diag": { text: "Jawabanmu langsung masuk ke HP guru." },
+          "fp-diag-1": { text: "Jawabanmu langsung masuk ke HP guru." },
+          "fp-diag-2": { text: "Sesudah tekan Kirim, lanjut Langkah 3." },
+          "hyb-note-diag-s": { text: "Tekan tombol Kirim. Skormu muncul di bawah." },
+          "form-note-diag": { text: "Sesudah kirim, lanjut Langkah 3." },
+          "fase-kasus": { text: "Langkah 3 · Baca Kasus" },
+          "kasus-judul": { text: "Kasus: Masalah Nyata" },
+          "fase-ahli": { text: "Langkah 4 · Kelompok Ahli" },
+          "lead-ahli": { text: "Kamu kelompok C2. Materimu: Perjudian (maisir). Baca kartu di bawah. Isi 3 kartu." },
+          "mindful-ahli": { text: "Selesai? Ceritakan ke temanmu: judi itu apa. Katakan kalimat penolakanmu." },
+          "fase-r1": { text: "Berhenti Sejenak" },
+          "refleksi1-judul": { text: "Berhenti Sejenak" },
+          "fase-kampanye": { text: "Langkah 5 · Kampanye" },
+          "kampanye-judul": { text: "Kampanye \"Sekolahku Aman\"" },
+          "lead-kampanye": { text: "Buat kampanye \"Sekolahku Aman\" sama-sama kelompokmu." },
+          "notice-kampanye": { text: "1 kelompok buat 1 poster atau 1 video. Bukan 1 orang 1 poster." },
+          "caption-poster": { text: "Contoh poster. Boleh ditiru." },
+          "mindful-kampanye": { text: "Ingat: 1 aksi kecil lebih baik dari slogan besar." },
+          "fase-r2": { text: "Refleksi 2 · Setelah Presentasi" },
+          "fase-kuis": { text: "Langkah 6 · Kuis Akhir" },
+          "kuis-judul": { text: "Kuis Akhir" },
+          "lead-kuis": { text: "Nilaimu langsung masuk ke HP guru." },
+          "fp-kuis-1": { text: "Nilaimu langsung terlihat. Guru langsung lihat." },
+          "fp-kuis-2": { text: "Sesudah tekan Kirim, lanjut Langkah 7." },
+          "hyb-note-kuis-s": { text: "Tekan tombol Kirim. Skormu muncul di bawah." },
+          "form-note-kuis-1": { text: "Sesudah kirim, lanjut Langkah 7." },
+          "fase-penutup": { text: "Langkah 7 · Refleksi & Janji" },
+          "lead-janji": { text: "Baca 3 janji ini. Lalu tekan tombol di bawah." },
+          "janji-1": { text: "Tidak mengejek teman. Saya tidak akan mengejek teman. Saya tidak akan memukul teman. Saya akan membela teman dengan cara yang aman." },
+          "janji-2": { text: "Tidak berkelahi. Saya tidak akan berkelahi. Kalau ada masalah, saya bicara baik-baik. Kalau ada yang berkelahi, saya lapor guru." },
+          "janji-3": { text: "Tidak berjudi. Saya tidak akan ikut judi. Saya tidak akan main judi online. Saya isi waktu dengan hal yang baik." },
+          "lead-ringkasan": { text: "Tekan tombol ini. Tunjukkan layar ini ke gurumu." },
+          "share-hint": { text: "Tekan Bagikan. Pilih WhatsApp gurumu. Kalau tidak bisa, ringkasan tersalin sendiri. Tempel ke grup WA kelas." },
+          "footer-2": { text: "Bab 3. Buku Siswa PAI 2024." },
+          "kasus-lead": { text: "Baca Kasus 1 dan Kasus 3." },
+          "label-analisis-kasus": { text: "Apa masalahnya? Tulis 1 kalimat." },
+          "hint-analisis-kasus": { text: "Pilih Kasus 3. Tulis 1 kalimat." },
+          "analisis-kasus": { ph: "Tulis 1 kalimat: apa masalahnya?" },
+          "label-r1a": { text: "Apa yang baru kamu pelajari?" },
+          "r1a": { ph: "Tulis 1 hal baru." },
+          "label-r1b": { text: "Apa yang kamu rasakan?" },
+          "r1b": { ph: "Tulis perasaanmu. 1 kalimat cukup." },
+          "label-r2a": { text: "Solusi terbaik hari ini?" },
+          "r2a": { ph: "Tulis 1 solusi." },
+          "label-r2b": { text: "Bisa dijalankan di sekolah? Kenapa?" },
+          "r2b": { ph: "Tulis jawabanmu. 1 kalimat cukup." },
+          "label-r3a": { text: "Apa yang kupelajari hari ini?" },
+          "r3a": { ph: "Tulis 1 hal yang kamu pelajari." },
+          "label-r3b": { text: "Apa yang kurasakan?" },
+          "r3b": { ph: "Tulis perasaanmu." },
+          "label-r3c": { text: "Apa yang akan kulakukan mulai hari ini?" },
+          "r3c": { ph: "Tulis 1 tindakan." }
+        };
+        var supianOriginals = {};
+        var supianSharedOriginals = null;
+        function swapSharedButtons(on){
+          var items = [];
+          document.querySelectorAll(".hyb-kirim").forEach(function(b){ items.push({ el: b, supian: "Buka Form" }); });
+          document.querySelectorAll(".checkpoint-link").forEach(function(a){
+            var card = a.closest ? a.closest(".checkpoint-card") : null;
+            var langkah = card ? (card.getAttribute("data-langkah") || "") : "";
+            var m = langkah.match(/Langkah (\d)/);
+            items.push({ el: a, supian: m ? ("Kirim: Langkah " + m[1] + " selesai") : a.textContent });
+          });
+          document.querySelectorAll(".checkpoint-tabnote").forEach(function(p){ items.push({ el: p, supian: "Form terbuka. Sesudah kirim, kembali ke sini." }); });
+          var unduh = $("btn-unduh");
+          if(unduh) items.push({ el: unduh, supian: "Unduh Ringkasan" });
+          if(on){
+            if(!supianSharedOriginals){
+              supianSharedOriginals = items.map(function(it){ return { el: it.el, text: it.el.textContent }; });
+            }
+            items.forEach(function(it){ it.el.textContent = it.supian; });
+          } else if(supianSharedOriginals){
+            supianSharedOriginals.forEach(function(o){ o.el.textContent = o.text; });
+          }
+        }
+        function setSupianMode(on){
+          document.body.classList.toggle("supian", !!on);
+          swapSharedButtons(!!on);
+          if(on){
+            Object.keys(SUPIAN_TEXT).forEach(function(id){
+              var el = $(id); if(!el) return;
+              if(!(id in supianOriginals)){
+                supianOriginals[id] = { text: el.textContent, ph: el.getAttribute("placeholder") };
+              }
+              if(SUPIAN_TEXT[id].text !== undefined) el.textContent = SUPIAN_TEXT[id].text;
+              if(SUPIAN_TEXT[id].ph !== undefined) el.setAttribute("placeholder", SUPIAN_TEXT[id].ph);
+            });
+            var peran = $("peran-saya");
+            if(peran && supianRolePrev === null){
+              supianRolePrev = peran.value;
+              peran.value = "Desainer poster/video";
+              if(window.syncPeranUI) window.syncPeranUI();
+            }
+          } else {
+            Object.keys(supianOriginals).forEach(function(id){
+              var el = $(id); if(!el) return;
+              var orig = supianOriginals[id];
+              if(orig.text !== undefined && el.textContent !== orig.text) el.textContent = orig.text;
+              if(orig.ph !== null && orig.ph !== undefined) el.setAttribute("placeholder", orig.ph);
+            });
+            var peran = $("peran-saya");
+            if(peran && supianRolePrev !== null){
+              if(peran.value === "Desainer poster/video") peran.value = supianRolePrev;
+              if(window.syncPeranUI) window.syncPeranUI();
+              supianRolePrev = null;
+            }
+          }
+        }
+
+        function applyAbsen(){
+          var raw = $("absen").value.trim();
+          var kartu = $("kartu-kelompok"), err = $("absen-error");
+          if(raw === ""){
+            kartu.classList.remove("show"); err.classList.remove("show");
+            state.group = ""; state.ahliCode = ""; state.ahliLabel = ""; state.asal = ""; state.absen = "";
+            state.supian = false; setSupianMode(false);
+            return;
+          }
+          var n = parseInt(raw, 10);
+          if(isNaN(n) || n < 1 || n > 36){
+            kartu.classList.remove("show"); err.classList.add("show");
+            state.group = ""; state.ahliCode = ""; state.ahliLabel = ""; state.asal = ""; state.absen = "";
+            state.supian = false; setSupianMode(false);
+            return;
+          }
+          err.classList.remove("show");
+          var ahli = AHLI_MAP[Math.ceil(n / 6) - 1];
+          var asalNum = ((n - 1) % 6) + 1;
+          var anggota = [];
+          for(var k = 0; k < 6; k++){ anggota.push(asalNum + (k * 6)); }
+          state.absen = n;
+          state.supian = (n === SUPIAN_ABSEN);
+          setSupianMode(state.supian);
+          state.group = ahli.topic;
+          state.ahliCode = ahli.code;
+          state.ahliLabel = ahli.code + " — " + ahli.topik;
+          state.asal = asalNum;
+          $("kk-absen").textContent = n;
+          $("kk-ahli").textContent = state.ahliLabel;
+          $("kk-ahli-sub").textContent = state.supian ? ("Materi " + ahli.topik + ". Sudah dibuka di Langkah 4.") : (ahli.range + " · 6 siswa · Materi " + ahli.topik + " di Langkah 4 sudah terbuka otomatis.");
+          $("kk-asal").textContent = "Kelompok Asal " + asalNum;
+          $("kk-asal-sub").textContent = state.supian ? ("Anggota: absen " + anggota.join(", ") + ".") : ("Anggota: absen " + anggota.join(", ") + " · 6 siswa, satu dari tiap Kelompok Ahli.");
+          kartu.classList.add("show");
+          showTab(ahli.topic);
+        }
+        $("absen").addEventListener("input", applyAbsen);
+        $("absen").addEventListener("change", function(){
+          if(state.ahliCode){
+            if(state.supian){
+              toast("Absen " + state.absen + ". Kamu kelompok " + state.ahliCode + ". Materimu sudah dibuka di Langkah 4.");
+            } else {
+              toast("Absen " + state.absen + ": Ahli " + state.ahliLabel + ", Kelompok Asal " + state.asal + ". Tab materimu sudah dibuka di Langkah 4.");
+            }
+          }
+        });
+        document.querySelectorAll(".tabs [data-tab]").forEach(function(btn){
+          btn.addEventListener("click", function(){ showTab(btn.getAttribute("data-tab")); });
+        });
+
+        /* ---------- Pilihan format kampanye ---------- */
+        document.querySelectorAll("[data-format]").forEach(function(btn){
+          btn.addEventListener("click", function(){
+            state.format = btn.getAttribute("data-format");
+            document.querySelectorAll("[data-format]").forEach(function(b){
+              b.setAttribute("aria-pressed", b===btn ? "true":"false");
+            });
+          });
+        });
+
+        /* ---------- Musik latar (file audio asli, satu elemen <audio> di header) ----------
+           Toggle tunggal di header persisten. Keadaan awal NYALA; musik mulai berbunyi pada
+           interaksi pertama pengguna (aturan peramban melarang autoplay bersuara), lalu terus
+           berbunyi sampai dimatikan lewat toggle — tidak ada berhenti otomatis. */
+        var musicAudio = $("musik-latar");
+        var musicBtn = $("btn-musik-header");
+        var musicLabel = $("musik-label");
+        var musicOn = true;
+        var musicStarted = false;
+        if(musicAudio){ musicAudio.volume = 0.55; /* cukup jelas di speaker HP, tidak mengagetkan */ }
+        function updateMusicButton(){
+          if(!musicBtn) return;
+          musicBtn.setAttribute("aria-pressed", musicOn ? "true" : "false");
+          musicBtn.classList.toggle("off", !musicOn);
+          if(musicLabel) musicLabel.textContent = musicOn ? "Musik: Hidup" : "Musik: Mati";
+        }
+        if(musicAudio && musicBtn){
+          musicAudio.addEventListener("playing", function(){ musicStarted = true; musicBtn.classList.add("playing"); });
+          musicAudio.addEventListener("pause", function(){ musicBtn.classList.remove("playing"); });
+        }
+        updateMusicButton();
+        function cobaPutarAwal(){
+          if(!musicAudio || !musicOn || !musicAudio.paused) return;
+          var p = musicAudio.play();
+          if(p && p.catch){
+            p.catch(function(){ /* gagal mulai — biarkan tetap Hidup supaya ketukan berikutnya mencoba lagi */ });
+          }
+        }
+        document.addEventListener("pointerdown", function awalMusik(ev){
+          if(musicBtn && ev.target && musicBtn.contains(ev.target)) return;
+          document.removeEventListener("pointerdown", awalMusik);
+          cobaPutarAwal();
+        });
+        if(musicBtn){
+          musicBtn.addEventListener("click", function(){
+            if(!musicAudio){ toast("Musik latar tidak bisa dimulai di browser ini."); return; }
+            if(musicOn && !musicStarted && musicAudio.paused){
+              var p0 = musicAudio.play();
+              if(p0 && p0.catch){
+                p0.catch(function(){ toast("Musik latar tidak bisa dimulai di browser ini."); });
+              }
+              toast(state.supian ? "Musik hidup." : "Musik latar hidup. Matikan kapan saja dengan tombol musik di atas.");
+              return;
+            }
+            if(musicOn){
+              musicAudio.pause();
+              musicOn = false;
+              updateMusicButton();
+            } else {
+              musicOn = true;
+              updateMusicButton();
+              var p = musicAudio.play();
+              if(p && p.catch){
+                p.catch(function(){ musicOn = false; updateMusicButton(); toast("Musik latar tidak bisa dimulai di browser ini."); });
+              }
+              toast(state.supian ? "Musik hidup. Matikan dengan tombol musik di atas." : "Musik latar hidup. Matikan kapan saja dengan tombol musik di atas.");
+            }
+          });
+        }
+
+        /* ---------- Janji ---------- */
+        $("btn-janji").addEventListener("click", function(){
+          state.janji = !state.janji;
+          this.setAttribute("aria-pressed", state.janji ? "true":"false");
+          this.textContent = state.janji ? "Janji Tercatat — Barakallahu fiik" : "Saya Berjanji";
+          $("janji-status").textContent = state.janji ?
+            (state.supian ? "Janjimu sudah tercatat. Semoga Allah membantumu." : "Janjimu sudah tercatat di halaman ini. Semoga Allah meneguhkan langkahmu menjalankannya.") : "";
+        });
+
+        /* ---------- Ringkasan ---------- */
+        var ahliLabels = {
+          A:["Pengertian perundungan","Jenis & contoh di sekolah","Penyebab (pelaku/korban/penonton)","Dampak","Cara mengatasi & mencegah","Pesan QS. al-Hujuraat 49:11"],
+          B:["Pengertian perkelahian/tawuran","Faktor penyebab & yang paling utama","Cara mencegah","Cara menangani","Pesan QS. al-Hujuraat 49:10","Makna QS. al-Anbiyaa' 21:107"],
+          C:["Pengertian maisir","Unsur perjudian pada judi online","Dampak perjudian","Cara menghindari","Hikmah larangan","Pesan QS. al-Maa'idah 5:90-91"]
+        };
+        function buildSummary(){
+          var lines = [];
+          lines.push({k:"Nama", v: val("nama") || "(belum diisi)"});
+          lines.push({k:"Kelas", v: val("kelas") || "(belum diisi)"});
+          lines.push({k:"Nomor Absen", v: state.absen ? String(state.absen) : "(belum diisi)"});
+          lines.push({k:"Kelompok Ahli", v: state.ahliLabel ? state.ahliLabel : "(belum ditentukan — isi nomor absen)"});
+          lines.push({k:"Kelompok Asal", v: state.asal ? "Kelompok Asal " + state.asal : "(belum ditentukan — isi nomor absen)"});
+          lines.push({k: state.supian ? "Nilai Diagnostik & Kuis" : "Skor Diagnostik & Kuis Akhir", v: state.supian ? "Nilai ada di Form. Guru langsung lihat." : "Skor diagnostik dan kuis akhir: lihat di Form (tercatat live di pantauan guru)"});
+          lines.push({k: state.supian ? "Analisis Kasus" : "Analisis Awal Kasus", v: val("analisis-kasus") || "(belum diisi)"});
+          if(state.supian){
+            lines.push({k:"Kartu 1 — Kasus (perbuatan ini termasuk apa?)", v: val("supian-k1") || "(belum diisi)"});
+            lines.push({k:"Kartu 2 — Dalil (arti maisir)", v: val("supian-k2") || "(belum diisi)"});
+            lines.push({k:"Kartu 3 — Solusi (kalimat penolakan)", v: val("supian-k3") || "(belum diisi)"});
+          } else if(state.group && ahliLabels[state.group]){
+            ahliLabels[state.group].forEach(function(label, i){
+              var el = document.querySelector('[data-ahli="' + state.group + (i+1) + '"]');
+              lines.push({k:"Ahli " + state.group + " — " + label, v: (el && el.value.trim()) || "(belum diisi)"});
+            });
+          }
+          lines.push({k: state.supian ? "Hal baru yang kupelajari" : "Refleksi 1 — Hal baru yang kupahami", v: val("r1a") || "(belum diisi)"});
+          lines.push({k: state.supian ? "Perasaanku" : "Refleksi 1 — Perasaanku", v: val("r1b") || "(belum diisi)"});
+          lines.push({k: state.supian ? "Kampanye" : "Kampanye — Produk", v: "Satu produk per Kelompok Asal" + (state.asal ? " " + state.asal : "")});
+          lines.push({k: state.supian ? "Peranku" : "Kampanye — Peran Saya", v: val("peran-saya") || "(belum dipilih)"});
+          if(!state.supian){
+            lines.push({k:"Kampanye — Pembagian Peran", v: ["Ketua: " + (val("peran-ketua") || "-"), "Penulis naskah: " + (val("peran-penulis") || "-"), "Desainer poster/video: " + (val("peran-desainer") || "-"), "Presenter: " + (val("peran-presenter") || "-"), "Pencatat tanggapan: " + (val("peran-pencatat") || "-")].join(" | ")});
+            lines.push({k:"Kampanye — Judul", v: val("kamp-judul") || "(belum diisi)"});
+            lines.push({k:"Kampanye — Slogan", v: val("kamp-slogan") || "(belum diisi)"});
+            lines.push({k:"Kampanye — Format", v: state.format || "(belum dipilih)"});
+            lines.push({k:"Kampanye — 3 Aksi Nyata", v: [val("aksi1"), val("aksi2"), val("aksi3")].filter(Boolean).join(" | ") || "(belum diisi)"});
+            lines.push({k:"Presentasi — Sebelum (poin & presenter)", v: val("presentasi-sebelum") || "(belum diisi)"});
+            lines.push({k:"Presentasi — Sesudah (tanggapan & pertanyaan kelompok lain)", v: val("presentasi-sesudah") || "(belum diisi)"});
+          }
+          lines.push({k: state.supian ? "Solusi terbaik" : "Refleksi 2 — Solusi terbaik", v: val("r2a") || "(belum diisi)"});
+          lines.push({k: state.supian ? "Bisa dijalankan di sekolah?" : "Refleksi 2 — Bisa diterapkan?", v: val("r2b") || "(belum diisi)"});
+          lines.push({k: state.supian ? "Yang kupelajari" : "Refleksi Akhir — Yang kupelajari", v: val("r3a") || "(belum diisi)"});
+          lines.push({k: state.supian ? "Yang kurasakan" : "Refleksi Akhir — Yang kurasakan", v: val("r3b") || "(belum diisi)"});
+          lines.push({k: state.supian ? "Yang akan kulakukan" : "Refleksi Akhir — Yang akan kulakukan", v: val("r3c") || "(belum diisi)"});
+          lines.push({k: state.supian ? "Janji" : "Komitmen", v: state.supian ? (state.janji ? "Sudah berjanji: tidak mengejek teman, tidak berkelahi, tidak berjudi." : "(belum menyatakan janji)") : (state.janji ? "Sudah menyatakan janji anti perundungan, anti perkelahian, dan anti perjudian." : "(belum menyatakan janji)")});
+          return lines;
+        }
+        $("btn-ringkasan").addEventListener("click", function(){
+          var box = $("summary");
+          var html = "<h3>" + (state.supian ? "Jawaban Saya — Tunjukkan ke Guru" : "Ringkasan Jawaban — Tunjukkan kepada Gurumu") + "</h3><dl>";
+          buildSummary().forEach(function(item){
+            html += "<dt>" + item.k + "</dt><dd>" + item.v.replace(/</g,"&lt;") + "</dd>";
+          });
+          html += "</dl>";
+          box.innerHTML = html;
+          box.classList.add("show");
+          box.scrollIntoView({ behavior:"smooth", block:"start" });
+          toast(state.supian ? "Selesai. Tunjukkan layar ini ke gurumu." : "Ringkasan dibuat. Tunjukkan layar ini kepada gurumu.");
+        });
+        $("btn-unduh").addEventListener("click", function(){
+          var text = "RINGKASAN LKPD DIGITAL BAB 3\nManfaat Menghindari Penyakit Sosial — Kelas XI SMAN 4 Banjarmasin\nSelasa, 10 November 2026\n==============================\n\n";
+          buildSummary().forEach(function(item){ text += item.k + ":\n" + item.v + "\n\n"; });
+          var blob = new Blob([text], { type:"text/plain;charset=utf-8" });
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "ringkasan-lkpd-bab3-" + (val("nama").replace(/\s+/g,"-").toLowerCase() || "siswa") + ".txt";
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1500);
+        });
+
+        /* ---------- Bagikan Ringkasan ke Guru (Web Share / salin) ---------- */
+        function buildShareText(){
+          var text = "RINGKASAN LKPD DIGITAL BAB 3\nManfaat Menghindari Penyakit Sosial — Kelas XI SMAN 4 Banjarmasin\nSelasa, 10 November 2026\n==============================\n\n";
+          buildSummary().forEach(function(item){ text += item.k + ":\n" + item.v + "\n\n"; });
+          return text.replace(/\s+$/, "") + "\n";
+        }
+        function copyShareTextFallback(text){
+          function done(){ toast("Ringkasan disalin, tempel ke grup WA kelas"); }
+          function fail(){ toast(state.supian ? "Ringkasan belum bisa disalin. Tekan Tampilkan Ringkasan. Tunjukkan layar ini ke gurumu." : "Ringkasan belum bisa disalin. Tekan Tampilkan Ringkasan lalu tunjukkan layar ini kepada gurumu."); }
+          if(navigator.clipboard && navigator.clipboard.writeText){
+            navigator.clipboard.writeText(text).then(done, function(){
+              fallbackCopy(text) ? done() : fail();
+            });
+          } else {
+            fallbackCopy(text) ? done() : fail();
+          }
+        }
+        function fallbackCopy(text){
+          try{
+            var ta = document.createElement("textarea");
+            ta.value = text;
+            ta.setAttribute("readonly", "");
+            ta.style.position = "fixed"; ta.style.top = "0"; ta.style.left = "0"; ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.focus(); ta.select();
+            var ok = document.execCommand("copy");
+            ta.remove();
+            return !!ok;
+          }catch(e){ return false; }
+        }
+        $("btn-bagikan").addEventListener("click", function(){
+          var text = buildShareText();
+          if(navigator.share){
+            var shareData = { title:"Ringkasan LKPD Digital Bab 3", text:text };
+            var can = true;
+            if(navigator.canShare){
+              try{ can = navigator.canShare(shareData); }catch(e){ can = true; }
+            }
+            if(can){
+              navigator.share(shareData).then(function(){
+                toast("Ringkasan dibagikan. Terima kasih!");
+              }).catch(function(err){
+                if(err && err.name === "AbortError") return;
+                copyShareTextFallback(text);
+              });
+              return;
+            }
+          }
+          copyShareTextFallback(text);
+        });
+        /* ---------- WEBGAS: kirim jawaban dari LKPD, skor dibaca dari Sheet ----------
+         * Siswa menjawab soal inline di LKPD; jawaban (huruf saja) dikirim ke
+         * Google Apps Script yang menilai di sisi server (kunci TIDAK ada di
+         * sini) dan menulis ke Sheet Rekap. Sesudah terkirim, skor dibaca
+         * kembali dari Sheet (gviz JSON) dan ditampilkan di LKPD.
+         * Bila pengiriman gagal / skor dari Sheet belum terbaca: tampilkan
+         * pesan jujur + tautan Google Form cadangan (jangan sembunyikan). */
+        var WEBGAS_URL = "https://script.google.com/macros/s/AKfycbxAuryAVcyomWq-ajLIJmqOD-kaNnIA1qfF2QaGNKDU1FllDRxXFIs40bD8WAOTz7_jkw/exec";
+        var SHEET_ID_WEBGAS = "1GqWo9BO6pxCoChxdXsdoUh_8CzsvcIbfER7fHmFlz04";
+        /* Urutan opsi versi Supian (tanpa awalan huruf) — untuk memetakan
+         * nilai pilihan ke huruf (pilihan ke-1 = A, ke-2 = B). Sama persis
+         * dengan yang dipakai sync-rekap.py. Ini BUKAN kunci jawaban. */
+        var SUPIAN_OPSI = {
+          diagnostik: [
+            ["Baik", "Tidak baik"],
+            ["Melerai dengan aman dan melapor ke guru", "Ikut menonton dan merekam"],
+            ["Permainan untung-untungan yang memakai taruhan", "Permainan yang pasti menang"]
+          ],
+          kuis: [
+            ["Mengejek dan mengucilkan teman", "Menolong teman"],
+            ["Bertahan dan fokus belajar", "Membalas dengan kekerasan"],
+            ["Taruhan", "Hadiah"],
+            ["Saya tidak ikut, itu judi.", "Saya ikut sebentar saja."],
+            ["Menimbulkan permusuhan dan melalaikan shalat", "Supaya kita kaya"]
+          ]
+        };
+        function kumpulkanJawaban(jenis){
+          var supian = !!state.supian;
+          var prefix = "hyb-" + (jenis === "diagnostik" ? "diag" : "kuis") + "-" + (supian ? "s" : "n") + "-q";
+          var jumlah = (jenis === "diagnostik") ? 3 : (supian ? 5 : 10);
+          var jawaban = [];
+          for(var i = 1; i <= jumlah; i++){
+            var radios = document.getElementsByName(prefix + i);
+            var pilih = null;
+            for(var r = 0; r < radios.length; r++){ if(radios[r].checked){ pilih = radios[r].value; break; } }
+            if(pilih === null) return { ok:false, kurang:i };
+            var huruf;
+            if(supian){
+              var idx = SUPIAN_OPSI[jenis][i - 1].indexOf(pilih);
+              if(idx < 0) return { ok:false, kurang:i };
+              huruf = String.fromCharCode(65 + idx);
+            } else {
+              huruf = pilih.charAt(0);
+              if("ABCDE".indexOf(huruf) < 0) return { ok:false, kurang:i };
+            }
+            jawaban.push(huruf);
+          }
+          return { ok:true, jawaban:jawaban };
+        }
+        function isiSkorBox(jenis, html, gagal){
+          var box = $(jenis === "diagnostik" ? "skor-diag" : "skor-kuis");
+          if(!box) return;
+          box.innerHTML = html;
+          box.classList.toggle("skor-gagal", !!gagal);
+          box.hidden = false;
+          box.scrollIntoView({ behavior:"smooth", block:"nearest" });
+        }
+        function tautanFormCadangan(jenis){
+          var url = jenis === "diagnostik"
+            ? (state.supian
+              ? "https://docs.google.com/forms/d/e/1FAIpQLSf9YYnTwOYfpW0tHH_j5-pYCEfRDjEfsWaGNMB7bBJh99UgDA/viewform"
+              : "https://docs.google.com/forms/d/e/1FAIpQLSdCWwLHGMG6jJhUcTncy4YO7ulbGEnU_y1DjJMYF1jmXvbCSg/viewform")
+            : (state.supian
+              ? "https://docs.google.com/forms/d/e/1FAIpQLSfvNDx20oxb1j-oNE3NZH7mO4PFl1SwRIwfDtOStJTYK3CZ6Q/viewform"
+              : "https://docs.google.com/forms/d/e/1FAIpQLScSda_5ZUhD9tT3zD9of0KkogWP_uUYm1Mh27iAdgZ5DqiPBA/viewform");
+          return '<a href="' + url + '" target="_blank" rel="noopener">Google Form (cadangan)</a>';
+        }
+        function tampilkanSkor(jenis, skor, maks, benar, jumlahSoal, dariSheet){
+          var supian = !!state.supian;
+          var html;
+          if(supian){
+            html = '<p class="skor-judul">Nilaimu sudah masuk.</p>'
+              + '<p><span class="skor-angka">' + skor + '</span> dari ' + maks + '</p>'
+              + '<p>Benar ' + benar + ' dari ' + jumlahSoal + ' soal.'
+              + (dariSheet ? ' Sudah tercatat.' : ' (Skor dari server; Sheet sedang diperbarui.)') + '</p>';
+          } else {
+            html = '<p class="skor-judul">Skormu sudah masuk ke pantauan guru.</p>'
+              + '<p><span class="skor-angka">' + skor + '</span> dari ' + maks + '</p>'
+              + '<p>Benar ' + benar + ' dari ' + jumlahSoal + ' soal.'
+              + (dariSheet ? ' Skor ini dibaca dari Sheet Rekap.' : ' (Skor dari server; pembacaan Sheet belum berhasil, tapi jawabanmu sudah tersimpan.)') + '</p>';
+          }
+          isiSkorBox(jenis, html, false);
+        }
+        function tampilkanGagal(jenis, pesan){
+          var supian = !!state.supian;
+          var html;
+          if(supian){
+            html = '<p class="skor-judul">Jawaban belum terkirim.</p>'
+              + '<p>' + pesan + '</p>'
+              + '<p>Isi lewat ' + tautanFormCadangan(jenis) + '.</p>';
+          } else {
+            html = '<p class="skor-judul">Jawaban belum terkirim.</p>'
+              + '<p>' + pesan + '</p>'
+              + '<p>Silakan isi lewat ' + tautanFormCadangan(jenis) + ' — jawabanmu tetap tercatat di sana.</p>';
+          }
+          isiSkorBox(jenis, html, true);
+        }
+        function selGviz(c){
+          if(!c) return "";
+          if(typeof c.v !== "undefined" && c.v !== null) return String(c.v);
+          return "";
+        }
+        function bacaSkorDariSheet(jenis, nama, absen, cb){
+          var tab = jenis === "diagnostik" ? "Diagnostik" : "Kuis Akhir";
+          var url = "https://docs.google.com/spreadsheets/d/" + SHEET_ID_WEBGAS
+            + "/gviz/tq?tqx=out:json&sheet=" + encodeURIComponent(tab);
+          var idSkrip = "gviz-skor-" + Date.now();
+          var selesai = false;
+          var timer = null;
+          var googleLama = window.google;
+          function done(hasil){
+            if(selesai) return;
+            selesai = true;
+            if(timer) clearTimeout(timer);
+            var s = document.getElementById(idSkrip);
+            if(s && s.parentNode) s.parentNode.removeChild(s);
+            if(googleLama === undefined){ try{ delete window.google; }catch(e){} }
+            else { window.google = googleLama; }
+            cb(hasil);
+          }
+          window.google = window.google || {};
+          window.google.visualization = window.google.visualization || {};
+          window.google.visualization.Query = window.google.visualization.Query || {};
+          window.google.visualization.Query.setResponse = function(resp){
+            try{
+              var rows = (resp && resp.table && resp.table.rows) || [];
+              var terbaik = null;
+              for(var i = 0; i < rows.length; i++){
+                var c = rows[i].c || [];
+                var w = selGviz(c[0]);
+                var nm = selGviz(c[1]);
+                var ab = selGviz(c[2]);
+                var sk = selGviz(c[3]);
+                if(!nm || !ab || sk === "") continue;
+                if(nm.trim().toLowerCase() !== nama.trim().toLowerCase()) continue;
+                if(String(parseInt(ab, 10)) !== String(absen)) continue;
+                var benar = 0, jumlah = 0;
+                for(var k = 4; k + 1 < c.length; k += 2){
+                  var b = selGviz(c[k + 1]);
+                  if(b === "") continue;
+                  jumlah++;
+                  if(b === "Benar") benar++;
+                }
+                if(!terbaik || w >= terbaik.waktu){
+                  terbaik = { waktu:w, skor:parseInt(sk, 10), benar:benar, jumlahSoal:jumlah };
+                }
+              }
+              done(terbaik);
+            }catch(err){ done(null); }
+          };
+          var s = document.createElement("script");
+          s.id = idSkrip;
+          s.src = url;
+          s.onerror = function(){ done(null); };
+          document.head.appendChild(s);
+          timer = setTimeout(function(){ done(null); }, 12000);
+        }
+        function postWebgas(payload){
+          return fetch(WEBGAS_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload)
+          }).then(function(res){
+            if(!res.ok) throw new Error("HTTP " + res.status);
+            return res.json();
+          });
+        }
+        function kirimNilai(jenis){
+          var nama = val("nama");
+          var absenRaw = val("absen");
+          var absen = parseInt(absenRaw, 10);
+          var btns = document.querySelectorAll('.btn-kirim-webgas[data-jenis="' + jenis + '"]');
+          function setTombol(aktif, teks){
+            btns.forEach(function(b){
+              b.disabled = !aktif;
+              if(teks !== null) b.textContent = teks;
+            });
+          }
+          if(WEBGAS_URL.indexOf("PASTE_URL_DISINI") !== -1){
+            tampilkanGagal(jenis, state.supian
+              ? "Aplikasi penilaian belum dipasang guru. Isi lewat Form."
+              : "Aplikasi penilaian belum dipasang (URL WebGAS belum diisi). Isi lewat Form cadangan di bawah.");
+            return;
+          }
+          if(!nama){
+            toast(state.supian ? "Tulis namamu dulu di atas." : "Isi dulu Nama lengkapmu di atas.");
+            var elNama = $("nama"); if(elNama) elNama.focus();
+            return;
+          }
+          if(isNaN(absen) || absen < 1 || absen > 36){
+            var err = $("absen-error"); if(err) err.style.display = "block";
+            toast(state.supian ? "Nomor absen 1 sampai 36." : "Nomor absen harus angka 1 sampai 36.");
+            var elAbsen = $("absen"); if(elAbsen) elAbsen.focus();
+            return;
+          }
+          var kumpul = kumpulkanJawaban(jenis);
+          if(!kumpul.ok){
+            toast(state.supian
+              ? ("Soal nomor " + kumpul.kurang + " belum dijawab.")
+              : ("Soal nomor " + kumpul.kurang + " belum dijawab. Cek lagi, ya."));
+            return;
+          }
+          var teksAsal = btns.length ? btns[0].textContent : "";
+          setTombol(false, "Mengirim...");
+          var payload = { nama:nama, absen:absen, jenis:jenis, jawaban:kumpul.jawaban };
+          postWebgas(payload).then(function(hasil){
+            if(hasil && hasil.ok){
+              bacaSkorDariSheet(jenis, nama, absen, function(dariSheet){
+                if(dariSheet){
+                  tampilkanSkor(jenis, dariSheet.skor, hasil.maks, dariSheet.benar, dariSheet.jumlahSoal || hasil.jumlahSoal, true);
+                } else {
+                  tampilkanSkor(jenis, hasil.skor, hasil.maks, hasil.benar, hasil.jumlahSoal, false);
+                }
+                setTombol(true, teksAsal);
+              });
+            } else {
+              setTombol(true, teksAsal);
+              tampilkanGagal(jenis, (hasil && hasil.error) ? hasil.error : "Server menolak kiriman.");
+            }
+          }).catch(function(){
+            fetch(WEBGAS_URL, {
+              method: "POST", mode: "no-cors",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: JSON.stringify(payload)
+            }).catch(function(){});
+            var percobaan = 0;
+            (function tungguSheet(){
+              percobaan++;
+              bacaSkorDariSheet(jenis, nama, absen, function(dariSheet){
+                if(dariSheet){
+                  var poin = jenis === "diagnostik" ? 1 : (state.supian ? 20 : 10);
+                  tampilkanSkor(jenis, dariSheet.skor, dariSheet.jumlahSoal * poin, dariSheet.benar, dariSheet.jumlahSoal, true);
+                  setTombol(true, teksAsal);
+                } else if(percobaan < 3){
+                  setTimeout(tungguSheet, 2500);
+                } else {
+                  setTombol(true, teksAsal);
+                  tampilkanGagal(jenis, state.supian
+                    ? "Jaringan lambat. Cek ke guru, atau isi lewat Form."
+                    : "Jawabanmu mungkin sudah terkirim, tapi skor dari Sheet belum bisa dibaca. Tanyakan ke guru, atau isi lewat Form cadangan di bawah bila perlu.");
+                }
+              });
+            })();
+          });
+        }
+        document.querySelectorAll(".btn-kirim-webgas").forEach(function(b){
+          b.addEventListener("click", function(){
+            kirimNilai(b.getAttribute("data-jenis"));
+          });
+        });
+      })();
+    </script>
+    <script>
+      /* ---------- Cangkang aplikasi: appbar + tabbar + scroll-spy + spotlight ---------- */
+      (function(){
+        "use strict";
+        var STEP_IDS = ["identitas","diagnostik","kasus","ahli","kampanye","kuis","penutup"];
+        var STEP_NAMES = {
+          identitas:"Langkah 1 \u00b7 Identitas",
+          diagnostik:"Langkah 2 \u00b7 Diagnostik",
+          kasus:"Langkah 3 \u00b7 Kasus",
+          ahli:"Langkah 4 \u00b7 Kelompok Ahli",
+          kampanye:"Langkah 5 \u00b7 Kampanye",
+          kuis:"Langkah 6 \u00b7 Kuis Akhir",
+          penutup:"Langkah 7 \u00b7 Refleksi & Janji"
+        };
+        var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var appbarStep = document.getElementById("appbar-step");
+        var appbarCount = document.getElementById("appbar-count");
+        var progressFill = document.getElementById("appbar-progress-fill");
+        var tabs = Array.prototype.slice.call(document.querySelectorAll(".tabbar a[data-step]"));
+        function setActive(id){
+          var idx = STEP_IDS.indexOf(id);
+          tabs.forEach(function(a, i){
+            var isCurrent = a.getAttribute("data-step") === id;
+            if(isCurrent){ a.setAttribute("aria-current","true"); } else { a.removeAttribute("aria-current"); }
+            if(idx >= 0 && i <= idx){ a.classList.add("done"); }
+          });
+          if(appbarStep){ appbarStep.textContent = idx >= 0 ? STEP_NAMES[id] : "Pembuka \u00b7 Tujuan"; }
+          if(appbarCount){ appbarCount.textContent = idx >= 0 ? (idx + 1) + " / 7" : "Mulai"; }
+          if(progressFill){ progressFill.style.width = (idx >= 0 ? ((idx + 1) / STEP_IDS.length * 100) : 4) + "%"; }
+        }
+        function spotlight(id){
+          var el = document.getElementById(id);
+          if(!el) return;
+          el.classList.remove("spotlight");
+          void el.offsetWidth;
+          el.classList.add("spotlight");
+          setTimeout(function(){ el.classList.remove("spotlight"); }, 1600);
+        }
+        function goTo(id){
+          var el = document.getElementById(id);
+          if(!el) return;
+          el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+          setActive(id);
+          setTimeout(function(){ spotlight(id); }, reduceMotion ? 0 : 350);
+        }
+        tabs.forEach(function(a){
+          a.addEventListener("click", function(ev){
+            ev.preventDefault();
+            goTo(a.getAttribute("data-step"));
+          });
+        });
+        var sections = STEP_IDS.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+        var tujuan = document.getElementById("tujuan");
+        if(tujuan){ sections.unshift(tujuan); }
+        function reveal(el){
+          if(el && !el.classList.contains("arrive")){ el.classList.add("arrive"); }
+        }
+        if("IntersectionObserver" in window){
+          var spy = new IntersectionObserver(function(entries){
+            entries.forEach(function(en){
+              if(!en.isIntersecting) return;
+              reveal(en.target);
+              var id = en.target.id;
+              if(id === "tujuan"){ setActive(""); }
+              else if(STEP_IDS.indexOf(id) >= 0){ setActive(id); }
+            });
+          }, { rootMargin: "-40% 0px -55% 0px", threshold: 0 });
+          sections.forEach(function(s){ spy.observe(s); });
+        } else {
+          sections.forEach(reveal);
+        }
+        setActive("");
+      })();
+    </script>
+
+    <script>
+      /* ---------- DROPDOWN CUSTOM PEMILIH PERAN (cermin <select id="peran-saya">) ---------- */
+      (function(){
+        var ROLES = {
+          "Ketua":                    { ico: "👑", sub: "Memimpin & bagi tugas" },
+          "Penulis naskah":           { ico: "✍️", sub: "Menulis pesan & slogan" },
+          "Desainer poster/video":    { ico: "🎨", sub: "Membuat poster / video" },
+          "Presenter":                { ico: "🎤", sub: "Menyampaikan hasil" },
+          "Pencatat tanggapan":       { ico: "📝", sub: "Mencatat tanggapan" }
+        };
+        var PLACEHOLDER = { ico: "🎭", label: "— Pilih peranmu —", sub: "Ketuk untuk memilih peranmu" };
+        var dd = document.getElementById("peran-dd");
+        var native = document.getElementById("peran-saya");
+        var trigger = document.getElementById("peran-trigger");
+        var list = document.getElementById("peran-list");
+        if(!dd || !native || !trigger || !list) return;
+        var icoEl = document.getElementById("peran-trigger-ico");
+        var labelEl = document.getElementById("peran-trigger-label");
+        var subEl = document.getElementById("peran-trigger-sub");
+        var options = Array.prototype.slice.call(list.querySelectorAll('[role="option"]'));
+        function syncPeranUI(){
+          var v = native.value;
+          var r = ROLES[v];
+          if(r){
+            icoEl.textContent = r.ico; labelEl.textContent = v; subEl.textContent = r.sub;
+            trigger.classList.add("has-value");
+          } else {
+            icoEl.textContent = PLACEHOLDER.ico; labelEl.textContent = PLACEHOLDER.label; subEl.textContent = PLACEHOLDER.sub;
+            trigger.classList.remove("has-value");
+          }
+          options.forEach(function(o){ o.setAttribute("aria-selected", o.getAttribute("data-value") === v ? "true" : "false"); });
+        }
+        window.syncPeranUI = syncPeranUI;
+        function isOpen(){ return dd.classList.contains("open"); }
+        function openDropdown(focusSelected){
+          syncPeranUI();
+          var rect = trigger.getBoundingClientRect();
+          dd.classList.toggle("open-up", rect.bottom + 340 > window.innerHeight);
+          list.hidden = false;
+          dd.classList.add("open");
+          trigger.setAttribute("aria-expanded", "true");
+          if(focusSelected){
+            var sel = list.querySelector('[aria-selected="true"]');
+            (sel || options[0]).focus();
+          }
+        }
+        function closeDropdown(refocusTrigger){
+          dd.classList.remove("open"); list.hidden = true;
+          trigger.setAttribute("aria-expanded", "false");
+          if(refocusTrigger) trigger.focus();
+        }
+        function setPeran(value, keepOpen){
+          native.value = value;
+          syncPeranUI();
+          native.dispatchEvent(new Event("change", { bubbles: true }));
+          if(!keepOpen) closeDropdown(true);
+        }
+        trigger.addEventListener("click", function(){
+          if(isOpen()) closeDropdown(false); else openDropdown(false);
+        });
+        trigger.addEventListener("keydown", function(ev){
+          if(ev.key === "ArrowDown" || ev.key === "Enter" || ev.key === " "){
+            ev.preventDefault(); openDropdown(true);
+          }
+        });
+        options.forEach(function(opt, i){
+          opt.addEventListener("click", function(){ setPeran(opt.getAttribute("data-value"), false); });
+          opt.addEventListener("keydown", function(ev){
+            if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); setPeran(opt.getAttribute("data-value"), false); }
+            else if(ev.key === "ArrowDown"){ ev.preventDefault(); (options[i + 1] || options[0]).focus(); }
+            else if(ev.key === "ArrowUp"){ ev.preventDefault(); (options[i - 1] || options[options.length - 1]).focus(); }
+            else if(ev.key === "Escape"){ ev.preventDefault(); closeDropdown(true); }
+            else if(ev.key === "Tab"){ closeDropdown(false); }
+          });
+        });
+        document.addEventListener("click", function(ev){
+          if(isOpen() && !dd.contains(ev.target)) closeDropdown(false);
+        });
+        document.addEventListener("keydown", function(ev){
+          if(ev.key === "Escape" && isOpen()) closeDropdown(true);
+        });
+        native.addEventListener("change", syncPeranUI);
+        syncPeranUI();
+      })();
+    </script>
+
+  </body>
+</html>
