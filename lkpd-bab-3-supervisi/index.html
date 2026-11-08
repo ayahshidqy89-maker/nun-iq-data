@@ -383,6 +383,16 @@
       .role-row{display:grid;gap:6px;margin-top:12px}
       @media(min-width:620px){ .role-row{grid-template-columns:190px 1fr;align-items:center} }
       .role-row label{font-weight:700;font-size:.96rem}
+      .undi-btn{width:100%;min-height:56px;display:flex;align-items:center;justify-content:center;gap:10px;font:inherit;font-weight:800;font-size:1.05rem;color:#fff;background:linear-gradient(135deg,#7C3AED,#EC4899);border:none;border-radius:16px;padding:12px 16px;cursor:pointer;box-shadow:var(--shadow-soft)}
+      .undi-btn:active{transform:scale(.98)}
+      .undi-hasil{margin-top:14px;border:1.5px solid var(--line);border-radius:16px;overflow:hidden}
+      .undi-peranmu{padding:12px 14px;background:linear-gradient(135deg,var(--sage),var(--surface));border-bottom:1.5px solid var(--line);font-weight:800;font-size:1.05rem}
+      .undi-baris{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line);font-size:.98rem}
+      .undi-baris:first-child{border-top:none}
+      .undi-baris.saya{background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(236,72,153,.10));font-weight:700}
+      .undi-baris .undi-nama{flex:1;min-width:0}
+      .undi-baris .undi-peran{font-weight:800;white-space:nowrap}
+      .undi-reset{margin-top:10px;background:none;border:none;color:var(--muted);font:inherit;font-size:.88rem;text-decoration:underline;cursor:pointer;padding:4px 0}
       footer{margin-top:28px;text-align:center;color:var(--muted);font-size:.88rem;padding:0 8px}
       .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%) translateY(80px);background:var(--green-deep);pointer-events:none;opacity:0;
         color:#FFF6DC;padding:13px 20px;border-radius:999px;font-weight:700;box-shadow:var(--shadow);
@@ -1162,38 +1172,15 @@
         </div>
 
         <h3 class="normal-only" style="margin-top:22px;font-size:1.08rem">Pembagian peran dalam Kelompok Asal</h3>
-        <p class="hint normal-only">Setiap anggota memegang satu peran. Pilih peranmu sendiri, lalu tulis nama anggota untuk tiap peran sesuai kesepakatan kelompok — supaya semua kebagian tugas, tidak ada yang hanya menonton.</p>
-        <label class="flabel normal-only" id="peran-label">Peran saya dalam kelompok</label>
-        <div class="peran-dd normal-only" id="peran-dd">
-          <select id="peran-saya" class="peran-native" tabindex="-1" aria-hidden="true">
-            <option value="">— Pilih peranmu —</option>
-            <option>Ketua</option>
-            <option>Penulis naskah</option>
-            <option>Desainer poster/video</option>
-            <option>Presenter</option>
-            <option>Pencatat tanggapan</option>
-          </select>
-          <button type="button" class="peran-trigger" id="peran-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="peran-label peran-trigger-label">
-            <span class="peran-trigger-ico" id="peran-trigger-ico" aria-hidden="true">🎭</span>
-            <span class="peran-trigger-text">
-              <span class="peran-trigger-label" id="peran-trigger-label">— Pilih peranmu —</span>
-              <span class="peran-trigger-sub" id="peran-trigger-sub">Ketuk untuk memilih peranmu</span>
-            </span>
-            <svg class="peran-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
-          </button>
-          <ul class="peran-list" id="peran-list" role="listbox" aria-labelledby="peran-label" hidden>
-    <li><button type="button" role="option" data-value="Ketua" aria-selected="false"><span class="peran-opt-ico" aria-hidden="true">👑</span><span class="peran-opt-text"><span class="peran-opt-label">Ketua</span><span class="peran-opt-sub">Memimpin &amp; bagi tugas</span></span><svg class="peran-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></button></li>
-    <li><button type="button" role="option" data-value="Penulis naskah" aria-selected="false"><span class="peran-opt-ico" aria-hidden="true">✍️</span><span class="peran-opt-text"><span class="peran-opt-label">Penulis naskah</span><span class="peran-opt-sub">Menulis pesan &amp; slogan</span></span><svg class="peran-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></button></li>
-    <li><button type="button" role="option" data-value="Desainer poster/video" aria-selected="false"><span class="peran-opt-ico" aria-hidden="true">🎨</span><span class="peran-opt-text"><span class="peran-opt-label">Desainer poster/video</span><span class="peran-opt-sub">Membuat poster / video</span></span><svg class="peran-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></button></li>
-    <li><button type="button" role="option" data-value="Presenter" aria-selected="false"><span class="peran-opt-ico" aria-hidden="true">🎤</span><span class="peran-opt-text"><span class="peran-opt-label">Presenter</span><span class="peran-opt-sub">Menyampaikan hasil</span></span><svg class="peran-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></button></li>
-    <li><button type="button" role="option" data-value="Pencatat tanggapan" aria-selected="false"><span class="peran-opt-ico" aria-hidden="true">📝</span><span class="peran-opt-text"><span class="peran-opt-label">Pencatat tanggapan</span><span class="peran-opt-sub">Mencatat tanggapan</span></span><svg class="peran-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></button></li>
-          </ul>
+        <p class="hint normal-only">Setiap anggota memegang satu peran. Peran <strong>diundi</strong> &mdash; bukan dipilih sendiri, bukan ditunjuk teman &mdash; supaya adil, tidak ada yang berebut dan tidak ada yang hanya menonton. Tekan tombol undi bersama kelompokmu.</p>
+        <div class="normal-only" id="undi-peran-blok">
+          <button type="button" class="undi-btn" id="btn-undi-peran">🎲 Undi peran</button>
+          <div class="undi-hasil" id="hasil-undi" hidden>
+            <div class="undi-peranmu" id="undi-peranmu">Peranmu: &mdash;</div>
+            <div id="undi-daftar"></div>
+          </div>
+          <button type="button" class="undi-reset" id="btn-reset-undi" hidden>&#8635; Undi ulang (minta guru)</button>
         </div>
-        <div class="role-row normal-only"><label for="peran-ketua">Ketua</label><input type="text" id="peran-ketua" placeholder="Nama — memimpin &amp; bagi tugas" /></div>
-        <div class="role-row normal-only"><label for="peran-penulis">Penulis naskah</label><input type="text" id="peran-penulis" placeholder="Nama — menulis pesan &amp; slogan" /></div>
-        <div class="role-row normal-only"><label for="peran-desainer">Desainer poster/video</label><input type="text" id="peran-desainer" placeholder="Nama — membuat poster / video" /></div>
-        <div class="role-row normal-only"><label for="peran-presenter">Presenter</label><input type="text" id="peran-presenter" placeholder="Nama — menyampaikan hasil" /></div>
-        <div class="role-row normal-only"><label for="peran-pencatat">Pencatat tanggapan</label><input type="text" id="peran-pencatat" placeholder="Nama — mencatat tanggapan" /></div>
 
         <figure class="poster-contoh">
           <div class="poster-html poster-bully normal-only" role="img" aria-label="Contoh poster kampanye Stop Bully, Mulai Peduli — Sekolahku Aman, Kelas XI-4">
@@ -1533,7 +1520,6 @@
         ];
         /* ---------- Jalur pendampingan diam-diam (absen 33) ---------- */
         var SUPIAN_ABSEN = 33;
-        var supianRolePrev = null;
         var SUPIAN_TEXT = {
           "hero-judul": { text: "Tidak Mengejek Teman, Tidak Berkelahi, Tidak Berjudi" },
           "hero-sub": { text: "Bab 3. Hari ini kita belajar dari masalah nyata di sekitar kita." },
@@ -1651,12 +1637,6 @@
               if(SUPIAN_TEXT[id].text !== undefined) el.textContent = SUPIAN_TEXT[id].text;
               if(SUPIAN_TEXT[id].ph !== undefined) el.setAttribute("placeholder", SUPIAN_TEXT[id].ph);
             });
-            var peran = $("peran-saya");
-            if(peran && supianRolePrev === null){
-              supianRolePrev = peran.value;
-              peran.value = "Desainer poster/video";
-              if(window.syncPeranUI) window.syncPeranUI();
-            }
           } else {
             Object.keys(supianOriginals).forEach(function(id){
               var el = $(id); if(!el) return;
@@ -1664,12 +1644,6 @@
               if(orig.text !== undefined && el.textContent !== orig.text) el.textContent = orig.text;
               if(orig.ph !== null && orig.ph !== undefined) el.setAttribute("placeholder", orig.ph);
             });
-            var peran = $("peran-saya");
-            if(peran && supianRolePrev !== null){
-              if(peran.value === "Desainer poster/video") peran.value = supianRolePrev;
-              if(window.syncPeranUI) window.syncPeranUI();
-              supianRolePrev = null;
-            }
           }
           if(typeof perbaruiProgress === "function") perbaruiProgress();
         }
@@ -1995,9 +1969,9 @@
           lines.push({k: state.supian ? "Hal baru yang kupelajari" : "Refleksi 1 — Hal baru yang kupahami", v: val("r1a") || "(belum diisi)"});
           lines.push({k: state.supian ? "Perasaanku" : "Refleksi 1 — Perasaanku", v: val("r1b") || "(belum diisi)"});
           lines.push({k: state.supian ? "Kampanye" : "Kampanye — Produk", v: "Satu produk per Kelompok Asal" + (state.asal ? " " + state.asal : "")});
-          lines.push({k: state.supian ? "Peranku" : "Kampanye — Peran Saya", v: val("peran-saya") || "(belum dipilih)"});
+          lines.push({k: state.supian ? "Peranku" : "Kampanye — Peran Saya", v: state.supian ? "Desainer poster/video" : ((typeof peranSayaDariUndi === "function" ? peranSayaDariUndi() : "") || "(belum diundi)")});
           if(!state.supian){
-            lines.push({k:"Kampanye — Pembagian Peran", v: ["Ketua: " + (val("peran-ketua") || "-"), "Penulis naskah: " + (val("peran-penulis") || "-"), "Desainer poster/video: " + (val("peran-desainer") || "-"), "Presenter: " + (val("peran-presenter") || "-"), "Pencatat tanggapan: " + (val("peran-pencatat") || "-")].join(" | ")});
+            lines.push({k:"Kampanye — Pembagian Peran", v: (typeof daftarUndiPeran === "function" ? daftarUndiPeran() : "") || "(belum diundi)"});
             lines.push({k:"Kampanye — Judul", v: val("kamp-judul") || "(belum diisi)"});
             lines.push({k:"Kampanye — Slogan", v: val("kamp-slogan") || "(belum diisi)"});
             lines.push({k:"Kampanye — Format", v: state.format || "(belum dipilih)"});
@@ -2849,6 +2823,130 @@
         bangunDropdownIdentitas("nama", "— Pilih namamu —");
         bangunDropdownIdentitas("kelas", "— Pilih kelas —");
         bangunDropdownIdentitas("absen", "— Pilih nomor absen —");
+      })();
+    </script>
+
+    <script>
+      /* ---------- UNDI PERAN (9 Nov) ----------
+         Peran diundi, bukan dipilih/ditunjuk — adil, kda ada yang
+         berebut atau betunjukan. Hasilnya DETERMINISTIK per Kelompok
+         Asal (seed = nomor Asal), jadi semua HP dalam satu kelompok
+         menghitung pembagian yang SAMA. Supian (absen 33, Asal 3)
+         tetap Desainer poster/video; 5 peran lain diundi ke 5 siswa
+         sisanya. Undi sekali lalu terkunci (localStorage); reset
+         hanya oleh guru. */
+      var PERAN_UNDI = [
+        { nama: "Ketua", ico: "👑", sub: "Memimpin & bagi tugas" },
+        { nama: "Penulis naskah", ico: "✍️", sub: "Menulis pesan & slogan" },
+        { nama: "Desainer poster/video", ico: "🎨", sub: "Membuat poster / video" },
+        { nama: "Presenter", ico: "🎤", sub: "Menyampaikan hasil" },
+        { nama: "Pencatat tanggapan", ico: "📝", sub: "Mencatat tanggapan" },
+        { nama: "Dokumentasi", ico: "📷", sub: "Memotret & merekam proses" }
+      ];
+      function mulberry32(a){ return function(){ a |= 0; a = (a + 0x6D2B79F5) | 0; var t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+      function namaDariAbsen(n){
+        var sel = document.getElementById("nama");
+        if(!sel) return "Absen " + n;
+        var opts = sel.options;
+        for(var i = 0; i < opts.length; i++){
+          if(opts[i].getAttribute("data-absen") == String(n)) return opts[i].value || opts[i].textContent;
+        }
+        return "Absen " + n;
+      }
+      function anggotaAsal(asalNum){
+        var m = [];
+        for(var k = 0; k < 6; k++) m.push(asalNum + (k * 6));
+        return m;
+      }
+      function hitungUndiPeran(asalNum){
+        var anggota = anggotaAsal(asalNum);
+        var rand = mulberry32((asalNum * 2654435761) >>> 0);
+        var peran = PERAN_UNDI.map(function(p){ return p.nama; });
+        for(var i = peran.length - 1; i > 0; i--){
+          var j = Math.floor(rand() * (i + 1));
+          var tmp = peran[i]; peran[i] = peran[j]; peran[j] = tmp;
+        }
+        var hasil = anggota.map(function(absen, idx){ return { absen: absen, nama: namaDariAbsen(absen), peran: peran[idx] }; });
+        if(asalNum === 3){
+          var idxSupian = -1, idxDesainer = -1;
+          hasil.forEach(function(h, i){ if(h.absen === 33) idxSupian = i; if(h.peran === "Desainer poster/video") idxDesainer = i; });
+          if(idxSupian >= 0 && idxDesainer >= 0 && idxSupian !== idxDesainer){
+            var t = hasil[idxSupian].peran; hasil[idxSupian].peran = hasil[idxDesainer].peran; hasil[idxDesainer].peran = t;
+          }
+        }
+        return hasil;
+      }
+      function undiSudah(asalNum){
+        try { return localStorage.getItem("undi-peran-" + asalNum) === "1"; } catch(e){ return false; }
+      }
+      function perbaruiUndiUI(){
+        var blok = document.getElementById("undi-peran-blok");
+        if(!blok) return;
+        var asalNum = state.asal;
+        var btn = document.getElementById("btn-undi-peran");
+        var hasilEl = document.getElementById("hasil-undi");
+        var resetBtn = document.getElementById("btn-reset-undi");
+        if(!asalNum || !undiSudah(asalNum)){
+          if(btn) btn.hidden = false;
+          if(hasilEl) hasilEl.hidden = true;
+          if(resetBtn) resetBtn.hidden = true;
+          return;
+        }
+        var hasil = hitungUndiPeran(asalNum);
+        var saya = null;
+        hasil.forEach(function(h){ if(h.absen === state.absen) saya = h; });
+        var peranmuEl = document.getElementById("undi-peranmu");
+        if(peranmuEl) peranmuEl.textContent = saya ? ("Peranmu: " + saya.peran) : "Peran kelompokmu:";
+        var daftar = document.getElementById("undi-daftar");
+        if(daftar){
+          daftar.innerHTML = "";
+          hasil.forEach(function(h){
+            var row = document.createElement("div");
+            row.className = "undi-baris" + (h.absen === state.absen ? " saya" : "");
+            var ico = "";
+            PERAN_UNDI.forEach(function(p){ if(p.nama === h.peran) ico = p.ico + " "; });
+            var nm = document.createElement("span"); nm.className = "undi-nama"; nm.textContent = h.nama + (h.absen === state.absen ? " (kamu)" : "");
+            var pr = document.createElement("span"); pr.className = "undi-peran"; pr.textContent = ico + h.peran;
+            row.appendChild(nm); row.appendChild(pr);
+            daftar.appendChild(row);
+          });
+        }
+        if(btn) btn.hidden = true;
+        if(hasilEl) hasilEl.hidden = false;
+        if(resetBtn) resetBtn.hidden = false;
+      }
+      function undiPeran(){
+        var asalNum = state.asal;
+        if(!asalNum) return;
+        try { localStorage.setItem("undi-peran-" + asalNum, "1"); } catch(e){}
+        perbaruiUndiUI();
+      }
+      function resetUndi(){
+        var asalNum = state.asal;
+        if(!asalNum) return;
+        try { localStorage.removeItem("undi-peran-" + asalNum); } catch(e){}
+        perbaruiUndiUI();
+      }
+      function peranSayaDariUndi(){
+        if(!state.asal || !undiSudah(state.asal)) return "";
+        var hasil = hitungUndiPeran(state.asal);
+        for(var i = 0; i < hasil.length; i++) if(hasil[i].absen === state.absen) return hasil[i].peran;
+        return "";
+      }
+      function daftarUndiPeran(){
+        if(!state.asal || !undiSudah(state.asal)) return "";
+        return hitungUndiPeran(state.asal).map(function(h){ return h.peran + ": " + h.nama; }).join(" | ");
+      }
+      (function(){
+        var b = document.getElementById("btn-undi-peran");
+        if(b) b.addEventListener("click", undiPeran);
+        var r = document.getElementById("btn-reset-undi");
+        if(r) r.addEventListener("click", resetUndi);
+        ["nama", "absen"].forEach(function(id){
+          var el = document.getElementById(id);
+          if(el) el.addEventListener("change", function(){ setTimeout(perbaruiUndiUI, 0); });
+        });
+        perbaruiUndiUI();
       })();
     </script>
 
