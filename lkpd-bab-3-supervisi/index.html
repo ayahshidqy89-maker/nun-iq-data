@@ -2982,6 +2982,8 @@
         var btn = document.getElementById("btn-undi-peran");
         var hasilEl = document.getElementById("hasil-undi");
         var peranmuEl = document.getElementById("undi-peranmu");
+        var daftarAwal = document.getElementById("undi-daftar");
+        if(daftarAwal) daftarAwal.hidden = true;
         if(btn) btn.hidden = true;
         if(hasilEl) hasilEl.hidden = false;
         var hasil = hitungUndiPeran(asalNum);
