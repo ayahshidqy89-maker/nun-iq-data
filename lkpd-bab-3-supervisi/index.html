@@ -396,6 +396,7 @@
       .undi-reset{margin-top:10px;background:none;border:none;color:var(--muted);font:inherit;font-size:.88rem;text-decoration:underline;cursor:pointer;padding:4px 0}
       .undi-lihat{margin-top:10px;width:100%;min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:700;font-size:.95rem;color:var(--ink);background:var(--surface-2);border:1.5px solid var(--line);border-radius:14px;padding:10px 14px;cursor:pointer}
       .undi-lihat[hidden]{display:none}
+      .undi-tukar-note{margin:0;padding:10px 14px;font-size:.88rem;color:var(--muted);border-top:1px solid var(--line)}
       footer{margin-top:28px;text-align:center;color:var(--muted);font-size:.88rem;padding:0 8px}
       .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%) translateY(80px);background:var(--green-deep);pointer-events:none;opacity:0;
         color:#FFF6DC;padding:13px 20px;border-radius:999px;font-weight:700;box-shadow:var(--shadow);
@@ -1181,6 +1182,7 @@
           <div class="undi-hasil" id="hasil-undi" hidden>
             <div class="undi-peranmu" id="undi-peranmu">Peranmu: &mdash;</div>
             <div id="undi-daftar" hidden></div>
+            <p class="undi-tukar-note">Boleh tukar peran dengan teman sekelompok kalau sama-sama setuju. Beri tahu guru.</p>
           </div>
           <button type="button" class="undi-lihat" id="btn-lihat-teman" hidden>&#128101; Lihat peran teman sekelompok</button>
           <button type="button" class="undi-reset" id="btn-reset-undi" hidden>&#8635; Undi ulang (minta guru)</button>
