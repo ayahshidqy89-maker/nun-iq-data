@@ -1509,15 +1509,23 @@
           $("kk-asal-sub").textContent = state.supian ? ("Anggota: absen " + anggota.join(", ") + ".") : ("Anggota: absen " + anggota.join(", ") + " · 6 siswa, satu dari tiap Kelompok Ahli.");
           kartu.classList.add("show");
           showTab(ahli.topic);
-          /* Progres otomatis (8 Nov): absen sah -> tampilkan catatan +
-             laporkan Langkah 1. Langkah berikutnya dilaporkan otomatis
-             saat siswa sampai di sana (via laporProgres di setActive). */
+          /* Progres otomatis (8 Nov): absen sah -> tampilkan catatan.
+             Lapor Langkah 1 hanya bila absen sudah lengkap: 2 digit
+             (10–36) langsung saat diketik; 1 digit (1–9) menunggu blur
+             (lihat listener "change" di bawah) — supaya ketikan "14"
+             tidak sempat tercatat sebagai absen 1. Langkah berikutnya
+             dilaporkan otomatis saat siswa sampai di sana (via
+             laporProgres di setActive). */
           var noteProgres = $("progres-otomatis-note");
           if(noteProgres) noteProgres.hidden = false;
-          if(typeof kirimProgres === "function") kirimProgres("identitas");
+          if(typeof kirimProgres === "function" && raw.length === 2) kirimProgres("identitas");
         }
         $("absen").addEventListener("input", applyAbsen);
         $("absen").addEventListener("change", function(){
+          /* Progres otomatis: absen 1 digit (1–9) dilaporkan di sini
+             (saat kolom ditinggalkan), karena di "input" ia belum bisa
+             dibedakan dari ketikan awal absen 2 digit. */
+          if(typeof kirimProgres === "function") kirimProgres("identitas");
           if(state.ahliCode){
             if(state.supian){
               toast("Absen " + state.absen + ". Kamu kelompok " + state.ahliCode + ". Materimu sudah dibuka di Langkah 4.");
@@ -1958,6 +1966,7 @@
           kuis: "Langkah 6 — Kuis Akhir",
           penutup: "Langkah 7 — Refleksi"
         };
+        var STEP_ORDER = ["identitas","diagnostik","kasus","ahli","kampanye","kuis","penutup"];
         var progresTerkirim = {};
         function kirimProgres(stepId){
           var label = LANGKAH_LABEL[stepId];
@@ -1965,8 +1974,19 @@
           var nama = val("nama");
           var absen = parseInt(val("absen"), 10);
           if(!nama || isNaN(absen) || absen < 1 || absen > 36) return;
-          if(progresTerkirim[stepId]) return;
-          progresTerkirim[stepId] = true;
+          var idx = STEP_ORDER.indexOf(stepId);
+          if(idx < 0) return;
+          /* Jangan mundur: bila langkah yang LEBIH JAUH sudah terkirim
+             untuk absen ini, laporan langkah yang lebih awal diabaikan
+             (mis. laporan Langkah 1 yang terlambat datang sesudah siswa
+             sudah di Langkah 5). Lacak per (absen, langkah), bukan per
+             langkah saja — supaya ganti nomor absen tidak tertahan. */
+          for(var k = idx + 1; k < STEP_ORDER.length; k++){
+            if(progresTerkirim[absen + ":" + STEP_ORDER[k]]) return;
+          }
+          var kunciProgres = absen + ":" + stepId;
+          if(progresTerkirim[kunciProgres]) return;
+          progresTerkirim[kunciProgres] = true;
           fetch(WEBGAS_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
