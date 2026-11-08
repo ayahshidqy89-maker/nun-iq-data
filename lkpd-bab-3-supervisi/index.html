@@ -328,13 +328,6 @@
       .skor-blok .skor-judul{font-weight:800}
       .form-cadangan{margin-top:10px;font-size:.88rem}
       .form-card .hyb-note{margin:10px auto 0;font-size:.88rem}
-      /* ---------- CHECKPOINT PROGRES: kartu tautan biasa ke Form Progres (opsional, boleh dilewati) ---------- */
-      .checkpoint-card{border:2px dashed var(--gold);border-radius:16px;padding:18px 16px;margin-top:18px;background:var(--surface-2);text-align:center}
-      .checkpoint-card h3{font-size:1.15rem;font-weight:800;margin-bottom:6px}
-      .checkpoint-card p{font-size:.97rem;color:var(--muted);max-width:56ch;margin:0 auto}
-      .checkpoint-card p strong{color:var(--ink)}
-      .checkpoint-card .checkpoint-link{margin-top:14px;text-decoration:none}
-      .checkpoint-card .checkpoint-hint{margin-top:10px;font-size:.88rem}
 
       /* ---------- PANDUAN KAMPANYE & PERAN ---------- */
       .notice-satu{background:var(--sage);color:var(--sage-ink);border-radius:14px;padding:14px 16px;margin-top:14px;font-size:.98rem}
@@ -455,8 +448,6 @@
       #btn-musik-header.off .eq-b{opacity:0;transform:scaleY(.12);animation:none}
       #btn-musik-header.off .mute-x{opacity:1;transform:scale(1) rotate(0deg)}
       @media (prefers-reduced-motion: reduce){#btn-musik-header .eq-b{animation:none}#btn-musik-header .mute-x{transition:none}}
-      /* ---------- Petunjuk tab baru di kartu checkpoint ---------- */
-      .checkpoint-card .checkpoint-tabnote{margin-top:8px;font-size:.88rem}
       /* ---------- DROPDOWN CUSTOM PEMILIH PERAN ---------- */
       .peran-dd{position:relative}
       .peran-native{position:absolute !important;top:0;left:0;width:1px !important;height:1px !important;min-height:0 !important;margin:0;padding:0;border:0;opacity:0;pointer-events:none}
@@ -652,6 +643,7 @@
         </div>
         <p class="absen-error" id="absen-error" role="alert">Nomor absen harus diisi angka 1 sampai 36. Cek lagi nomor absenmu, ya.</p>
         <p class="hint" id="hint-kelompok" style="margin-top:12px">Cukup isi nomor absenmu — kelompokmu ditentukan <strong>otomatis</strong>, tidak perlu memilih sendiri. Kelompok ahli dibentuk menjadi 6 kelompok, tiap kelompok 6 orang, supaya semua kebagian bicara dan tidak ada yang hanya menumpang nama.</p>
+        <p class="hint" id="progres-otomatis-note" hidden style="margin-top:10px">✓ Progresmu tercatat <strong>otomatis</strong> ke guru — tidak perlu isi Form lagi. Cukup lanjutkan ke langkah berikutnya.</p>
 
         <div class="kartu-kelompok" id="kartu-kelompok" role="status" aria-live="polite">
           <p class="kk-head"><span id="kartu-head">Kartu Kelompok Saya — otomatis dari Nomor Absen</span> <span id="kk-absen"></span></p>
@@ -792,17 +784,6 @@
         <p class="hint" id="hint-analisis-kasus">Pilih satu kasus. Tulis: (1) masalah utamanya, (2) siapa yang dirugikan, (3) perkiraan penyebabnya, (4) satu solusi awal menurut kelompokmu.</p>
         <textarea id="analisis-kasus" placeholder="Tulis hasil diskusi awal kelompokmu di sini…"></textarea>
       </section>
-
-      <!-- ============ CHECKPOINT PROGRES (tautan biasa ke Form Progres — BUKAN pengiriman latar) ============ -->
-      <aside class="checkpoint-card" data-langkah="Langkah 3 — Kasus">
-        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
-        <h3>&#10003; Sudah sampai sini?</h3>
-        <p class="normal-only">Tekan tombol di bawah ini untuk membuka Form Progres. Di Form, isi Nama, Nomor Absen, dan langkah yang baru selesai ini, lalu tekan <strong>Kirim</strong> dan kembali ke LKPD ini.</p>
-        <p class="supian-only">Tekan tombol ini sama-sama dengan guru. Isi Nama dan Nomor Absen di Form. Lalu tekan <strong>Kirim</strong>.</p>
-        <a class="btn primary btn-form checkpoint-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfn34q5JpOYu3pLseknylzBG04FWEe2H7og5tonpFv1mqzUlA/viewform" target="_blank" rel="noopener">Kirim progres: Langkah 3 — Kasus</a>
-        <p class="checkpoint-tabnote">Form terbuka di tab baru &mdash; musik tetap berbunyi; sesudah mengirim, kembali ke tab LKPD ini.</p>
-        <p class="checkpoint-hint">Di Form: tulis Nama dan Nomor Absen. Lalu tekan Kirim.</p>
-      </aside>
 
       <!-- ================= 4. KELOMPOK AHLI ================= -->
       <section class="card" id="ahli" aria-labelledby="ahli-judul">
@@ -971,17 +952,6 @@
         <div class="mindful" id="mindful-ahli"><strong>Selesai menjadi ahli?</strong> Kembali ke kelompok asalmu dan ajarkan topikmu kepada teman-temanmu. Mengajarkan adalah cara belajar yang paling dalam &mdash; pastikan temanmu paham, bukan sekadar mendengar.</div>
       </section>
 
-      <!-- ============ CHECKPOINT PROGRES (tautan biasa ke Form Progres — BUKAN pengiriman latar) ============ -->
-      <aside class="checkpoint-card" data-langkah="Langkah 4 — Kelompok Ahli">
-        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
-        <h3>&#10003; Sudah sampai sini?</h3>
-        <p class="normal-only">Tekan tombol di bawah ini untuk membuka Form Progres. Di Form, isi Nama, Nomor Absen, dan langkah yang baru selesai ini, lalu tekan <strong>Kirim</strong> dan kembali ke LKPD ini.</p>
-        <p class="supian-only">Tekan tombol ini sama-sama dengan guru. Isi Nama dan Nomor Absen di Form. Lalu tekan <strong>Kirim</strong>.</p>
-        <a class="btn primary btn-form checkpoint-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfn34q5JpOYu3pLseknylzBG04FWEe2H7og5tonpFv1mqzUlA/viewform" target="_blank" rel="noopener">Kirim progres: Langkah 4 — Kelompok Ahli</a>
-        <p class="checkpoint-tabnote">Form terbuka di tab baru &mdash; musik tetap berbunyi; sesudah mengirim, kembali ke tab LKPD ini.</p>
-        <p class="checkpoint-hint">Di Form: tulis Nama dan Nomor Absen. Lalu tekan Kirim.</p>
-      </aside>
-
       <!-- ================= REFLEKSI 1 ================= -->
       <section class="card" id="refleksi1" aria-labelledby="refleksi1-judul">
         <div class="sec-head">
@@ -1109,17 +1079,6 @@
         <textarea id="presentasi-sesudah" class="normal-only" placeholder="Contoh: Kelompok Asal 3 bertanya… Kelompok Asal 5 menyarankan…"></textarea>
         <div class="mindful" id="mindful-kampanye"><strong>Ingat:</strong> kampanye terbaik bukan yang paling ramai, tetapi yang paling bisa dijalankan. Satu aksi kecil yang konsisten lebih berarti daripada slogan besar yang berhenti di poster.</div>
       </section>
-
-      <!-- ============ CHECKPOINT PROGRES (tautan biasa ke Form Progres — BUKAN pengiriman latar) ============ -->
-      <aside class="checkpoint-card" data-langkah="Langkah 5 — Kelompok Asal">
-        <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
-        <h3>&#10003; Sudah sampai sini?</h3>
-        <p class="normal-only">Tekan tombol di bawah ini untuk membuka Form Progres. Di Form, isi Nama, Nomor Absen, dan langkah yang baru selesai ini, lalu tekan <strong>Kirim</strong> dan kembali ke LKPD ini.</p>
-        <p class="supian-only">Tekan tombol ini sama-sama dengan guru. Isi Nama dan Nomor Absen di Form. Lalu tekan <strong>Kirim</strong>.</p>
-        <a class="btn primary btn-form checkpoint-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfn34q5JpOYu3pLseknylzBG04FWEe2H7og5tonpFv1mqzUlA/viewform" target="_blank" rel="noopener">Kirim progres: Langkah 5 — Kelompok Asal</a>
-        <p class="checkpoint-tabnote">Form terbuka di tab baru &mdash; musik tetap berbunyi; sesudah mengirim, kembali ke tab LKPD ini.</p>
-        <p class="checkpoint-hint">Di Form: tulis Nama dan Nomor Absen. Lalu tekan Kirim.</p>
-      </aside>
 
       <!-- ================= REFLEKSI 2 ================= -->
       <section class="card" id="refleksi2" aria-labelledby="refleksi2-judul">
@@ -1469,13 +1428,6 @@
         function swapSharedButtons(on){
           var items = [];
           document.querySelectorAll(".hyb-kirim").forEach(function(b){ items.push({ el: b, supian: "Buka Form" }); });
-          document.querySelectorAll(".checkpoint-link").forEach(function(a){
-            var card = a.closest ? a.closest(".checkpoint-card") : null;
-            var langkah = card ? (card.getAttribute("data-langkah") || "") : "";
-            var m = langkah.match(/Langkah (\d)/);
-            items.push({ el: a, supian: m ? ("Kirim: Langkah " + m[1] + " selesai") : a.textContent });
-          });
-          document.querySelectorAll(".checkpoint-tabnote").forEach(function(p){ items.push({ el: p, supian: "Form terbuka. Sesudah kirim, kembali ke sini." }); });
           var unduh = $("btn-unduh");
           if(unduh) items.push({ el: unduh, supian: "Unduh Ringkasan" });
           if(on){
@@ -1557,6 +1509,12 @@
           $("kk-asal-sub").textContent = state.supian ? ("Anggota: absen " + anggota.join(", ") + ".") : ("Anggota: absen " + anggota.join(", ") + " · 6 siswa, satu dari tiap Kelompok Ahli.");
           kartu.classList.add("show");
           showTab(ahli.topic);
+          /* Progres otomatis (8 Nov): absen sah -> tampilkan catatan +
+             laporkan Langkah 1. Langkah berikutnya dilaporkan otomatis
+             saat siswa sampai di sana (via laporProgres di setActive). */
+          var noteProgres = $("progres-otomatis-note");
+          if(noteProgres) noteProgres.hidden = false;
+          if(typeof kirimProgres === "function") kirimProgres("identitas");
         }
         $("absen").addEventListener("input", applyAbsen);
         $("absen").addEventListener("change", function(){
@@ -1988,6 +1946,34 @@
             return res.json();
           });
         }
+        /* ---------- PROGRES OTOMATIS (8 Nov): laporkan langkah yang dicapai
+           siswa ke WebGAS (tab "Progres Log") sesudah ia mengisi nomor absen.
+           TANPA Form, TANPA isi ulang Nama/Absen, TANPA tombol. ---------- */
+        var LANGKAH_LABEL = {
+          identitas: "Langkah 1 — Identitas",
+          diagnostik: "Langkah 2 — Diagnostik",
+          kasus: "Langkah 3 — Kasus",
+          ahli: "Langkah 4 — Kelompok Ahli",
+          kampanye: "Langkah 5 — Kelompok Asal",
+          kuis: "Langkah 6 — Kuis Akhir",
+          penutup: "Langkah 7 — Refleksi"
+        };
+        var progresTerkirim = {};
+        function kirimProgres(stepId){
+          var label = LANGKAH_LABEL[stepId];
+          if(!label) return;
+          var nama = val("nama");
+          var absen = parseInt(val("absen"), 10);
+          if(!nama || isNaN(absen) || absen < 1 || absen > 36) return;
+          if(progresTerkirim[stepId]) return;
+          progresTerkirim[stepId] = true;
+          fetch(WEBGAS_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ nama:nama, absen:absen, jenis:"progres", langkah:label })
+          }).catch(function(){});
+        }
+        window.laporProgres = kirimProgres;
         function kirimNilai(jenis){
           var nama = val("nama");
           var absenRaw = val("absen");
@@ -2103,6 +2089,10 @@
           if(appbarStep){ appbarStep.textContent = idx >= 0 ? STEP_NAMES[id] : "Pembuka \u00b7 Tujuan"; }
           if(appbarCount){ appbarCount.textContent = idx >= 0 ? (idx + 1) + " / 7" : "Mulai"; }
           if(progressFill){ progressFill.style.width = (idx >= 0 ? ((idx + 1) / STEP_IDS.length * 100) : 4) + "%"; }
+          /* Progres otomatis (8 Nov): siswa sampai di langkah ini -> laporkan
+             ke guru lewat WebGAS (tanpa Form, tanpa isi ulang). Diam bila
+             absen belum diisi (laporProgres yang memutuskan). */
+          if(idx >= 0 && typeof window.laporProgres === "function"){ window.laporProgres(id); }
         }
         function spotlight(id){
           var el = document.getElementById(id);
