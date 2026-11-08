@@ -314,7 +314,7 @@
       /* Skor muncul dengan pop + confetti (lihat JS confettiBurst) */
       .skor-blok{animation:skorPop .45s cubic-bezier(.34,1.56,.64,1) both}
       @keyframes skorPop{from{opacity:0;transform:scale(.88) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
-      .confetti-bit{position:fixed;top:-12px;z-index:9999;pointer-events:none;border-radius:2px;animation:confettiJatuh 2.4s ease-in forwards}
+      .confetti-bit{position:fixed;top:-14px;z-index:9999;pointer-events:none;border-radius:2px;animation:confettiJatuh 3.6s ease-in forwards}
       @keyframes confettiJatuh{to{transform:translateY(105vh) rotate(720deg);opacity:0}}
       /* Pil kemajuan (bukan timer): "X dari Y dijawab" */
       .kuis-progress{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:.92rem;border-radius:999px;padding:6px 14px;margin-top:10px;background:linear-gradient(135deg,#EDE9FE,#FCE7F3);color:#5B21B6;border:2px solid #C4B5FD}
@@ -1840,18 +1840,18 @@
         /* ---------- Perayaan Wayground (8 Nov): confetti + pil kemajuan, TANPA timer ---------- */
         function confettiBurst(){
           var warna = ["#E21B3C","#1368CE","#D89E00","#26890C","#7C3AED","#EC4899","#F59E0B"];
-          for(var i = 0; i < 28; i++){
+          for(var i = 0; i < 42; i++){
             var b = document.createElement("span");
             b.className = "confetti-bit";
-            var ukuran = 7 + Math.floor(Math.random() * 8);
+            var ukuran = 9 + Math.floor(Math.random() * 9);
             b.style.left = (Math.random() * 100) + "vw";
             b.style.width = ukuran + "px";
             b.style.height = (ukuran * 0.6) + "px";
             b.style.background = warna[i % warna.length];
-            b.style.animationDelay = (Math.random() * 0.5) + "s";
-            b.style.animationDuration = (1.8 + Math.random() * 1.2) + "s";
+            b.style.animationDelay = (Math.random() * 0.7) + "s";
+            b.style.animationDuration = (3 + Math.random() * 1.5) + "s";
             document.body.appendChild(b);
-            (function(el){ setTimeout(function(){ el.remove(); }, 3400); })(b);
+            (function(el){ setTimeout(function(){ el.remove(); }, 6000); })(b);
           }
         }
         function perbaruiProgress(){
