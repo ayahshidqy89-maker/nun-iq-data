@@ -1828,11 +1828,11 @@
            Video HP terlalu besar untuk WebGAS (batas 50 MB) — dikumpul
            lewat Form khusus. Tautan prefilled: Nama + Absen terisi
            otomatis dari identitas Langkah 1, siswa tinggal unggah video.
-           Entry ID didapat via Apps Script FormApp.getId (9 Nov):
-           Nama entry.1239441081, Absen entry.912917052. ---------- */
+           Entry ID didapat via Apps Script FormResponse.toPrefilledUrl (9 Nov):
+           Nama entry.1937619735, Absen entry.242736385. ---------- */
         var FORM_VIDEO_URL = "https://docs.google.com/forms/d/e/1FAIpQLScLCAqiIdkckLMEQxcin9NelFBN9WDNy6Nq9jR2rZLR0Hxhuw/viewform";
-        var ENTRY_NAMA_VIDEO = "1239441081";
-        var ENTRY_ABSEN_VIDEO = "912917052";
+        var ENTRY_NAMA_VIDEO = "1937619735";
+        var ENTRY_ABSEN_VIDEO = "242736385";
         function tautanVideoPrefilled(){
           var nama = val("nama").trim();
           var absen = val("absen").trim();
