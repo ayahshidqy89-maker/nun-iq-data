@@ -1167,11 +1167,11 @@
         <p class="lead" id="lead-kampanye">Bersama kelompok asalmu, ubah pemahamanmu menjadi aksi. Buat rancangan kampanye digital yang benar-benar bisa dijalankan di sekolah kita untuk mencegah perundungan, perkelahian, dan perjudian.</p>
 
         <div class="notice-satu" id="notice-kampanye"><strong>SATU produk per Kelompok Asal — bukan per siswa.</strong> Setiap Kelompok Asal (6 siswa) hanya membuat <strong>satu</strong> poster digital <em>atau</em> satu video 60 detik bersama-sama. Formulir di bawah ini diisi sebagai rancangan kelompok, jadi diskusikan dulu, baru tulis kesepakatan kelompokmu.</div>
-        <div class="supian-only pendamping-box"><span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span><br /><strong>Peranmu: Pembuat poster/video.</strong> Buat gambar poster. Katakan 1 kalimat saat presentasi.</div>
+        <div class="supian-only pendamping-box"><span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span><br /><strong>Peranmu: Tukang foto.</strong> Foto temanmu saat kerja. Katakan 1 kalimat saat presentasi.</div>
         <div class="pdpd-box">
           <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
           <p><strong>Tugasmu ada 2.</strong></p>
-          <p>1. Buat gambar poster.<br />2. Katakan 1 kalimat saat presentasi: &ldquo;Saya tidak ikut, itu judi.&rdquo;</p>
+          <p>1. Foto temanmu saat kerja.<br />2. Katakan 1 kalimat saat presentasi: &ldquo;Saya tidak ikut, itu judi.&rdquo;</p>
         </div>
 
         <h3 class="normal-only" style="margin-top:22px;font-size:1.08rem">Pembagian peran dalam Kelompok Asal</h3>
@@ -2004,7 +2004,7 @@
           lines.push({k: state.supian ? "Hal baru yang kupelajari" : "Refleksi 1 — Hal baru yang kupahami", v: val("r1a") || "(belum diisi)"});
           lines.push({k: state.supian ? "Perasaanku" : "Refleksi 1 — Perasaanku", v: val("r1b") || "(belum diisi)"});
           lines.push({k: state.supian ? "Kampanye" : "Kampanye — Produk", v: "Satu produk per Kelompok Asal" + (state.asal ? " " + state.asal : "")});
-          lines.push({k: state.supian ? "Peranku" : "Kampanye — Peran Saya", v: state.supian ? "Desainer poster/video" : ((typeof peranSayaDariUndi === "function" ? peranSayaDariUndi() : "") || "(belum diundi)")});
+          lines.push({k: state.supian ? "Peranku" : "Kampanye — Peran Saya", v: state.supian ? "Dokumentasi" : ((typeof peranSayaDariUndi === "function" ? peranSayaDariUndi() : "") || "(belum diundi)")});
           if(!state.supian){
             lines.push({k:"Kampanye — Pembagian Peran", v: (typeof daftarUndiPeran === "function" ? daftarUndiPeran() : "") || "(belum diundi)"});
             lines.push({k:"Kampanye — Judul", v: val("kamp-judul") || "(belum diisi)"});
@@ -2867,7 +2867,7 @@
          berebut atau betunjukan. Hasilnya DETERMINISTIK per Kelompok
          Asal (seed = nomor Asal), jadi semua HP dalam satu kelompok
          menghitung pembagian yang SAMA. Supian (absen 33, Asal 3)
-         tetap Desainer poster/video; 5 peran lain diundi ke 5 siswa
+         tetap Dokumentasi; 5 peran lain diundi ke 5 siswa
          sisanya. Undi sekali lalu terkunci (localStorage); reset
          hanya oleh guru. */
       var PERAN_UNDI = [
@@ -2913,10 +2913,10 @@
         }
         var hasil = anggota.map(function(absen, idx){ return { absen: absen, nama: namaDariAbsen(absen), peran: peran[idx] }; });
         if(asalNum === 3){
-          var idxSupian = -1, idxDesainer = -1;
-          hasil.forEach(function(h, i){ if(h.absen === 33) idxSupian = i; if(h.peran === "Desainer poster/video") idxDesainer = i; });
-          if(idxSupian >= 0 && idxDesainer >= 0 && idxSupian !== idxDesainer){
-            var t = hasil[idxSupian].peran; hasil[idxSupian].peran = hasil[idxDesainer].peran; hasil[idxDesainer].peran = t;
+          var idxSupian = -1, idxDok = -1;
+          hasil.forEach(function(h, i){ if(h.absen === 33) idxSupian = i; if(h.peran === "Dokumentasi") idxDok = i; });
+          if(idxSupian >= 0 && idxDok >= 0 && idxSupian !== idxDok){
+            var t = hasil[idxSupian].peran; hasil[idxSupian].peran = hasil[idxDok].peran; hasil[idxDok].peran = t;
           }
         }
         return hasil;
