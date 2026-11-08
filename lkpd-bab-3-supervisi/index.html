@@ -282,10 +282,44 @@
       .hyb-blok{margin-top:18px;text-align:left}
       .hyb-soal{border:1.5px solid var(--line);background:var(--surface);border-radius:14px;padding:14px;margin:0 0 12px;min-width:0}
       .hyb-soal legend{font-weight:800;font-size:1rem;line-height:1.45;padding:0 6px;color:var(--ink)}
-      .hyb-opsi{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border:1.5px solid var(--line);border-radius:12px;margin-top:8px;cursor:pointer;background:var(--surface-2);font-size:.97rem;line-height:1.45;color:var(--ink)}
-      .hyb-opsi input[type=radio]{flex:none;width:22px;height:22px;margin:1px 0 0;accent-color:var(--green);cursor:pointer}
+      /* ---------- GAYA WAYGROUND (8 Nov): ubin jawaban warna-warni ala Quizizz/Wayground ----------
+         Tiap pilihan punya warna sendiri (A merah, B biru, C kuning, D hijau) — TANPA timer. */
+      .hyb-opsi{display:flex;gap:12px;align-items:flex-start;padding:14px 14px;border:2.5px solid var(--line);border-radius:16px;margin-top:10px;cursor:pointer;background:var(--surface-2);font-size:1rem;line-height:1.45;color:var(--ink);font-weight:600;box-shadow:0 2px 0 rgba(0,0,0,.06);transition:transform .15s ease,box-shadow .15s ease,background .15s ease,border-color .15s ease}
+      .hyb-opsi:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.12)}
+      .hyb-opsi:active{transform:translateY(0) scale(.99)}
+      .hyb-opsi input[type=radio]{flex:none;width:24px;height:24px;margin:1px 0 0;accent-color:var(--green);cursor:pointer}
       .hyb-opsi input[type=radio]:focus-visible{outline:3px solid var(--sage);outline-offset:2px}
-      .hyb-opsi:has(input[type=radio]:checked){border-color:var(--green-mid);background:var(--sage)}
+      .hyb-opsi:has(input[type=radio]:checked){transform:scale(1.02);box-shadow:0 8px 18px rgba(0,0,0,.18)}
+      .hyb-opsi:has(input[type=radio]:checked) input[type=radio]{accent-color:#fff}
+      /* Warna per posisi (A=merah, B=biru, C=kuning, D=hijau) — gaya Quizizz/Wayground */
+      .hyb-soal .hyb-opsi:nth-of-type(1){border-color:#E21B3C;background:#FDE9EC}
+      .hyb-soal .hyb-opsi:nth-of-type(2){border-color:#1368CE;background:#E4EEFB}
+      .hyb-soal .hyb-opsi:nth-of-type(3){border-color:#D89E00;background:#FDF3D3}
+      .hyb-soal .hyb-opsi:nth-of-type(4){border-color:#26890C;background:#E7F4E2}
+      .hyb-soal .hyb-opsi:nth-of-type(1):has(input[type=radio]:checked){background:#E21B3C;border-color:#A8122B;color:#fff}
+      .hyb-soal .hyb-opsi:nth-of-type(2):has(input[type=radio]:checked){background:#1368CE;border-color:#0D4E9E;color:#fff}
+      .hyb-soal .hyb-opsi:nth-of-type(3):has(input[type=radio]:checked){background:#D89E00;border-color:#9A7000;color:#fff}
+      .hyb-soal .hyb-opsi:nth-of-type(4):has(input[type=radio]:checked){background:#26890C;border-color:#1B6109;color:#fff}
+      @media (prefers-color-scheme: dark){
+        .hyb-soal .hyb-opsi:nth-of-type(1){background:#3A1220}
+        .hyb-soal .hyb-opsi:nth-of-type(2){background:#12283F}
+        .hyb-soal .hyb-opsi:nth-of-type(3){background:#3A2E0C}
+        .hyb-soal .hyb-opsi:nth-of-type(4){background:#142E12}
+      }
+      /* Tombol kirim gaya Wayground: gradien ungu->pink, tebal, memantul (TANPA timer) */
+      .btn-kirim-webgas{background:linear-gradient(135deg,#7C3AED,#EC4899) !important;color:#fff !important;min-height:64px;font-size:1.12rem;border-radius:18px;box-shadow:0 6px 0 rgba(0,0,0,.18),0 12px 24px rgba(124,58,237,.35);transition:transform .12s ease,box-shadow .12s ease}
+      .btn-kirim-webgas:hover{transform:scale(1.02)}
+      .btn-kirim-webgas:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.18),0 6px 12px rgba(124,58,237,.3)}
+      .btn-kirim-webgas::before{content:"🚀 "}
+      /* Skor muncul dengan pop + confetti (lihat JS confettiBurst) */
+      .skor-blok{animation:skorPop .45s cubic-bezier(.34,1.56,.64,1) both}
+      @keyframes skorPop{from{opacity:0;transform:scale(.88) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+      .confetti-bit{position:fixed;top:-12px;z-index:9999;pointer-events:none;border-radius:2px;animation:confettiJatuh 2.4s ease-in forwards}
+      @keyframes confettiJatuh{to{transform:translateY(105vh) rotate(720deg);opacity:0}}
+      /* Pil kemajuan (bukan timer): "X dari Y dijawab" */
+      .kuis-progress{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:.92rem;border-radius:999px;padding:6px 14px;margin-top:10px;background:linear-gradient(135deg,#EDE9FE,#FCE7F3);color:#5B21B6;border:2px solid #C4B5FD}
+      .kuis-progress .bar{width:90px;height:10px;border-radius:999px;background:#E5E7EB;overflow:hidden}
+      .kuis-progress .bar i{display:block;height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#7C3AED,#EC4899);transition:width .3s ease}
       .hyb-kirim{margin-top:2px}
       .btn-kirim-webgas{margin-top:2px}
       .skor-blok{margin:14px auto 0;padding:14px 16px;border-radius:12px;background:#ECFDF5;border:2px solid #047857;font-size:1rem;line-height:1.55;text-align:center}
@@ -648,7 +682,8 @@
         </div>
         <p class="lead" id="lead-diag">Jawab 3 soal di bawah ini — jawabanmu dikirim dari LKPD ini dan skormu langsung masuk ke pantauan guru secara live.</p>
         <div class="form-card">
-          <h3 id="diag-form-judul">Jawab Diagnostik di Sini</h3>
+          <h3 id="diag-form-judul">🎯 Jawab Diagnostik di Sini</h3>
+          <p class="kuis-progress" data-blok="diag"><span class="teks">0 dari 3 dijawab</span><span class="bar"><i></i></span></p>
           <p class="normal-only"><strong>3 soal</strong> untuk mengukur titik awalmu &mdash; <strong>bukan untuk nilai rapor</strong>.</p>
           <p class="supian-only"><span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span><br /><strong>3 soal mudah.</strong> Khusus untukmu. Kerjakan sama-sama dengan guru. <strong>Bukan untuk nilai rapor.</strong></p>
           <div class="supian-only pendamping-box"><span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span><br /><strong>Guru bacakan soal.</strong> Kamu jawab dengan bicara. Waktu lebih lama.</div>
@@ -1114,7 +1149,8 @@
         </div>
         <p class="lead" id="lead-kuis">Jawab 10 soal di bawah ini — jawabanmu dikirim dari LKPD ini dan skormu langsung tercatat dan bisa dipantau guru secara live.</p>
         <div class="form-card">
-          <h3 id="kuis-form-judul">Jawab Kuis Akhir di Sini</h3>
+          <h3 id="kuis-form-judul">🏆 Jawab Kuis Akhir di Sini</h3>
+          <p class="kuis-progress" data-blok="kuis"><span class="teks">0 dari 10 dijawab</span><span class="bar"><i></i></span></p>
           <p class="normal-only"><strong>10 soal verbatim</strong> dari Uji Kompetensi Bab 3 (Buku Siswa hlm. 83&ndash;86). Tiap soal <strong>10 poin</strong>, skor maksimum <strong>100</strong>.</p>
           <p class="supian-only"><span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span><br /><strong>5 soal mudah.</strong> Khusus untukmu. Kerjakan sama-sama dengan guru. Tiap soal <strong>20 poin</strong>. Nilai paling besar <strong>100</strong>. Sama seperti temanmu.</p>
           <div class="supian-only pendamping-box"><span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span><br /><strong>Guru bacakan soal.</strong> Kamu jawab dengan bicara. Waktu lebih lama.</div>
@@ -1483,6 +1519,7 @@
               supianRolePrev = null;
             }
           }
+          if(typeof perbaruiProgress === "function") perbaruiProgress();
         }
 
         function applyAbsen(){
@@ -1800,6 +1837,50 @@
               : "https://docs.google.com/forms/d/e/1FAIpQLScSda_5ZUhD9tT3zD9of0KkogWP_uUYm1Mh27iAdgZ5DqiPBA/viewform");
           return '<a href="' + url + '" target="_blank" rel="noopener">Google Form (cadangan)</a>';
         }
+        /* ---------- Perayaan Wayground (8 Nov): confetti + pil kemajuan, TANPA timer ---------- */
+        function confettiBurst(){
+          var warna = ["#E21B3C","#1368CE","#D89E00","#26890C","#7C3AED","#EC4899","#F59E0B"];
+          for(var i = 0; i < 28; i++){
+            var b = document.createElement("span");
+            b.className = "confetti-bit";
+            var ukuran = 7 + Math.floor(Math.random() * 8);
+            b.style.left = (Math.random() * 100) + "vw";
+            b.style.width = ukuran + "px";
+            b.style.height = (ukuran * 0.6) + "px";
+            b.style.background = warna[i % warna.length];
+            b.style.animationDelay = (Math.random() * 0.5) + "s";
+            b.style.animationDuration = (1.8 + Math.random() * 1.2) + "s";
+            document.body.appendChild(b);
+            (function(el){ setTimeout(function(){ el.remove(); }, 3400); })(b);
+          }
+        }
+        function perbaruiProgress(){
+          document.querySelectorAll(".kuis-progress").forEach(function(pil){
+            var blok = pil.getAttribute("data-blok");
+            var kartu = pil.closest(".form-card");
+            if(!kartu) return;
+            var soalTerlihat = [];
+            kartu.querySelectorAll(".hyb-blok").forEach(function(b){
+              if(b.offsetParent === null) return; /* blok tersembunyi (mis. versi lain) */
+              b.querySelectorAll("fieldset.hyb-soal").forEach(function(fs){
+                soalTerlihat.push(fs);
+              });
+            });
+            var total = soalTerlihat.length;
+            if(total === 0) total = (blok === "kuis" ? 10 : 3);
+            var dijawab = soalTerlihat.filter(function(fs){
+              return fs.querySelector("input[type=radio]:checked");
+            }).length;
+            var teks = pil.querySelector(".teks");
+            var bar = pil.querySelector(".bar i");
+            if(teks) teks.textContent = dijawab + " dari " + total + " dijawab";
+            if(bar) bar.style.width = (total ? Math.round(dijawab / total * 100) : 0) + "%";
+          });
+        }
+        document.addEventListener("change", function(e){
+          if(e.target && e.target.matches(".hyb-opsi input[type=radio]")) perbaruiProgress();
+        });
+        perbaruiProgress();
         function tampilkanSkor(jenis, skor, maks, benar, jumlahSoal, dariSheet){
           var supian = !!state.supian;
           var html;
@@ -1815,6 +1896,7 @@
               + (dariSheet ? ' Skor ini dibaca dari Sheet Rekap.' : ' (Skor dari server; pembacaan Sheet belum berhasil, tapi jawabanmu sudah tersimpan.)') + '</p>';
           }
           isiSkorBox(jenis, html, false);
+          if(benar > 0) confettiBurst();
         }
         function tampilkanGagal(jenis, pesan){
           var supian = !!state.supian;
