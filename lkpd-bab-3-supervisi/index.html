@@ -499,6 +499,38 @@
       .peran-check{flex:none;width:22px;height:22px;color:var(--gold);opacity:0;transform:scale(.6);transition:opacity .15s ease,transform .15s ease}
       .peran-list [role="option"][aria-selected="true"] .peran-check{opacity:1;transform:scale(1)}
       @media (prefers-reduced-motion: reduce){.peran-trigger,.peran-chevron,.peran-check{transition:none}.peran-dd.open .peran-list,.peran-dd.open-up.open .peran-list{animation:none}}
+      /* ---------- DROPDOWN CUSTOM IDENTITAS (8 Nov): daftar pilihan bawaan
+         Android terlihat jadul — daftar ini dibuat sendiri (HTML/CSS/JS)
+         supaya tampil modern. Select asli tetap ada (tersembunyi) sebagai
+         sumber nilai; pilih di daftar ini = isi select asli + picu change,
+         jadi sinkronIdentitas + applyAbsen tetap jalan. Daftar dibuat dari
+         <option> asli (36 nama, 36 absen, 1 kelas) + bisa digulir. */
+      .ident-dd{position:relative}
+      .ident-native{position:absolute !important;top:0;left:0;width:1px !important;height:1px !important;min-height:0 !important;margin:0;padding:0;border:0;opacity:0;pointer-events:none}
+      .ident-trigger{width:100%;min-height:56px;display:flex;align-items:center;gap:10px;font:inherit;text-align:left;cursor:pointer;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:12px 16px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.07);transition:border-color .15s ease,box-shadow .15s ease}
+      .ident-trigger:hover{border-color:var(--green-mid)}
+      .ident-trigger:focus-visible{outline:3px solid var(--sage);border-color:var(--green-mid)}
+      .ident-trigger.has-value{border-color:var(--green-mid)}
+      .ident-trigger-label{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .ident-trigger:not(.has-value) .ident-trigger-label{color:var(--muted);font-weight:600}
+      .ident-chevron{flex:none;width:20px;height:20px;color:#D97706;transition:transform .2s ease}
+      .ident-dd.open .ident-chevron{transform:rotate(180deg)}
+      .ident-dd.open .ident-trigger{border-color:#D97706;outline:3px solid rgba(227,192,122,.55);box-shadow:0 0 0 4px rgba(227,192,122,.18)}
+      .ident-list{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:60;list-style:none;margin:0;padding:6px;max-height:320px;overflow-y:auto;background:var(--surface);border:1.5px solid rgba(217,119,6,.5);border-radius:16px;box-shadow:var(--shadow-lift)}
+      .ident-dd.open-up .ident-list{top:auto;bottom:calc(100% + 8px)}
+      .ident-dd.open .ident-list{animation:identPop .18s ease both}
+      @keyframes identPop{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
+      .ident-dd.open-up.open .ident-list{animation-name:identPopUp}
+      @keyframes identPopUp{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+      .ident-list li{margin:0}
+      .ident-list [role="option"]{width:100%;min-height:48px;display:flex;align-items:center;gap:10px;font:inherit;text-align:left;cursor:pointer;color:var(--ink);background:transparent;border:none;border-radius:12px;padding:8px 12px;font-weight:600}
+      .ident-list [role="option"]:hover{background:var(--surface-2)}
+      .ident-list [role="option"]:focus-visible{outline:3px solid rgba(227,192,122,.55);outline-offset:-1px}
+      .ident-list [role="option"][aria-selected="true"]{background:var(--sage);font-weight:800}
+      .ident-opt-label{flex:1;min-width:0}
+      .ident-check{flex:none;width:20px;height:20px;color:var(--gold);opacity:0;transform:scale(.6);transition:opacity .15s ease,transform .15s ease}
+      .ident-list [role="option"][aria-selected="true"] .ident-check{opacity:1;transform:scale(1)}
+      @media (prefers-reduced-motion: reduce){.ident-trigger,.ident-chevron,.ident-check{transition:none}.ident-dd.open .ident-list,.ident-dd.open-up.open .ident-list{animation:none}}
       @media (prefers-color-scheme: dark){ .appbar-chip{color:#E3C07A} }
       /* ---------- TAB BAR: kaca buram + ikon aktif gradien ---------- */
       .tabbar{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
@@ -1600,9 +1632,6 @@
           var lead = $("kasus-lead"), hint = $("hint-analisis-kasus");
           var topik = state.group || "";
           document.querySelectorAll("#kasus article.case").forEach(function(a){
-            /* Supian dilewati: ia membaca Kasus 1 + Kasus 3 versi sederhana
-               (diatur CSS body.supian); filter ini hanya untuk kasus normal. */
-            if(a.classList.contains("supian-only")) return;
             var t = a.getAttribute("data-topik");
             a.style.display = (!topik || t === topik) ? "" : "none";
           });
@@ -1746,6 +1775,21 @@
           musicAudio.addEventListener("pause", function(){ musicBtn.classList.remove("playing"); });
         }
         updateMusicButton();
+        /* Loop tanpa jeda (8 Nov): berkas MP3 "Positive Energy" berakhir
+           dengan ~2,95 dtk hening (87,646–90,594 dtk, terukur ffmpeg
+           silencedetect -50dB) — bila dibiarkan, tiap putaran ada jeda
+           hening sebelum musik mulai lagi. Jadi putaran dipotong di 87,0
+           dtk (sebelum hening dimulai; aman dari jeda timeupdate ~250 mdtk)
+           dengan mengembalikan currentTime ke 0. Atribut loop tetap ada
+           sebagai pengaman bila handler ini terlewat. */
+        var MUSIK_LOOP_END = 87.0;
+        if(musicAudio){
+          musicAudio.addEventListener("timeupdate", function(){
+            if(musicAudio.currentTime >= MUSIK_LOOP_END){
+              musicAudio.currentTime = 0;
+            }
+          });
+        }
         function cobaPutarAwal(){
           if(!musicAudio || !musicOn || !musicAudio.paused) return;
           var p = musicAudio.play();
@@ -2414,6 +2458,163 @@
           sections.forEach(reveal);
         }
         setActive("");
+      })();
+    </script>
+
+    <script>
+      /* ---------- DROPDOWN CUSTOM IDENTITAS (8 Nov): daftar pilihan bawaan
+         Android terlihat jadul — daftar ini dibuat sendiri supaya tampil
+         modern. Select asli tetap sumber nilai; pilih di sini = isi select
+         asli + picu change (sinkronIdentitas + applyAbsen tetap jalan).
+         Daftar dibuat dari <option> asli (36 nama, 36 absen, 1 kelas).
+         sinkronIdentitas mengisi select lain TANPA picu change, jadi
+         sesudah tiap pilihan, ketiga pemicu disinkronkan bersama. */
+      (function(){
+        var semua = [];
+        function syncSemua(){
+          semua.forEach(function(d){ d.syncUI(); });
+        }
+        function bangunDropdownIdentitas(selectId, labelKosong){
+          var native = document.getElementById(selectId);
+          if(!native || !native.parentNode) return;
+          var dd = document.createElement("div");
+          dd.className = "ident-dd";
+          native.parentNode.insertBefore(dd, native);
+          dd.appendChild(native);
+          native.classList.add("ident-native");
+          native.setAttribute("tabindex", "-1");
+          native.setAttribute("aria-hidden", "true");
+          var trigger = document.createElement("button");
+          trigger.type = "button";
+          trigger.className = "ident-trigger";
+          trigger.id = native.id + "-trigger";
+          trigger.setAttribute("aria-haspopup", "listbox");
+          trigger.setAttribute("aria-expanded", "false");
+          trigger.setAttribute("aria-labelledby", "label-" + native.id + " " + native.id + "-trigger-label");
+          var labelEl = document.createElement("span");
+          labelEl.className = "ident-trigger-label";
+          labelEl.id = native.id + "-trigger-label";
+          trigger.appendChild(labelEl);
+          var chev = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          chev.setAttribute("class", "ident-chevron");
+          chev.setAttribute("viewBox", "0 0 24 24");
+          chev.setAttribute("fill", "none");
+          chev.setAttribute("stroke", "currentColor");
+          chev.setAttribute("stroke-width", "3");
+          chev.setAttribute("stroke-linecap", "round");
+          chev.setAttribute("stroke-linejoin", "round");
+          chev.setAttribute("aria-hidden", "true");
+          var cpath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          cpath.setAttribute("d", "M6 9l6 6 6-6");
+          chev.appendChild(cpath);
+          trigger.appendChild(chev);
+          dd.appendChild(trigger);
+          var list = document.createElement("ul");
+          list.className = "ident-list";
+          list.id = native.id + "-list";
+          list.setAttribute("role", "listbox");
+          list.setAttribute("aria-labelledby", "label-" + native.id);
+          list.hidden = true;
+          var options = [];
+          Array.prototype.slice.call(native.options).forEach(function(opt){
+            if(opt.disabled || opt.value === "") return;
+            var li = document.createElement("li");
+            var btn = document.createElement("button");
+            btn.type = "button";
+            btn.setAttribute("role", "option");
+            btn.setAttribute("data-value", opt.value);
+            btn.setAttribute("aria-selected", "false");
+            var txt = document.createElement("span");
+            txt.className = "ident-opt-label";
+            txt.textContent = opt.textContent;
+            btn.appendChild(txt);
+            var check = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            check.setAttribute("class", "ident-check");
+            check.setAttribute("viewBox", "0 0 24 24");
+            check.setAttribute("fill", "none");
+            check.setAttribute("stroke", "currentColor");
+            check.setAttribute("stroke-width", "3");
+            check.setAttribute("stroke-linecap", "round");
+            check.setAttribute("stroke-linejoin", "round");
+            check.setAttribute("aria-hidden", "true");
+            var kpath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            kpath.setAttribute("d", "M20 6L9 17l-5-5");
+            check.appendChild(kpath);
+            btn.appendChild(check);
+            li.appendChild(btn);
+            list.appendChild(li);
+            options.push(btn);
+          });
+          dd.appendChild(list);
+          function syncUI(){
+            var v = native.value;
+            var sel = native.options[native.selectedIndex];
+            if(v && sel){
+              labelEl.textContent = sel.textContent;
+              trigger.classList.add("has-value");
+            } else {
+              labelEl.textContent = labelKosong;
+              trigger.classList.remove("has-value");
+            }
+            options.forEach(function(o){
+              o.setAttribute("aria-selected", o.getAttribute("data-value") === v ? "true" : "false");
+            });
+          }
+          function isOpen(){ return dd.classList.contains("open"); }
+          function openDropdown(focusSelected){
+            syncUI();
+            var rect = trigger.getBoundingClientRect();
+            dd.classList.toggle("open-up", rect.bottom + 340 > window.innerHeight);
+            list.hidden = false;
+            dd.classList.add("open");
+            trigger.setAttribute("aria-expanded", "true");
+            var sel = list.querySelector('[aria-selected="true"]');
+            if(sel) sel.scrollIntoView({block:"nearest"});
+            if(focusSelected){ (sel || options[0]).focus(); }
+          }
+          function closeDropdown(refocusTrigger){
+            dd.classList.remove("open"); list.hidden = true;
+            trigger.setAttribute("aria-expanded", "false");
+            if(refocusTrigger) trigger.focus();
+          }
+          function setValue(value){
+            native.value = value;
+            syncUI();
+            native.dispatchEvent(new Event("change", {bubbles:true}));
+            syncSemua();
+            closeDropdown(true);
+          }
+          trigger.addEventListener("click", function(){
+            if(isOpen()) closeDropdown(false); else openDropdown(false);
+          });
+          trigger.addEventListener("keydown", function(ev){
+            if(ev.key === "ArrowDown" || ev.key === "Enter" || ev.key === " "){
+              ev.preventDefault(); openDropdown(true);
+            }
+          });
+          options.forEach(function(opt, i){
+            opt.addEventListener("click", function(){ setValue(opt.getAttribute("data-value")); });
+            opt.addEventListener("keydown", function(ev){
+              if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); setValue(opt.getAttribute("data-value")); }
+              else if(ev.key === "ArrowDown"){ ev.preventDefault(); (options[i + 1] || options[0]).focus(); }
+              else if(ev.key === "ArrowUp"){ ev.preventDefault(); (options[i - 1] || options[options.length - 1]).focus(); }
+              else if(ev.key === "Escape"){ ev.preventDefault(); closeDropdown(true); }
+              else if(ev.key === "Tab"){ closeDropdown(false); }
+            });
+          });
+          document.addEventListener("click", function(ev){
+            if(isOpen() && !dd.contains(ev.target)) closeDropdown(false);
+          });
+          document.addEventListener("keydown", function(ev){
+            if(ev.key === "Escape" && isOpen()) closeDropdown(true);
+          });
+          native.addEventListener("change", syncUI);
+          semua.push({syncUI: syncUI});
+          syncUI();
+        }
+        bangunDropdownIdentitas("nama", "— Pilih namamu —");
+        bangunDropdownIdentitas("kelas", "— Pilih kelas —");
+        bangunDropdownIdentitas("absen", "— Pilih nomor absen —");
       })();
     </script>
 
