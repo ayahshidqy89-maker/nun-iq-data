@@ -1779,6 +1779,12 @@
          * pesan jujur + tautan Google Form cadangan (jangan sembunyikan). */
         var WEBGAS_URL = "https://script.google.com/macros/s/AKfycbxAuryAVcyomWq-ajLIJmqOD-kaNnIA1qfF2QaGNKDU1FllDRxXFIs40bD8WAOTz7_jkw/exec";
         var SHEET_ID_WEBGAS = "1GqWo9BO6pxCoChxdXsdoUh_8CzsvcIbfER7fHmFlz04";
+        /* 8 Nov — 30 dtk lawas: panaskan Apps Script saat halaman dibuka.
+           GET ringan ke doGet ('OK'), tanpa efek samping — supaya kiriman
+           pertama siswa sudah hangat, bukan cold start. */
+        if(WEBGAS_URL.indexOf("PASTE_URL_DISINI") === -1){
+          try{ fetch(WEBGAS_URL, { mode: "no-cors", cache: "no-store" }).catch(function(){}); }catch(e){}
+        }
         /* Urutan opsi versi Supian (tanpa awalan huruf) — untuk memetakan
          * nilai pilihan ke huruf (pilihan ke-1 = A, ke-2 = B). Sama persis
          * dengan yang dipakai sync-rekap.py. Ini BUKAN kunci jawaban. */
@@ -1881,7 +1887,7 @@
           if(e.target && e.target.matches(".hyb-opsi input[type=radio]")) perbaruiProgress();
         });
         perbaruiProgress();
-        function tampilkanSkor(jenis, skor, maks, benar, jumlahSoal, dariSheet){
+        function tampilkanSkor(jenis, skor, maks, benar, jumlahSoal, dariSheet, tanpaConfetti){
           var supian = !!state.supian;
           var html;
           if(supian){
@@ -1896,7 +1902,7 @@
               + (dariSheet ? ' Skor ini dibaca dari Sheet Rekap.' : ' (Skor dari server; pembacaan Sheet belum berhasil, tapi jawabanmu sudah tersimpan.)') + '</p>';
           }
           isiSkorBox(jenis, html, false);
-          if(benar > 0) confettiBurst();
+          if(benar > 0 && !tanpaConfetti) confettiBurst();
         }
         function tampilkanGagal(jenis, pesan){
           var supian = !!state.supian;
@@ -2022,13 +2028,14 @@
           var payload = { nama:nama, absen:absen, jenis:jenis, jawaban:kumpul.jawaban };
           postWebgas(payload).then(function(hasil){
             if(hasil && hasil.ok){
+              /* 8 Nov — 30 dtk lawas: skor ditampilkan SEGERA dari jawaban server
+                 (tanpa menunggu pembacaan Sheet). Konfirmasi Sheet menyusul di latar. */
+              tampilkanSkor(jenis, hasil.skor, hasil.maks, hasil.benar, hasil.jumlahSoal, false);
+              setTombol(true, teksAsal);
               bacaSkorDariSheet(jenis, nama, absen, function(dariSheet){
                 if(dariSheet){
-                  tampilkanSkor(jenis, dariSheet.skor, hasil.maks, dariSheet.benar, dariSheet.jumlahSoal || hasil.jumlahSoal, true);
-                } else {
-                  tampilkanSkor(jenis, hasil.skor, hasil.maks, hasil.benar, hasil.jumlahSoal, false);
+                  tampilkanSkor(jenis, dariSheet.skor, hasil.maks, dariSheet.benar, dariSheet.jumlahSoal || hasil.jumlahSoal, true, true);
                 }
-                setTombol(true, teksAsal);
               });
             } else {
               setTombol(true, teksAsal);
