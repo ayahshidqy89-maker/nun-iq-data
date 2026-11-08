@@ -102,6 +102,13 @@
       .kumpul-box{margin-top:18px;border:2px dashed var(--green);border-radius:14px;padding:16px;background:var(--surface)}
       .kumpul-box .btn-kirim-webgas{margin-top:12px}
       #kamp-status{margin-top:10px;font-weight:600}
+      /* ---------- KIRIM FILE LANGSUNG (9 Nov): siswa pilih file dari HP,
+         LKPD kirim base64 ke WebGAS -> Drive guru. Tautan jadi cadangan. */
+      .kumpul-box input[type="file"]{display:block;width:100%;margin:10px 0 4px;padding:10px;border:2px dashed var(--line);border-radius:12px;background:var(--surface);font-size:1rem}
+      #kamp-file-nama{margin-top:6px;font-weight:600}
+      .kumpul-alt{margin-top:14px}
+      .kumpul-alt summary{cursor:pointer;font-weight:700;color:var(--muted);font-size:.95rem}
+      .kumpul-alt input{margin-top:10px}
 
       /* ---------- HERO ---------- */
       .hero{
@@ -1249,13 +1256,19 @@
         <p class="hint normal-only">Isi <em>sesudah</em> tampil: tulis tanggapan, saran, dan pertanyaan dari kelompok lain — dicatat oleh Pencatat tanggapan.</p>
         <textarea id="presentasi-sesudah" class="normal-only" placeholder="Contoh: Kelompok Asal 3 bertanya… Kelompok Asal 5 menyarankan…"></textarea>
         <div class="kumpul-box" id="kumpul-kampanye">
-          <label class="flabel normal-only" for="kamp-tautan">Kumpulkan poster/videomu</label>
-          <p class="hint normal-only">Unggah dulu poster/videomu ke Google Drive, atur berbagi ke &ldquo;Siapa saja yang memiliki tautan&rdquo;, lalu tempel tautannya di sini dan tekan <strong>Kirim tautan</strong>. Tautanmu tercatat ke guru.</p>
-          <label class="flabel supian-only" for="kamp-tautan">Kirim postermu</label>
-          <p class="hint supian-only">Minta tolong guru: unggah postermu ke Drive, salin tautannya, tempel di sini, lalu tekan <strong>Kirim</strong>.</p>
-          <input type="url" id="kamp-tautan" placeholder="Tempel tautan Google Drive poster/videomu di sini…" inputmode="url" />
-          <button type="button" class="btn-kirim-webgas" id="btn-kirim-kampanye">📤 Kirim tautan poster/video</button>
+          <label class="flabel normal-only" for="kamp-file">Kumpulkan poster/videomu</label>
+          <p class="hint normal-only">Pilih file poster/videomu dari HP, lalu tekan <strong>Kirim</strong>. Filemu langsung tersimpan ke Drive guru — kda perlu unggah manual ke Drive.</p>
+          <label class="flabel supian-only" for="kamp-file">Kirim postermu</label>
+          <p class="hint supian-only">Pilih gambar postermu, lalu tekan <strong>Kirim</strong>.</p>
+          <input type="file" id="kamp-file" accept="image/*,video/*" />
+          <p class="hint" id="kamp-file-nama" aria-live="polite"></p>
+          <button type="button" class="btn-kirim-webgas" id="btn-kirim-kampanye">📤 Kirim poster/video</button>
           <p class="hint" id="kamp-status" role="status" aria-live="polite"></p>
+          <details class="kumpul-alt">
+            <summary><span class="normal-only">Atau tempel tautan Drive (bila file terlalu besar)</span><span class="supian-only">Atau tempel tautan</span></summary>
+            <input type="url" id="kamp-tautan" placeholder="Tempel tautan Google Drive poster/videomu di sini…" inputmode="url" />
+            <button type="button" class="btn-kirim-webgas" id="btn-kirim-tautan">🔗 Kirim tautan</button>
+          </details>
         </div>
         <div class="mindful" id="mindful-kampanye"><strong>Ingat:</strong> kampanye terbaik bukan yang paling ramai, tetapi yang paling bisa dijalankan. Satu aksi kecil yang konsisten lebih berarti daripada slogan besar yang berhenti di poster.</div>
       </section>
@@ -1530,6 +1543,7 @@
           "ahli-judul": { text: "Tugas Kelompok" },
           "kampanye-judul": { text: "Kampanye Sekolahku Aman" },
           "btn-kirim-kampanye": { text: "📤 Kirim" },
+          "btn-kirim-tautan": { text: "🔗 Kirim" },
           "kamp-tautan": { ph: "Tempel tautan postermu di sini…" },
           "refleksi2-judul": { text: "Solusi Terbaik" },
           "kuis-form-judul": { text: "Soal Kuis Akhir" },
@@ -2429,21 +2443,98 @@
             })();
           });
         }
-        /* Kirim tautan poster/video kampanye (9 Nov): siswa menempel tautan
-           Google Drive poster/videonya; LKPD mengirim {nama, absen, jenis:
-           'kampanye', tautan} ke WebGAS -> tab "Kampanye" di Sheet. Bukan
+        /* Kirim poster/video kampanye (9 Nov): cara utama = FILE langsung
+           (kirimKampanyeFile, di bawah); cadangan = TAUTAN Drive
+           (kirimKampanyeTautan). Keduanya mengirim {nama, absen, jenis:
+           'kampanye', ...} ke WebGAS -> tab "Kampanye" di Sheet. Bukan
            skor, hanya bukti pengumpulan produk. */
-        function kirimKampanye(){
+        /* Kirim FILE poster/video langsung ke Drive guru (9 Nov): siswa pilih
+           file dari HP, LKPD baca sebagai base64 lalu kirim ke WebGAS — WebGAS
+           menyimpan ke folder Drive "Kampanye Bab 3 — XI-4" dan mencatat
+           tautannya. Kda perlu unggah manual ke Drive. Batas ~35 MB (aman
+           dari batas 50 MB Apps Script sesudah base64). */
+        function kirimKampanyeFile(){
+          var nama = val("nama");
+          var absenRaw = val("absen");
+          var absen = parseInt(absenRaw, 10);
+          var input = $("kamp-file");
+          var status = $("kamp-status");
+          var btn = $("btn-kirim-kampanye");
+          var file = input && input.files && input.files[0];
+          function setStatus(teks, ok){
+            if(status){ status.textContent = teks; status.style.color = ok ? "var(--green)" : "#B91C1C"; }
+          }
+          function teksTombol(){ return state.supian ? "📤 Kirim" : "📤 Kirim poster/video"; }
+          if(WEBGAS_URL.indexOf("PASTE_URL_DISINI") !== -1){
+            setStatus(state.supian ? "Aplikasi penilaian belum dipasang guru." : "Aplikasi penilaian belum dipasang (URL WebGAS belum diisi).", false);
+            return;
+          }
+          if(!nama){
+            toast(state.supian ? "Tulis namamu dulu di atas." : "Isi dulu Nama lengkapmu di atas.");
+            var elNama = $("nama"); if(elNama) elNama.focus();
+            return;
+          }
+          if(isNaN(absen) || absen < 1 || absen > 36){
+            toast(state.supian ? "Nomor absen 1 sampai 36." : "Nomor absen harus angka 1 sampai 36.");
+            var elAbsen = $("absen"); if(elAbsen) elAbsen.focus();
+            return;
+          }
+          if(!file){
+            setStatus(state.supian ? "Pilih dulu gambar postermu." : "Pilih dulu file poster/videomu.", false);
+            if(input) input.focus();
+            return;
+          }
+          var BATAS = 35 * 1024 * 1024;
+          if(file.size > BATAS){
+            setStatus(state.supian ? "File terlalu besar. Minta tolong guru." : "File terlalu besar (maks ~35 MB). Rekam dengan kualitas lebih rendah, atau pakai tautan Drive di bawah.", false);
+            return;
+          }
+          if(btn){ btn.disabled = true; btn.textContent = state.supian ? "Mengirim…" : "Mengirim file…"; }
+          setStatus("", true);
+          var reader = new FileReader();
+          reader.onload = function(){
+            var dataUrl = reader.result || "";
+            var base64 = dataUrl.indexOf(",") !== -1 ? dataUrl.split(",")[1] : "";
+            if(!base64){
+              if(btn){ btn.disabled = false; btn.textContent = teksTombol(); }
+              setStatus("File kda bisa dibaca. Coba lagi.", false);
+              return;
+            }
+            postWebgas({ nama: nama, absen: absen, jenis: "kampanye", file: { nama: file.name, tipe: file.type || "application/octet-stream", data: base64 } })
+              .then(function(hasil){
+                if(btn){ btn.disabled = false; btn.textContent = teksTombol(); }
+                if(hasil && hasil.ok){
+                  setStatus(state.supian ? "Terkirim. Terima kasih." : "File terkirim ke guru. Terima kasih.", true);
+                  if(input) input.value = "";
+                  var fn = $("kamp-file-nama"); if(fn) fn.textContent = "";
+                } else {
+                  setStatus((hasil && hasil.error) ? hasil.error : "Gagal mengirim. Coba lagi.", false);
+                }
+              })
+              .catch(function(){
+                if(btn){ btn.disabled = false; btn.textContent = teksTombol(); }
+                setStatus(state.supian ? "Jaringan lambat. Coba lagi." : "Jaringan lambat. Coba lagi, atau tunjukkan filemu langsung ke guru.", false);
+              });
+          };
+          reader.onerror = function(){
+            if(btn){ btn.disabled = false; btn.textContent = teksTombol(); }
+            setStatus("File kda bisa dibaca. Coba lagi.", false);
+          };
+          reader.readAsDataURL(file);
+        }
+        /* Kirim TAUTAN Drive (cadangan bila file terlalu besar): logika lama
+           kirimKampanye, kini terikat ke tombol #btn-kirim-tautan. */
+        function kirimKampanyeTautan(){
           var nama = val("nama");
           var absenRaw = val("absen");
           var absen = parseInt(absenRaw, 10);
           var tautan = val("kamp-tautan").trim();
           var status = $("kamp-status");
-          var btn = $("btn-kirim-kampanye");
+          var btn = $("btn-kirim-tautan");
           function setStatus(teks, ok){
             if(status){ status.textContent = teks; status.style.color = ok ? "var(--green)" : "#B91C1C"; }
           }
-          function teksTombol(){ return state.supian ? "📤 Kirim" : "📤 Kirim tautan poster/video"; }
+          function teksTombol(){ return state.supian ? "🔗 Kirim" : "🔗 Kirim tautan"; }
           if(WEBGAS_URL.indexOf("PASTE_URL_DISINI") !== -1){
             setStatus(state.supian ? "Aplikasi penilaian belum dipasang guru." : "Aplikasi penilaian belum dipasang (URL WebGAS belum diisi).", false);
             return;
@@ -2480,8 +2571,19 @@
             });
         }
         document.querySelectorAll("#btn-kirim-kampanye").forEach(function(b){
-          b.addEventListener("click", kirimKampanye);
+          b.addEventListener("click", kirimKampanyeFile);
         });
+        document.querySelectorAll("#btn-kirim-tautan").forEach(function(b){
+          b.addEventListener("click", kirimKampanyeTautan);
+        });
+        var kampFileInput = $("kamp-file");
+        if(kampFileInput){
+          kampFileInput.addEventListener("change", function(){
+            var f = kampFileInput.files && kampFileInput.files[0];
+            var fn = $("kamp-file-nama");
+            if(fn) fn.textContent = f ? (state.supian ? f.name : ("Dipilih: " + f.name + " (" + (f.size / 1048576).toFixed(1) + " MB)")) : "";
+          });
+        }
         document.querySelectorAll(".btn-kirim-webgas").forEach(function(b){
           b.addEventListener("click", function(){
             kirimNilai(b.getAttribute("data-jenis"));
