@@ -1600,6 +1600,9 @@
           var lead = $("kasus-lead"), hint = $("hint-analisis-kasus");
           var topik = state.group || "";
           document.querySelectorAll("#kasus article.case").forEach(function(a){
+            /* Supian dilewati: ia membaca Kasus 1 + Kasus 3 versi sederhana
+               (diatur CSS body.supian); filter ini hanya untuk kasus normal. */
+            if(a.classList.contains("supian-only")) return;
             var t = a.getAttribute("data-topik");
             a.style.display = (!topik || t === topik) ? "" : "none";
           });
