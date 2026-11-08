@@ -84,6 +84,24 @@
       .poster-contoh{margin:20px 0 4px}
       .poster-contoh img{display:block;width:100%;height:auto;border-radius:16px;border:1px solid var(--line)}
       .poster-contoh figcaption{margin-top:9px;font-size:.9rem;color:var(--muted);text-align:center}
+      /* ---------- POSTER CONTOH HTML (9 Nov): <img> poster.png 404 di Vercel
+         (biner kda bisa di-push) sehingga contoh poster kda pernah tampil —
+         hanya caption 'Contoh poster. Boleh ditiru.' yang terlihat. Poster
+         kini dibuat dari HTML/CSS supaya benar-benar tampil dan bisa ditiru. */
+      .poster-html{border-radius:16px;padding:30px 20px;text-align:center;box-shadow:var(--shadow-lift);margin:0}
+      .poster-html .poster-judul{font-size:1.9rem;font-weight:900;line-height:1.2;letter-spacing:-.01em;margin:0 0 10px}
+      .poster-html .poster-isi{font-size:1.08rem;font-weight:700;line-height:1.45;margin:0}
+      .poster-html .poster-kaki{margin:16px 0 0;font-size:.85rem;font-weight:600;opacity:.85}
+      .poster-html.poster-bully{background:linear-gradient(135deg,#7F1D1D,#B91C1C);color:#FEF2F2;border:2px solid #FCA5A5}
+      .poster-html.poster-judi{background:linear-gradient(135deg,#065F46,#047857);color:#ECFDF5;border:2px solid #6EE7B7}
+      .poster-html.poster-judi .poster-judul{color:#FEF3C7}
+      /* ---------- KOTAK KUMPUL POSTER/VIDEO (9 Nov): selama ini kda ada
+         form pengumpulan produk kampanye — siswa membuat poster/video di
+         aplikasi luar tapi kda ada tempat menyerahkannya di LKPD. Kini ada
+         kolom tautan Drive + tombol kirim ke WebGAS (jenis 'kampanye'). */
+      .kumpul-box{margin-top:18px;border:2px dashed var(--green);border-radius:14px;padding:16px;background:var(--surface)}
+      .kumpul-box .btn-kirim-webgas{margin-top:12px}
+      #kamp-status{margin-top:10px;font-weight:600}
 
       /* ---------- HERO ---------- */
       .hero{
@@ -805,7 +823,7 @@
             </div>
           </div>
         </div>
-        <div class="mindful" id="mindful-kelompok"><strong> Cara kelompok dibentuk:</strong> Kelompok Ahli untuk belajar mendalam satu topik (absen 1–6 = A1, 7–12 = A2, 13–18 = B1, 19–24 = B2, 25–30 = C1, 31–36 = C2). Kelompok Asal untuk kembali berkumpul dan saling mengajar — tiap Kelompok Asal berisi 1 siswa dari tiap Kelompok Ahli, jadi semua topik terwakili. Tab materi ahlimu di Langkah 4 sudah terbuka otomatis mengikuti nomor absenmu.</div>
+        <div class="mindful" id="mindful-kelompok"><strong> Cara kelompok dibentuk:</strong> Kelompok Ahli untuk belajar mendalam satu topik (absen 1–6 = A1, 7–12 = A2, 13–18 = B1, 19–24 = B2, 25–30 = C1, 31–36 = C2). Kelompok Asal untuk kembali berkumpul dan saling mengajar — tiap Kelompok Asal berisi 1 siswa dari tiap Kelompok Ahli, jadi semua topik terwakili. <strong>Alur duduk:</strong> mulai di Kelompok Asal &rarr; pindah ke Kelompok Ahli (belajar) &rarr; kembali ke Kelompok Asal (mengajar + kampanye). Tab materi ahlimu di Langkah 4 sudah terbuka otomatis mengikuti nomor absenmu.</div>
       </section>
 
       <!-- ================= 2. DIAGNOSTIK ================= -->
@@ -1168,7 +1186,15 @@
         <div class="role-row normal-only"><label for="peran-pencatat">Pencatat tanggapan</label><input type="text" id="peran-pencatat" placeholder="Nama — mencatat tanggapan" /></div>
 
         <figure class="poster-contoh">
-          <img src="assets/poster.png" onerror="this.style.display='none'" width="794" height="1123" alt="Contoh poster kampanye &ldquo;Stop Bully, Mulai Peduli&rdquo; — Sekolahku Aman, Kelas XI-4" />
+          <div class="poster-html poster-bully normal-only" role="img" aria-label="Contoh poster kampanye Stop Bully, Mulai Peduli — Sekolahku Aman, Kelas XI-4">
+            <p class="poster-judul">STOP BULLY,<br />MULAI PEDULI</p>
+            <p class="poster-isi">Sekolahku Aman &mdash; Kelas XI-4</p>
+          </div>
+          <div class="poster-html poster-judi supian-only" role="img" aria-label="Contoh poster kampanye Jangan Judi — Judi (maisir) itu haram">
+            <p class="poster-judul">JANGAN JUDI.</p>
+            <p class="poster-isi">Judi (maisir) itu haram.</p>
+            <p class="poster-kaki">Sekolahku Aman</p>
+          </div>
           <figcaption id="caption-poster">Contoh poster — boleh ditiru strukturnya, isi dengan judul dan aksimu sendiri.</figcaption>
         </figure>
 
@@ -1209,7 +1235,7 @@
         <div class="pdpd-box">
           <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
           <p><strong>Cara buat poster</strong></p>
-          <p>1. Buka aplikasi gambar di HP.<br />2. Tulis 1 pesan: &ldquo;Jangan judi.&rdquo;<br />3. Tulis: Judi (maisir) itu haram.</p>
+          <p>1. Buka aplikasi gambar di HP.<br />2. Tulis pesan besar: &ldquo;Jangan judi.&rdquo;<br />3. Tulis di bawahnya: Judi (maisir) itu haram.</p>
         </div>
         <label class="flabel normal-only" for="aksi1">Tiga aksi nyata di sekolah</label>
         <p class="hint normal-only">Tulis aksi yang benar-benar bisa dijalankan kelompokmu di sekolah — bukan sekadar slogan.</p>
@@ -1222,6 +1248,15 @@
         <label class="flabel normal-only" for="presentasi-sesudah">Sesudah presentasi — tanggapan dan pertanyaan dari kelompok lain yang kami terima</label>
         <p class="hint normal-only">Isi <em>sesudah</em> tampil: tulis tanggapan, saran, dan pertanyaan dari kelompok lain — dicatat oleh Pencatat tanggapan.</p>
         <textarea id="presentasi-sesudah" class="normal-only" placeholder="Contoh: Kelompok Asal 3 bertanya… Kelompok Asal 5 menyarankan…"></textarea>
+        <div class="kumpul-box" id="kumpul-kampanye">
+          <label class="flabel normal-only" for="kamp-tautan">Kumpulkan poster/videomu</label>
+          <p class="hint normal-only">Unggah dulu poster/videomu ke Google Drive, atur berbagi ke &ldquo;Siapa saja yang memiliki tautan&rdquo;, lalu tempel tautannya di sini dan tekan <strong>Kirim tautan</strong>. Tautanmu tercatat ke guru.</p>
+          <label class="flabel supian-only" for="kamp-tautan">Kirim postermu</label>
+          <p class="hint supian-only">Minta tolong guru: unggah postermu ke Drive, salin tautannya, tempel di sini, lalu tekan <strong>Kirim</strong>.</p>
+          <input type="url" id="kamp-tautan" placeholder="Tempel tautan Google Drive poster/videomu di sini…" inputmode="url" />
+          <button type="button" class="btn-kirim-webgas" id="btn-kirim-kampanye">📤 Kirim tautan poster/video</button>
+          <p class="hint" id="kamp-status" role="status" aria-live="polite"></p>
+        </div>
         <div class="mindful" id="mindful-kampanye"><strong>Ingat:</strong> kampanye terbaik bukan yang paling ramai, tetapi yang paling bisa dijalankan. Satu aksi kecil yang konsisten lebih berarti daripada slogan besar yang berhenti di poster.</div>
       </section>
 
@@ -1494,6 +1529,8 @@
           "diag-form-judul": { text: "Soal Cek Awal" },
           "ahli-judul": { text: "Tugas Kelompok" },
           "kampanye-judul": { text: "Kampanye Sekolahku Aman" },
+          "btn-kirim-kampanye": { text: "📤 Kirim" },
+          "kamp-tautan": { ph: "Tempel tautan postermu di sini…" },
           "refleksi2-judul": { text: "Solusi Terbaik" },
           "kuis-form-judul": { text: "Soal Kuis Akhir" },
           "penutup-judul": { text: "Refleksi dan Janji" },
@@ -1653,6 +1690,20 @@
         }
         terapkanKasusOtomatis();
 
+        /* Tab Ahli otomatis (9 Nov): tiap siswa hanya melihat tab kelompoknya
+           sendiri — tab kelompok lain disembunyikan supaya pembagian kelompok
+           tidak sia-sia (sama seperti Kasus). Bila belum pilih identitas,
+           ketiga tab tampil (fallback). Supian sudah benar (hanya tab C,
+           karena A/B normal-only); filter ini terutama untuk siswa normal. */
+        function terapkanTabAhli(){
+          var topik = state.group || "";
+          document.querySelectorAll(".tabs [data-tab]").forEach(function(b){
+            var t = b.getAttribute("data-tab");
+            b.style.display = (!topik || t === topik) ? "" : "none";
+          });
+        }
+        terapkanTabAhli();
+
         function applyAbsen(){
           var raw = $("absen").value.trim();
           var kartu = $("kartu-kelompok"), err = $("absen-error");
@@ -1661,6 +1712,7 @@
             state.group = ""; state.ahliCode = ""; state.ahliLabel = ""; state.asal = ""; state.absen = "";
             state.supian = false; setSupianMode(false);
             terapkanKasusOtomatis();
+            terapkanTabAhli();
             return;
           }
           var n = parseInt(raw, 10);
@@ -1669,6 +1721,7 @@
             state.group = ""; state.ahliCode = ""; state.ahliLabel = ""; state.asal = ""; state.absen = "";
             state.supian = false; setSupianMode(false);
             terapkanKasusOtomatis();
+            terapkanTabAhli();
             return;
           }
           err.classList.remove("show");
@@ -1691,6 +1744,7 @@
           kartu.classList.add("show");
           showTab(ahli.topic);
           terapkanKasusOtomatis();
+          terapkanTabAhli();
           /* Progres otomatis (8 Nov): absen sah -> tampilkan catatan +
              laporkan Langkah 1. Nilai dropdown selalu lengkap (kda ada
              ketikan sebagian seperti dulu), jadi lapor langsung di sini.
@@ -2375,6 +2429,59 @@
             })();
           });
         }
+        /* Kirim tautan poster/video kampanye (9 Nov): siswa menempel tautan
+           Google Drive poster/videonya; LKPD mengirim {nama, absen, jenis:
+           'kampanye', tautan} ke WebGAS -> tab "Kampanye" di Sheet. Bukan
+           skor, hanya bukti pengumpulan produk. */
+        function kirimKampanye(){
+          var nama = val("nama");
+          var absenRaw = val("absen");
+          var absen = parseInt(absenRaw, 10);
+          var tautan = val("kamp-tautan").trim();
+          var status = $("kamp-status");
+          var btn = $("btn-kirim-kampanye");
+          function setStatus(teks, ok){
+            if(status){ status.textContent = teks; status.style.color = ok ? "var(--green)" : "#B91C1C"; }
+          }
+          function teksTombol(){ return state.supian ? "📤 Kirim" : "📤 Kirim tautan poster/video"; }
+          if(WEBGAS_URL.indexOf("PASTE_URL_DISINI") !== -1){
+            setStatus(state.supian ? "Aplikasi penilaian belum dipasang guru." : "Aplikasi penilaian belum dipasang (URL WebGAS belum diisi).", false);
+            return;
+          }
+          if(!nama){
+            toast(state.supian ? "Tulis namamu dulu di atas." : "Isi dulu Nama lengkapmu di atas.");
+            var elNama = $("nama"); if(elNama) elNama.focus();
+            return;
+          }
+          if(isNaN(absen) || absen < 1 || absen > 36){
+            toast(state.supian ? "Nomor absen 1 sampai 36." : "Nomor absen harus angka 1 sampai 36.");
+            var elAbsen = $("absen"); if(elAbsen) elAbsen.focus();
+            return;
+          }
+          if(!tautan || tautan.indexOf("http") !== 0){
+            setStatus(state.supian ? "Tempel dulu tautan postermu." : "Tempel dulu tautan Google Drive poster/videomu (diawali http).", false);
+            var elT = $("kamp-tautan"); if(elT) elT.focus();
+            return;
+          }
+          if(btn){ btn.disabled = true; btn.textContent = state.supian ? "Mengirim…" : "Mengirim tautan…"; }
+          setStatus("", true);
+          postWebgas({ nama: nama, absen: absen, jenis: "kampanye", tautan: tautan })
+            .then(function(hasil){
+              if(btn){ btn.disabled = false; btn.textContent = teksTombol(); }
+              if(hasil && hasil.ok){
+                setStatus(state.supian ? "Terkirim. Terima kasih." : "Tautan terkirim ke guru. Terima kasih.", true);
+              } else {
+                setStatus((hasil && hasil.error) ? hasil.error : "Gagal mengirim. Coba lagi.", false);
+              }
+            })
+            .catch(function(){
+              if(btn){ btn.disabled = false; btn.textContent = teksTombol(); }
+              setStatus(state.supian ? "Jaringan lambat. Coba lagi." : "Jaringan lambat. Coba lagi, atau tunjukkan tautanmu langsung ke guru.", false);
+            });
+        }
+        document.querySelectorAll("#btn-kirim-kampanye").forEach(function(b){
+          b.addEventListener("click", kirimKampanye);
+        });
         document.querySelectorAll(".btn-kirim-webgas").forEach(function(b){
           b.addEventListener("click", function(){
             kirimNilai(b.getAttribute("data-jenis"));
