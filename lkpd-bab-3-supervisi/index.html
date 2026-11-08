@@ -373,6 +373,9 @@
       .notice-satu{background:var(--sage);color:var(--sage-ink);border-radius:14px;padding:14px 16px;margin-top:14px;font-size:.98rem}
       .guide-grid{display:grid;gap:12px;margin-top:12px}
       @media(min-width:620px){ .guide-grid{grid-template-columns:1fr 1fr} }
+      /* Bila hanya satu petunjuk yang tampil (format sudah dipilih), pakai
+         satu kolom penuh supaya kartu tidak setengah lebar di layar besar. */
+      .guide-grid.guide-satu{grid-template-columns:1fr}
       .guide{background:var(--surface-2);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px}
       .guide h4{margin:0 0 8px;font-size:1rem}
       .guide ol{margin:0;padding-left:20px;font-size:.93rem}
@@ -1217,7 +1220,8 @@
 
         <h3 class="normal-only" style="margin-top:22px;font-size:1.08rem">Petunjuk membuat karya di HP (dalam waktu kelas)</h3>
         <div class="guide-grid normal-only">
-          <div class="guide">
+          <p class="hint" id="guide-belum">👆 Pilih dulu format karyamu di atas (Poster Digital atau Video 60 Detik) — petunjuk langkah-langkahnya akan muncul di sini.</p>
+          <div class="guide" id="guide-poster">
             <h4>Jika memilih Poster Digital</h4>
             <ol>
               <li>Buka aplikasi desain yang ada di HP kelompokmu (aplikasi desain poster/foto apa saja yang sudah terpasang).</li>
@@ -1227,7 +1231,7 @@
               <li>Simpan hasilnya dan siapkan untuk ditunjukkan saat presentasi.</li>
             </ol>
           </div>
-          <div class="guide">
+          <div class="guide" id="guide-video">
             <h4>Jika memilih Video 60 Detik</h4>
             <ol>
               <li>Tulis naskah pendek dulu: pembuka, <strong>satu pesan utama</strong>, satu dalil, dan ajakan menutup.</li>
@@ -1819,8 +1823,29 @@
             document.querySelectorAll("[data-format]").forEach(function(b){
               b.setAttribute("aria-pressed", b===btn ? "true":"false");
             });
+            terapkanGuideFormat();
           });
         });
+
+        /* ---------- Petunjuk format kampanye: hanya tampil sesuai pilihan
+           (9 Nov, permintaan Imron): bila Poster dipilih, hanya petunjuk
+           Poster; bila Video, hanya petunjuk Video. Bila belum ada yang
+           dipilih, tampil ajakan memilih format (keputusan ane: jangan
+           tampilkan dua-duanya sekaligus — siswa bingung). ---------- */
+        var guidePoster = $("guide-poster");
+        var guideVideo = $("guide-video");
+        var guideBelum = $("guide-belum");
+        var guideGrid = document.querySelector(".guide-grid");
+        function terapkanGuideFormat(){
+          var fmt = state.format || "";
+          var pilihPoster = fmt === "Poster digital";
+          var pilihVideo = fmt === "Video 60 detik";
+          if(guidePoster) guidePoster.style.display = pilihPoster ? "" : "none";
+          if(guideVideo) guideVideo.style.display = pilihVideo ? "" : "none";
+          if(guideBelum) guideBelum.style.display = (pilihPoster || pilihVideo) ? "none" : "";
+          if(guideGrid) guideGrid.classList.toggle("guide-satu", pilihPoster || pilihVideo);
+        }
+        terapkanGuideFormat();
 
         /* ---------- Musik latar (file audio asli, satu elemen <audio> di header) ----------
            Toggle tunggal di header persisten. Keadaan awal NYALA; musik mulai berbunyi pada
