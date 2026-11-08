@@ -394,6 +394,8 @@
       .undi-baris .undi-nama{flex:1;min-width:0}
       .undi-baris .undi-peran{font-weight:800;white-space:nowrap}
       .undi-reset{margin-top:10px;background:none;border:none;color:var(--muted);font:inherit;font-size:.88rem;text-decoration:underline;cursor:pointer;padding:4px 0}
+      .undi-lihat{margin-top:10px;width:100%;min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:700;font-size:.95rem;color:var(--ink);background:var(--surface-2);border:1.5px solid var(--line);border-radius:14px;padding:10px 14px;cursor:pointer}
+      .undi-lihat[hidden]{display:none}
       footer{margin-top:28px;text-align:center;color:var(--muted);font-size:.88rem;padding:0 8px}
       .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%) translateY(80px);background:var(--green-deep);pointer-events:none;opacity:0;
         color:#FFF6DC;padding:13px 20px;border-radius:999px;font-weight:700;box-shadow:var(--shadow);
@@ -1178,8 +1180,9 @@
           <button type="button" class="undi-btn" id="btn-undi-peran">🎲 Undi peran</button>
           <div class="undi-hasil" id="hasil-undi" hidden>
             <div class="undi-peranmu" id="undi-peranmu">Peranmu: &mdash;</div>
-            <div id="undi-daftar"></div>
+            <div id="undi-daftar" hidden></div>
           </div>
+          <button type="button" class="undi-lihat" id="btn-lihat-teman" hidden>&#128101; Lihat peran teman sekelompok</button>
           <button type="button" class="undi-reset" id="btn-reset-undi" hidden>&#8635; Undi ulang (minta guru)</button>
         </div>
 
@@ -2921,6 +2924,10 @@
       function undiSudah(asalNum){
         try { return localStorage.getItem("undi-peran-" + asalNum) === "1"; } catch(e){ return false; }
       }
+      function icoPeran(nama){
+        for(var i = 0; i < PERAN_UNDI.length; i++) if(PERAN_UNDI[i].nama === nama) return PERAN_UNDI[i].ico + " ";
+        return "";
+      }
       function perbaruiUndiUI(){
         var blok = document.getElementById("undi-peran-blok");
         if(!blok) return;
@@ -2928,9 +2935,12 @@
         var btn = document.getElementById("btn-undi-peran");
         var hasilEl = document.getElementById("hasil-undi");
         var resetBtn = document.getElementById("btn-reset-undi");
+        var lihatBtn = document.getElementById("btn-lihat-teman");
+        var daftar = document.getElementById("undi-daftar");
         if(!asalNum || !undiSudah(asalNum)){
           if(btn) btn.hidden = false;
           if(hasilEl) hasilEl.hidden = true;
+          if(lihatBtn) lihatBtn.hidden = true;
           if(resetBtn) resetBtn.hidden = true;
           return;
         }
@@ -2938,30 +2948,55 @@
         var saya = null;
         hasil.forEach(function(h){ if(h.absen === absenDariDOM()) saya = h; });
         var peranmuEl = document.getElementById("undi-peranmu");
-        if(peranmuEl) peranmuEl.textContent = saya ? ("Peranmu: " + saya.peran) : "Peran kelompokmu:";
-        var daftar = document.getElementById("undi-daftar");
+        if(peranmuEl) peranmuEl.textContent = saya ? ("Peranmu: " + icoPeran(saya.peran) + saya.peran) : "Peran kelompokmu:";
         if(daftar){
           daftar.innerHTML = "";
           hasil.forEach(function(h){
             var row = document.createElement("div");
             row.className = "undi-baris" + (h.absen === absenDariDOM() ? " saya" : "");
-            var ico = "";
-            PERAN_UNDI.forEach(function(p){ if(p.nama === h.peran) ico = p.ico + " "; });
             var nm = document.createElement("span"); nm.className = "undi-nama"; nm.textContent = h.nama + (h.absen === absenDariDOM() ? " (kamu)" : "");
-            var pr = document.createElement("span"); pr.className = "undi-peran"; pr.textContent = ico + h.peran;
+            var pr = document.createElement("span"); pr.className = "undi-peran"; pr.textContent = icoPeran(h.peran) + h.peran;
             row.appendChild(nm); row.appendChild(pr);
             daftar.appendChild(row);
           });
+          daftar.hidden = true;
         }
+        if(lihatBtn){ lihatBtn.hidden = false; lihatBtn.textContent = "👥 Lihat peran teman sekelompok"; }
         if(btn) btn.hidden = true;
         if(hasilEl) hasilEl.hidden = false;
         if(resetBtn) resetBtn.hidden = false;
+      }
+      function toggleLihatTeman(){
+        var daftar = document.getElementById("undi-daftar");
+        var lihatBtn = document.getElementById("btn-lihat-teman");
+        if(!daftar || !lihatBtn) return;
+        daftar.hidden = !daftar.hidden;
+        lihatBtn.textContent = daftar.hidden ? "👥 Lihat peran teman sekelompok" : "🙈 Sembunyikan peran teman";
       }
       function undiPeran(){
         var asalNum = asalDariDOM();
         if(!asalNum) return;
         try { localStorage.setItem("undi-peran-" + asalNum, "1"); } catch(e){}
-        perbaruiUndiUI();
+        var btn = document.getElementById("btn-undi-peran");
+        var hasilEl = document.getElementById("hasil-undi");
+        var peranmuEl = document.getElementById("undi-peranmu");
+        if(btn) btn.hidden = true;
+        if(hasilEl) hasilEl.hidden = false;
+        var hasil = hitungUndiPeran(asalNum);
+        var saya = null;
+        hasil.forEach(function(h){ if(h.absen === absenDariDOM()) saya = h; });
+        if(!saya || !peranmuEl){ perbaruiUndiUI(); return; }
+        var langkah = 0, total = 16;
+        var timer = setInterval(function(){
+          langkah++;
+          if(langkah >= total){
+            clearInterval(timer);
+            perbaruiUndiUI();
+            return;
+          }
+          var acak = PERAN_UNDI[Math.floor(Math.random() * PERAN_UNDI.length)];
+          peranmuEl.textContent = "🎲 " + acak.ico + " " + acak.nama + " …";
+        }, 90);
       }
       function resetUndi(){
         var asalNum = asalDariDOM();
@@ -2982,6 +3017,8 @@
       (function(){
         var b = document.getElementById("btn-undi-peran");
         if(b) b.addEventListener("click", undiPeran);
+        var l = document.getElementById("btn-lihat-teman");
+        if(l) l.addEventListener("click", toggleLihatTeman);
         var r = document.getElementById("btn-reset-undi");
         if(r) r.addEventListener("click", resetUndi);
         ["nama", "absen"].forEach(function(id){
