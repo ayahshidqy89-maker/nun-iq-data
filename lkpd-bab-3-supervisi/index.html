@@ -260,6 +260,21 @@
       input[type=number]{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;min-height:52px}
       input[type=number]:focus{outline:3px solid var(--sage);border-color:var(--green-mid)}
       select:focus{outline:3px solid var(--sage);border-color:var(--green-mid)}
+      /* ---------- DROPDOWN IDENTITAS: tampilan modern (8 Nov) ----------
+         Select bawaan peramban terlihat jadul (panah kecil abu-abu).
+         Dibuat seperti kontrol modern: chevron emas, sudut membulat besar,
+         bayangan lembut, cincin fokus emas. Tetap <select> asli supaya di
+         HP tetap membuka pemilih bawaan yang mudah dipakai. */
+      #identitas select{
+        -webkit-appearance:none;appearance:none;
+        background-color:var(--surface);
+        background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D97706' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat:no-repeat;background-position:right 16px center;background-size:20px 20px;
+        border:2px solid var(--line);border-radius:16px;
+        padding:14px 50px 14px 18px;min-height:56px;font-weight:700;
+        box-shadow:0 2px 8px rgba(0,0,0,.07);cursor:pointer;
+        transition:border-color .15s ease,box-shadow .15s ease}
+      #identitas select:hover{border-color:var(--green-mid)}
 
       /* ---------- MUSIK LATAR ---------- */
       .musicbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--gold-soft);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:16px}
@@ -557,9 +572,29 @@
         .btn:hover,.bigchoices button:hover,.tabs button:hover,.btn-music:hover{transform:none}
         section.card:hover{box-shadow:var(--shadow-soft)}
       }
+      /* ---------- POP-UP SAMBUTAN (8 Nov): ketuk sekali, musik langsung bunyi ---------- */
+      #sambutan-popup{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+        padding:20px;background:rgba(6,40,28,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+      #sambutan-popup .sambutan-kartu{max-width:420px;width:100%;text-align:center;background:var(--surface);
+        border-radius:22px;padding:28px 24px;box-shadow:0 18px 50px rgba(0,0,0,.35);
+        border:2px solid rgba(227,192,122,.6)}
+      #sambutan-popup .sambutan-kartu h2{font-size:1.35rem;margin:0 0 8px}
+      #sambutan-popup .sambutan-kartu p{color:var(--muted);margin:0 0 18px;line-height:1.55}
+      #btn-sambutan-mulai{width:100%;min-height:56px;font-size:1.1rem}
+      #btn-sambutan-tanpa-musik{margin-top:12px;background:none;border:none;color:var(--muted);
+        font:inherit;font-size:.92rem;font-weight:600;cursor:pointer;text-decoration:underline}
     </style>
   </head>
   <body>
+    <!-- Pop-up sambutan (8 Nov): ketuk sekali = gestur untuk musik, jadi musik langsung berbunyi -->
+    <div id="sambutan-popup" role="dialog" aria-modal="true" aria-labelledby="sambutan-judul">
+      <div class="sambutan-kartu">
+        <h2 id="sambutan-judul">👋 Selamat datang di LKPD Bab 3!</h2>
+        <p>Ketuk tombol di bawah untuk mulai belajar. Musik latar langsung berbunyi.</p>
+        <button type="button" class="btn primary" id="btn-sambutan-mulai">▶&nbsp; Mulai Belajar 🎵</button><br />
+        <button type="button" id="btn-sambutan-tanpa-musik">Lanjutkan tanpa musik</button>
+      </div>
+    </div>
     <div class="wrap">
 
       <!-- ================= BANNER HERO ================= -->
@@ -822,35 +857,35 @@
             <h2 id="kasus-judul">Kasus Pemantik: Masalah Nyata di Sekitar Kita</h2>
           </div>
         </div>
-        <p class="lead" id="kasus-lead">Baca ketiga kasus berikut dengan saksama. Inilah masalah yang akan kita pecahkan bersama hari ini.</p>
+        <p class="lead" id="kasus-lead">Baca kasus kelompokmu dengan saksama. Inilah masalah yang akan kita pecahkan bersama hari ini.</p>
 
-        <article class="case green normal-only">
+        <article class="case green normal-only" data-topik="A">
           <h3><span class="tag">KASUS 1</span> Kisah Andi: Dari Korban Menjadi Teladan</h3>
           <p>Andi (nama samaran dalam buku) adalah siswa yang menjadi korban perundungan sejak duduk di bangku SD hingga SMA. Ia diejek, dikucilkan, dan diperlakukan tidak menyenangkan oleh teman-temannya dalam waktu yang lama. Perundungan itu membuatnya tertekan, tetapi Andi tidak membalas dengan kekerasan. Ia memilih bertahan, fokus belajar, dan membuktikan kemampuannya lewat prestasi.</p>
           <p>Ketekunan Andi berbuah manis: ia berhasil meraih prestasi dan lolos mendapatkan <strong>dua beasiswa S2 ke Eropa</strong>. Kisah Andi membuktikan bahwa korban perundungan bisa bangkit &mdash; dan bahwa perundungan tidak pernah membuat pelakunya menjadi pemenang.</p>
           <div class="tanya"><strong>Renungkan:</strong> Apa yang membuat Andi bisa bangkit? Dukungan apa yang sebenarnya paling ia butuhkan dari teman dan lingkungannya?</div>
         </article>
 
-        <article class="case supian-only">
+        <article class="case supian-only" data-topik="A">
           <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
           <h3><span class="tag">KASUS 1</span> Kisah Andi</h3>
           <p>Andi diejek teman-temannya sejak SD sampai SMA. Andi dikucilkan. Andi tidak membalas. Andi tetap belajar. Andi dapat beasiswa ke Eropa.</p>
           <div class="tanya"><strong>Renungkan:</strong> Kenapa Andi bisa berhasil?</div>
         </article>
 
-        <article class="case normal-only">
+        <article class="case normal-only" data-topik="B">
           <h3><span class="tag">KASUS 2</span> Perkelahian Antar Pelajar</h3>
           <p>Sepulang sekolah, dua kelompok pelajar dari sekolah berbeda terlibat perkelahian di pinggir jalan. Berawal dari saling ejek di media sosial dan rasa tidak terima, mereka janjian bertemu. Perkelahian itu membuat warga resah, beberapa siswa terluka, dan nama baik kedua sekolah tercoreng. Padahal, persoalan awalnya hanyalah kesalahpahaman kecil yang sebenarnya bisa diselesaikan dengan bicara baik-baik.</p>
           <div class="tanya"><strong>Renungkan:</strong> Di titik mana perkelahian ini sebenarnya masih bisa dicegah? Siapa saja yang berperan menghentikannya?</div>
         </article>
 
-        <article class="case normal-only">
+        <article class="case normal-only" data-topik="C">
           <h3><span class="tag">KASUS 3</span> Terjebak Judi Online</h3>
           <p>Seorang siswa awalnya hanya iseng mencoba permainan di sebuah situs yang ternyata adalah judi online. Sekali menang kecil, ia ketagihan dan terus bermain dengan harapan menang besar. Uang jajannya habis, ia mulai berbohong kepada orang tua, meminjam uang teman, dan prestasinya di sekolah menurun drastis. Ia malu bercerita, padahal jebakan itu dirancang memang untuk membuat pemainnya terus kalah dan kecanduan.</p>
           <div class="tanya"><strong>Renungkan:</strong> Mengapa &ldquo;menang kecil di awal&rdquo; justru berbahaya? Apa langkah pertama yang harus diambil siswa ini?</div>
         </article>
 
-        <article class="case supian-only">
+        <article class="case supian-only" data-topik="C">
           <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
           <h3><span class="tag">KASUS 3</span> Terjebak Judi Online</h3>
           <p>Teman mengajak taruhan uang jajan di HP. Yang menang dapat uang temannya. Uang jajan bisa habis. Jangan ikut.</p>
@@ -859,7 +894,7 @@
 
         <label class="flabel" id="label-analisis-kasus" for="analisis-kasus">Analisis awal kelompokmu</label>
         <span class="lencana-pdpd">⭐ Bahasa Sederhana — Versi PDPD</span>
-        <p class="hint" id="hint-analisis-kasus">Pilih satu kasus. Tulis: (1) masalah utamanya, (2) siapa yang dirugikan, (3) perkiraan penyebabnya, (4) satu solusi awal menurut kelompokmu.</p>
+        <p class="hint" id="hint-analisis-kasus">Tulis tentang kasus kelompokmu: (1) masalah utamanya, (2) siapa yang dirugikan, (3) perkiraan penyebabnya, (4) satu solusi awal menurut kelompokmu.</p>
         <textarea id="analisis-kasus" placeholder="Tulis hasil diskusi awal kelompokmu di sini…"></textarea>
       </section>
 
@@ -1482,9 +1517,9 @@
           "lead-ringkasan": { text: "Tekan tombol ini. Tunjukkan layar ini ke gurumu." },
           "share-hint": { text: "Tekan Bagikan. Pilih WhatsApp gurumu. Kalau tidak bisa, ringkasan tersalin sendiri. Tempel ke grup WA kelas." },
           "footer-2": { text: "Bab 3. Buku Siswa PAI 2024." },
-          "kasus-lead": { text: "Baca Kasus 1 dan Kasus 3." },
+          "kasus-lead": { text: "Baca kasus kelompokmu." },
           "label-analisis-kasus": { text: "Apa masalahnya? Tulis 1 kalimat." },
-          "hint-analisis-kasus": { text: "Pilih Kasus 3. Tulis 1 kalimat." },
+          "hint-analisis-kasus": { text: "Kasus 3. Tulis 1 kalimat." },
           "analisis-kasus": { ph: "Tulis 1 kalimat: apa masalahnya?" },
           "label-r1a": { text: "Apa yang baru kamu pelajari?" },
           "r1a": { ph: "Tulis 1 hal baru." },
@@ -1552,6 +1587,40 @@
           if(typeof perbaruiProgress === "function") perbaruiProgress();
         }
 
+        /* ---------- Kasus otomatis per kelompok (8 Nov) ----------
+           Jangan tampilkan ketiga kasus ke semua siswa — pembagian
+           kelompok jadi sia-sia. Sesudah absen dipilih, hanya kasus
+           topik kelompok ahli itu yang tampil (A=Perundungan/Kasus 1,
+           B=Perkelahian/Kasus 2, C=Perjudian/Kasus 3); versi Supian
+           ikut aturan yang sama (Supian C2 -> Kasus 3 sederhana).
+           Sebelum absen dipilih, semua kasus tampil + arahan ke
+           Langkah 1. Dipanggil dari applyAbsen() dan sekali saat muat. */
+        var TOPIK_NAMA = { A:"Perundungan", B:"Perkelahian", C:"Perjudian" };
+        function terapkanKasusOtomatis(){
+          var lead = $("kasus-lead"), hint = $("hint-analisis-kasus");
+          var topik = state.group || "";
+          document.querySelectorAll("#kasus article.case").forEach(function(a){
+            var t = a.getAttribute("data-topik");
+            a.style.display = (!topik || t === topik) ? "" : "none";
+          });
+          if(!lead) return;
+          if(topik){
+            var nama = TOPIK_NAMA[topik] || "";
+            lead.textContent = state.supian
+              ? "Baca kasus kelompokmu."
+              : ("Ini kasus kelompokmu — " + nama + " (Kelompok " + (state.ahliCode || "") + "). Baca dengan saksama. Inilah masalah yang akan kita pecahkan bersama hari ini.");
+            if(hint && !state.supian){
+              hint.textContent = "Tulis tentang kasus kelompokmu (" + nama + "): (1) masalah utamanya, (2) siapa yang dirugikan, (3) perkiraan penyebabnya, (4) satu solusi awal menurut kelompokmu.";
+            }
+          } else {
+            lead.textContent = "Pilih namamu di Langkah 1 — kasus kelompokmu akan tampil otomatis di sini.";
+            if(hint && !state.supian){
+              hint.textContent = "Tulis tentang kasus kelompokmu: (1) masalah utamanya, (2) siapa yang dirugikan, (3) perkiraan penyebabnya, (4) satu solusi awal menurut kelompokmu.";
+            }
+          }
+        }
+        terapkanKasusOtomatis();
+
         function applyAbsen(){
           var raw = $("absen").value.trim();
           var kartu = $("kartu-kelompok"), err = $("absen-error");
@@ -1559,6 +1628,7 @@
             kartu.classList.remove("show"); err.classList.remove("show");
             state.group = ""; state.ahliCode = ""; state.ahliLabel = ""; state.asal = ""; state.absen = "";
             state.supian = false; setSupianMode(false);
+            terapkanKasusOtomatis();
             return;
           }
           var n = parseInt(raw, 10);
@@ -1566,6 +1636,7 @@
             kartu.classList.remove("show"); err.classList.add("show");
             state.group = ""; state.ahliCode = ""; state.ahliLabel = ""; state.asal = ""; state.absen = "";
             state.supian = false; setSupianMode(false);
+            terapkanKasusOtomatis();
             return;
           }
           err.classList.remove("show");
@@ -1587,6 +1658,7 @@
           $("kk-asal-sub").textContent = state.supian ? ("Anggota: absen " + anggota.join(", ") + ".") : ("Anggota: absen " + anggota.join(", ") + " · 6 siswa, satu dari tiap Kelompok Ahli.");
           kartu.classList.add("show");
           showTab(ahli.topic);
+          terapkanKasusOtomatis();
           /* Progres otomatis (8 Nov): absen sah -> tampilkan catatan +
              laporkan Langkah 1. Nilai dropdown selalu lengkap (kda ada
              ketikan sebagian seperti dulu), jadi lapor langsung di sini.
@@ -1718,6 +1790,32 @@
               toast(state.supian ? "Musik hidup. Matikan dengan tombol musik di atas." : "Musik latar hidup. Matikan kapan saja dengan tombol musik di atas.");
             }
           });
+        }
+
+        /* ---------- Pop-up sambutan (8 Nov): musik mulai seketika ----------
+           Peramban melarang autoplay bersuara — musik hanya boleh mulai
+           dari ketukan pengguna. Pop-up ini memberi ketukan itu di awal:
+           begitu siswa menekan "Mulai Belajar", musik langsung diputar
+           (gestur asli, bukan scroll), jadi tidak ada lagi jeda beberapa
+           detik. "Lanjutkan tanpa musik" mematikan musik; toggle di atas
+           tetap bisa menghidupkannya lagi kapan saja. */
+        var sambutan = $("sambutan-popup");
+        if(sambutan){
+          var btnSambutanMulai = $("btn-sambutan-mulai");
+          var btnSambutanTanpa = $("btn-sambutan-tanpa-musik");
+          if(btnSambutanMulai){
+            btnSambutanMulai.addEventListener("click", function(){
+              sambutan.style.display = "none";
+              musicOn = true; updateMusicButton();
+              cobaPutarAwal();
+            });
+          }
+          if(btnSambutanTanpa){
+            btnSambutanTanpa.addEventListener("click", function(){
+              sambutan.style.display = "none";
+              musicOn = false; updateMusicButton();
+            });
+          }
         }
 
         /* ---------- Janji ---------- */
@@ -1880,6 +1978,25 @@
             ["Menimbulkan permusuhan dan melalaikan shalat", "Supaya kita kaya"]
           ]
         };
+        /* Nomor soal yang TAMPIL di layar (8 Nov): sesudah soal diacak,
+           nomor di legend berubah mengikuti urutan baru. Pesan "Soal
+           nomor X belum dijawab" harus memakai nomor tampil itu, bukan
+           nomor nama soal (q1..q10). Bila legend tanpa angka (Supian),
+           pakai nomor nama seperti semula. */
+        function nomorTampilSoal(prefix, i){
+          var radios = document.getElementsByName(prefix + i);
+          if(radios.length){
+            var fs = radios[0].closest ? radios[0].closest("fieldset.hyb-soal") : null;
+            if(fs){
+              var lg = fs.querySelector("legend");
+              if(lg){
+                var m = lg.textContent.match(/^\s*(\d+)\./);
+                if(m) return parseInt(m[1], 10);
+              }
+            }
+          }
+          return i;
+        }
         function kumpulkanJawaban(jenis){
           var supian = !!state.supian;
           var prefix = "hyb-" + (jenis === "diagnostik" ? "diag" : "kuis") + "-" + (supian ? "s" : "n") + "-q";
@@ -1889,15 +2006,15 @@
             var radios = document.getElementsByName(prefix + i);
             var pilih = null;
             for(var r = 0; r < radios.length; r++){ if(radios[r].checked){ pilih = radios[r].value; break; } }
-            if(pilih === null) return { ok:false, kurang:i };
+            if(pilih === null) return { ok:false, kurang:nomorTampilSoal(prefix, i) };
             var huruf;
             if(supian){
               var idx = SUPIAN_OPSI[jenis][i - 1].indexOf(pilih);
-              if(idx < 0) return { ok:false, kurang:i };
+              if(idx < 0) return { ok:false, kurang:nomorTampilSoal(prefix, i) };
               huruf = String.fromCharCode(65 + idx);
             } else {
               huruf = pilih.charAt(0);
-              if("ABCDE".indexOf(huruf) < 0) return { ok:false, kurang:i };
+              if("ABCDE".indexOf(huruf) < 0) return { ok:false, kurang:nomorTampilSoal(prefix, i) };
             }
             jawaban.push(huruf);
           }
@@ -1964,6 +2081,32 @@
         document.addEventListener("change", function(e){
           if(e.target && e.target.matches(".hyb-opsi input[type=radio]")) perbaruiProgress();
         });
+        /* ---------- Soal diacak (8 Nov): urutan soal Diagnostik & Kuis
+           normal diacak tiap muat halaman — soalnya SAMA untuk semua
+           siswa (sesuai rencana: tiap perwakilan kelompok menjelaskan,
+           kelompok lain mendengarkan + mencatat), hanya urutannya beda
+           supaya tidak bisa mencontek urutan. TIDAK berlaku untuk Supian
+           (jalur PDPD tetap urut, tidak diacak). Penilaian membaca radio
+           per NAMA soal, jadi aman diacak; nomor di legend ditulis ulang
+           mengikuti urutan baru. */
+        function acakSoalNormal(){
+          ["diag-normal","kuis-normal"].forEach(function(kunci){
+            var blok = document.querySelector('.hyb-blok[data-hyb="' + kunci + '"]');
+            if(!blok) return;
+            var soal = Array.prototype.slice.call(blok.querySelectorAll("fieldset.hyb-soal"));
+            if(soal.length < 2) return;
+            for(var i = soal.length - 1; i > 0; i--){
+              var j = Math.floor(Math.random() * (i + 1));
+              var tmp = soal[i]; soal[i] = soal[j]; soal[j] = tmp;
+            }
+            soal.forEach(function(fs, idx){
+              blok.appendChild(fs);
+              var lg = fs.querySelector("legend");
+              if(lg) lg.textContent = lg.textContent.replace(/^\d+\.\s*/, (idx + 1) + ". ");
+            });
+          });
+        }
+        acakSoalNormal();
         perbaruiProgress();
         function tampilkanSkor(jenis, skor, maks, benar, jumlahSoal, dariSheet, tanpaConfetti){
           var supian = !!state.supian;
