@@ -10,6 +10,14 @@
  *  4. Salin URL Web App (.../exec) → isi ke konstanta WEBGAS_URL di
  *     pra-ujian-pas-xi/index.html (ganti __WEBGAS_URL__), lalu redeploy Vercel.
  *
+ * PERUBAHAN v2 (16 Nov 2026, ~07:50): doPost MENOLAK DUPLIKAT di sisi
+ * server — bila (kelas, nama, mapel) sudah ada di tab Rekap, baris baru
+ * TIDAK ditambahkan; respons mengembalikan skor yang sudah tercatat.
+ * Ini jaring pengaman terakhir bila cek duplikat di LKPD (sisi browser)
+ * gagal jalan: skor pertama tetap yang berlaku, Sheet tetap bersih.
+ * (Klien mengirim POST mode "no-cors" sehingga tidak bisa membaca
+ * respons ini — yang penting baris ganda tidak tercatat.)
+ *
  * Sheet tujuan: "Rekap Pra Ujian PAS XI"
  *   https://docs.google.com/spreadsheets/d/1LNFMvGZhm6zfMzzNbN271B3Onj5A_bJTcapfd69gxlE
  * Tab: "Rekap" — kolom: Timestamp | Kelas | Nama | Mapel | Versi |
@@ -19,10 +27,30 @@
 var SHEET_ID = "1LNFMvGZhm6zfMzzNbN271B3Onj5A_bJTcapfd69gxlE";
 var SHEET_NAME = "Rekap";
 
+function normalKelas(k) {
+  return String(k || "").replace(/[\s\-]/g, "").toUpperCase();
+}
+
 function doPost(e) {
   try {
     var d = JSON.parse(e.postData.contents);
     var sh = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
+    var nama = String(d.nama || "").trim().toLowerCase();
+    var mapel = String(d.mapel || "").trim().toUpperCase();
+    var kelas = normalKelas(d.kelas);
+    var data = sh.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      var r = data[i];
+      if (normalKelas(r[1]) !== kelas) continue;
+      if (String(r[2] || "").trim().toLowerCase() !== nama) continue;
+      if (String(r[3] || "").trim().toUpperCase() !== mapel) continue;
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          ok: true, duplikat: true,
+          benar: r[5], jumlahSoal: r[6], skor: r[7]
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
     sh.appendRow([
       new Date(),
       d.kelas || "",
