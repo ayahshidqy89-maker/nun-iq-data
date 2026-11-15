@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" href="data:," />
+<title>Dashboard Pemantauan — Pra Ujian PAS Kelas XI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F0FDF4;
+    --surface: #FFFFFF;
+    --ink: #111827;
+    --ink-soft: #4B5563;
+    --ink-faint: #6B7280;
+    --line: #D1FAE5;
+    --line-strong: #BBF7D0;
+    --accent: #14532D;
+    --accent-2: #166534;
+    --accent-soft: #DCFCE7;
+    --accent-mid: #22C55E;
+    --gold: #CA8A04;
+    --gold-soft: #FEF9C3;
+    --grey-soft: #F3F4F6;
+    --red: #B91C1C;
+    --red-soft: #FEE2E2;
+    --shadow: 0 1px 3px rgba(20, 83, 45, 0.08), 0 4px 14px rgba(20, 83, 45, 0.06);
+    --shadow-lg: 0 4px 10px rgba(20, 83, 45, 0.10), 0 12px 32px rgba(20, 83, 45, 0.08);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: clamp(14px, 3vw, 32px) clamp(14px, 3.5vw, 32px) 48px; }
+
+  /* ---------- Header ---------- */
+  header.top {
+    background: linear-gradient(135deg, var(--accent) 0%, #166534 60%, #15803D 100%);
+    color: #FFFFFF;
+    border-radius: 20px;
+    padding: clamp(20px, 4vw, 32px);
+    box-shadow: var(--shadow-lg);
+  }
+  header.top h1 { margin: 0; font-size: clamp(1.25rem, 4.5vw, 1.9rem); font-weight: 800; line-height: 1.25; }
+  header.top p.sub { margin: 8px 0 0; font-size: 1rem; font-weight: 600; color: #BBF7D0; }
+  header.top p.desc { margin: 10px 0 0; font-size: 0.9rem; color: #DCFCE7; max-width: 60ch; }
+  .status-line { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 0.85rem; font-weight: 600; }
+  .status-line .dot {
+    display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+    background: #4ADE80; margin-right: 6px; vertical-align: middle;
+    animation: pulse-dot 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  .status-line .pill {
+    background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 4px 12px; border-radius: 999px; color: #FFFFFF;
+  }
+
+  /* ---------- Ringkasan ---------- */
+  .section-title { font-size: 1.05rem; font-weight: 800; color: var(--accent); margin: 28px 0 12px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 16px; padding: 18px 20px; box-shadow: var(--shadow);
+  }
+  .card .label { font-size: 0.82rem; font-weight: 700; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
+  .card .big { font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1.15; margin-top: 4px; }
+  .card .detail { font-size: 0.9rem; color: var(--ink-soft); margin-top: 4px; }
+  .card .badge-mapel {
+    display: inline-block; background: var(--accent-soft); color: var(--accent);
+    font-weight: 800; font-size: 0.78rem; padding: 3px 10px; border-radius: 999px; margin-bottom: 6px;
+  }
+
+  /* ---------- Progres per kelas ---------- */
+  .progress-list { display: flex; flex-direction: column; gap: 12px; }
+  .progress-row { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center; }
+  .progress-row .kelas { font-weight: 800; color: var(--accent); }
+  .progress-row .angka { font-size: 0.88rem; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
+  .bar { height: 12px; background: #E5E7EB; border-radius: 999px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent-mid), var(--accent-2)); border-radius: 999px; transition: width 0.5s ease; }
+  .total-line { margin-top: 12px; font-size: 0.92rem; font-weight: 700; color: var(--accent); }
+
+  /* ---------- Notifikasi live ---------- */
+  .notif-list { display: flex; flex-direction: column; gap: 10px; }
+  .notif-card {
+    background: var(--surface); border: 1px solid var(--line); border-left-width: 6px;
+    border-radius: 14px; padding: 14px 16px; box-shadow: var(--shadow);
+    animation: slide-down 0.45s ease both;
+  }
+  @keyframes slide-down {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .notif-card.tier-90 { border-left-color: #14532D; background: #F0FDF4; }
+  .notif-card.tier-75 { border-left-color: #16A34A; background: #F0FDF4; }
+  .notif-card.tier-60 { border-left-color: #CA8A04; background: #FEFCE8; }
+  .notif-card.tier-low { border-left-color: #9CA3AF; background: #F9FAFB; }
+  .notif-card .msg { font-size: 1.02rem; font-weight: 800; color: var(--ink); }
+  .notif-card .meta { font-size: 0.9rem; color: var(--ink-soft); margin-top: 4px; }
+  .notif-card .meta b { color: var(--accent); }
+  .notif-card .skor { font-size: 0.9rem; font-weight: 800; color: var(--accent); margin-top: 2px; }
+  .notif-card .waktu { font-size: 0.8rem; color: var(--ink-faint); margin-top: 2px; }
+  .empty-note {
+    background: var(--surface); border: 1px dashed var(--line-strong); border-radius: 14px;
+    padding: 22px; text-align: center; color: var(--ink-soft); font-weight: 600;
+  }
+
+  /* ---------- Filter + tabel ---------- */
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+  .filters select, .filters input[type="search"] {
+    font-family: inherit; font-size: 0.92rem; padding: 10px 12px;
+    border: 1px solid var(--line-strong); border-radius: 12px; background: #FFFFFF; color: var(--ink);
+  }
+  .filters input[type="search"] { flex: 1 1 200px; min-width: 180px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  thead th {
+    text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--accent); background: var(--accent-soft);
+    padding: 10px 12px; border-bottom: 2px solid var(--line-strong); white-space: nowrap;
+  }
+  tbody td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:nth-child(even) td { background: #F9FAFB; }
+  tbody tr:hover td { background: #F0FDF4; }
+  td.skor-cell { font-weight: 800; color: var(--accent); }
+  .tag-mapel {
+    display: inline-block; padding: 2px 10px; border-radius: 999px;
+    font-size: 0.8rem; font-weight: 800;
+  }
+  .tag-mapel.pai { background: var(--accent-soft); color: var(--accent); }
+  .tag-mapel.paq { background: #DBEAFE; color: #1E40AF; }
+  .count-line { font-size: 0.88rem; color: var(--ink-faint); margin-top: 10px; font-weight: 600; }
+
+  footer { margin-top: 32px; font-size: 0.82rem; color: var(--ink-faint); text-align: center; }
+  @media (max-width: 640px) {
+    .progress-row { grid-template-columns: 56px 1fr; }
+    .progress-row .angka { grid-column: 2; }
+    .card .big { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <h1>Dashboard Pemantauan — Pra Ujian PAS Kelas XI</h1>
+    <p class="sub">SMAN 4 Banjarmasin</p>
+    <p class="desc">Pemantauan live pengerjaan Pra Ujian PAS (PAI &amp; PAQ) kelas XI-1 s.d. XI-8. Data diperbarui otomatis dari Google Sheet.</p>
+    <div class="status-line">
+      <span class="pill"><span class="dot" id="pollDot"></span>Polling aktif · tiap 8 detik</span>
+      <span class="pill" id="lastUpdated">Terakhir diperbarui: —</span>
+      <span class="pill" id="connState">Menunggu data…</span>
+    </div>
+  </header>
+
+  <h2 class="section-title">Ringkasan</h2>
+  <div class="summary-grid">
+    <div class="card">
+      <span class="badge-mapel">PAI</span>
+      <div class="label">Siswa sudah mengerjakan</div>
+      <div class="big" id="countPai">0 siswa</div>
+      <div class="detail" id="avgPai">Rata-rata nilai: —</div>
+    </div>
+    <div class="card">
+      <span class="badge-mapel">PAQ</span>
+      <div class="label">Siswa sudah mengerjakan</div>
+      <div class="big" id="countPaq">0 siswa</div>
+      <div class="detail" id="avgPaq">Rata-rata nilai: —</div>
+    </div>
+    <div class="card">
+      <div class="label">Total pengerjaan</div>
+      <div class="big" id="totalAttempts">0</div>
+      <div class="detail" id="totalUnique">0 siswa unik sudah mengerjakan (dari 281 siswa)</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Progres per Kelas</h2>
+  <div class="card">
+    <div class="progress-list" id="progressList"></div>
+    <div class="total-line" id="progressTotal"></div>
+  </div>
+
+  <h2 class="section-title">Notifikasi Live — Baru Selesai Mengerjakan</h2>
+  <div class="notif-list" id="notifList">
+    <div class="empty-note">Belum ada siswa yang mengerjakan.</div>
+  </div>
+
+  <h2 class="section-title">Hasil Pengerjaan</h2>
+  <div class="card">
+    <div class="filters">
+      <select id="filterKelas" aria-label="Filter kelas">
+        <option value="">Semua kelas</option>
+        <option>XI-1</option><option>XI-2</option><option>XI-3</option><option>XI-4</option>
+        <option>XI-5</option><option>XI-6</option><option>XI-7</option><option>XI-8</option>
+      </select>
+      <select id="filterMapel" aria-label="Filter mapel">
+        <option value="">Semua mapel</option>
+        <option value="PAI">PAI</option>
+        <option value="PAQ">PAQ</option>
+      </select>
+      <input type="search" id="searchNama" placeholder="Cari nama siswa…" aria-label="Cari nama siswa" />
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Kelas</th><th>Nama</th><th>Mapel</th><th>Versi</th><th>Benar</th><th>Skor</th><th>Waktu</th></tr>
+        </thead>
+        <tbody id="resultBody">
+          <tr><td colspan="7">Belum ada siswa yang mengerjakan.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="count-line" id="resultCount"></div>
+  </div>
+
+  <footer>Dashboard Pemantauan — Pra Ujian PAS Kelas XI · SMAN 4 Banjarmasin</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Konstanta ---------- */
+  var SHEET_ID = "1LNFMvGZhm6zfMzzNbN271B3Onj5A_bJTcapfd69gxlE";
+  var SHEET_NAME = "Rekap";
+  var POLL_MS = 8000;
+  var MAX_NOTIF = 20;
+  var TOTAL_SISWA = 281;
+
+  /* Total siswa per kelas (data resmi). */
+  var KELAS_TOTAL = {
+    "XI-1": 33, "XI-2": 35, "XI-3": 35, "XI-4": 36,
+    "XI-5": 36, "XI-6": 36, "XI-7": 35, "XI-8": 35
+  };
+  var KELAS_LIST = ["XI-1", "XI-2", "XI-3", "XI-4", "XI-5", "XI-6", "XI-7", "XI-8"];
+
+  var JSONP_BASE = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
+    "/gviz/tq?tqx=out%3Ajson%3BresponseHandler%3A";
+  var CSV_URL = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
+    "/gviz/tq?tqx=out:csv&sheet=" + encodeURIComponent(SHEET_NAME) + "&headers=1";
+
+  /* ---------- State ---------- */
+  var allRows = [];            /* semua baris Rekap, terbaru dulu */
+  var seenKeys = {};           /* snapshot kunci unik baris yang sudah terlihat */
+  var notifHistory = [];       /* kartu notifikasi, terbaru dulu, maks MAX_NOTIF */
+  var jsonpSeq = 0;
+  var firstLoad = true;
+
+  /* ---------- Elemen ---------- */
+  var el = {
+    lastUpdated: document.getElementById("lastUpdated"),
+    connState: document.getElementById("connState"),
+    countPai: document.getElementById("countPai"),
+    countPaq: document.getElementById("countPaq"),
+    avgPai: document.getElementById("avgPai"),
+    avgPaq: document.getElementById("avgPaq"),
+    totalAttempts: document.getElementById("totalAttempts"),
+    totalUnique: document.getElementById("totalUnique"),
+    progressList: document.getElementById("progressList"),
+    progressTotal: document.getElementById("progressTotal"),
+    notifList: document.getElementById("notifList"),
+    resultBody: document.getElementById("resultBody"),
+    resultCount: document.getElementById("resultCount"),
+    filterKelas: document.getElementById("filterKelas"),
+    filterMapel: document.getElementById("filterMapel"),
+    searchNama: document.getElementById("searchNama")
+  };
+
+  var fmtJam = new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Makassar", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+  });
+  var fmtTanggal = new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Makassar", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", hour12: false
+  });
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /* Sel gviz: bila objek tanggal (ada field f), pakai f; bila teks, tampilkan apa adanya. */
+  function strCell(cell) {
+    if (!cell || cell.v === null || cell.v === undefined) return "";
+    if (cell.f !== null && cell.f !== undefined && cell.f !== "") return String(cell.f);
+    return String(cell.v);
+  }
+  function numCell(cell) {
+    if (!cell || typeof cell.v !== "number") return null;
+    return cell.v;
+  }
+  function toScore(txt) {
+    var n = parseFloat(String(txt == null ? "" : txt).replace(",", "."));
+    return isNaN(n) ? null : n;
+  }
+
+  /* Waktu tampil: hari/bulan + jam (WITA). Coba parse tanggal, bila gagal tampilkan apa adanya. */
+  function formatWaktu(raw) {
+    var s = String(raw == null ? "" : raw).trim();
+    if (!s) return "—";
+    var d = new Date(s);
+    if (!isNaN(d.getTime())) return fmtTanggal.format(d) + " WITA";
+    /* Format gviz "Date(2026,10,16,9,5,0)" */
+    var m = s.match(/Date\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+),\s*(\d+)(?:,\s*(\d+))?)?\)/);
+    if (m) {
+      var d2 = new Date(+m[1], +m[2], +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0));
+      return fmtTanggal.format(d2) + " WITA";
+    }
+    return s;
+  }
+
+  /* Kunci unik baris baru: Timestamp + Nama + Mapel. */
+  function rowKey(r) {
+    return (r.waktuRaw || "") + "|" + (r.nama || "") + "|" + (r.mapel || "");
+  }
+
+  /* Tier ucapan sesuai nilai — teks persis sesuai spesifikasi. */
+  function tierOf(skor) {
+    if (skor === null || skor === undefined) return { cls: "tier-low", msg: "Terus semangat! 💪" };
+    if (skor >= 90) return { cls: "tier-90", msg: "Luar biasa! 🎉" };
+    if (skor >= 75) return { cls: "tier-75", msg: "Bagus sekali! 👏" };
+    if (skor >= 60) return { cls: "tier-60", msg: "Terus semangat! 💪" };
+    return { cls: "tier-low", msg: "Jangan menyerah! 📖" };
+  }
+
+  /* ---------- Notifikasi live ---------- */
+  function pushNotif(r) {
+    var t = tierOf(r.skor);
+    var card = {
+      key: rowKey(r),
+      tierCls: t.cls,
+      msg: t.msg,
+      nama: r.nama,
+      kelas: r.kelas,
+      mapel: r.mapel,
+      skor: r.skor,
+      waktu: formatWaktu(r.waktuRaw)
+    };
+    notifHistory.unshift(card);
+    if (notifHistory.length > MAX_NOTIF) notifHistory.length = MAX_NOTIF;
+    renderNotifs();
+  }
+
+  function renderNotifs() {
+    if (!notifHistory.length) {
+      el.notifList.innerHTML = '<div class="empty-note">Belum ada siswa yang mengerjakan.</div>';
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < notifHistory.length; i++) {
+      var n = notifHistory[i];
+      html += '<article class="notif-card ' + esc(n.tierCls) + '">' +
+        '<div class="msg">' + esc(n.msg) + '</div>' +
+        '<div class="meta"><b>' + esc(n.nama) + '</b> · ' + esc(n.kelas) + ' · ' + esc(n.mapel) + '</div>' +
+        '<div class="skor">Nilai: ' + (n.skor === null ? "—" : esc(n.skor)) + '</div>' +
+        '<div class="waktu">Selesai: ' + esc(n.waktu) + '</div>' +
+        '</article>';
+    }
+    el.notifList.innerHTML = html;
+  }
+
+  /* Deteksi baris baru vs snapshot sebelumnya; baris baru -> kartu notifikasi. */
+  function detectNewRows(rows) {
+    if (firstLoad) {
+      /* Polling pertama: jadikan snapshot awal, jangan banjiri notifikasi lama. */
+      for (var i = 0; i < rows.length; i++) seenKeys[rowKey(rows[i])] = true;
+      firstLoad = false;
+      return;
+    }
+    var fresh = [];
+    for (var j = 0; j < rows.length; j++) {
+      var k = rowKey(rows[j]);
+      if (!seenKeys[k]) { seenKeys[k] = true; fresh.push(rows[j]); }
+    }
+    /* Notifikasi diurutkan: yang paling baru (paling atas di Sheet) tampil paling atas. */
+    for (var m = fresh.length - 1; m >= 0; m--) pushNotif(fresh[m]);
+  }
+
+  /* ---------- Ringkasan + progres ---------- */
+  function renderSummary(rows) {
+    var byMapel = { PAI: { names: {}, sum: 0, n: 0 }, PAQ: { names: {}, sum: 0, n: 0 } };
+    var uniqueAll = {};
+    var perKelas = {};
+    KELAS_LIST.forEach(function (k) { perKelas[k] = {}; });
+
+    rows.forEach(function (r) {
+      var m = (r.mapel || "").toUpperCase();
+      if (m !== "PAI" && m !== "PAQ") return;
+      var keyNama = (r.kelas || "") + "|" + (r.nama || "").toLowerCase();
+      byMapel[m].names[keyNama] = true;
+      if (r.skor !== null) { byMapel[m].sum += r.skor; byMapel[m].n++; }
+      uniqueAll[keyNama] = true;
+      if (perKelas[r.kelas]) perKelas[r.kelas][(r.nama || "").toLowerCase()] = true;
+    });
+
+    function countNames(o) { return Object.keys(o).length; }
+    el.countPai.textContent = countNames(byMapel.PAI.names) + " siswa";
+    el.countPaq.textContent = countNames(byMapel.PAQ.names) + " siswa";
+    el.avgPai.textContent = "Rata-rata nilai: " + (byMapel.PAI.n ? (byMapel.PAI.sum / byMapel.PAI.n).toFixed(1) : "—");
+    el.avgPaq.textContent = "Rata-rata nilai: " + (byMapel.PAQ.n ? (byMapel.PAQ.sum / byMapel.PAQ.n).toFixed(1) : "—");
+    el.totalAttempts.textContent = String(rows.length);
+    el.totalUnique.textContent = countNames(uniqueAll) + " siswa unik sudah mengerjakan (dari " + TOTAL_SISWA + " siswa)";
+
+    var html = "";
+    var doneAll = 0;
+    KELAS_LIST.forEach(function (k) {
+      var done = countNames(perKelas[k]);
+      var total = KELAS_TOTAL[k];
+      doneAll += done;
+      var pct = total ? Math.round(done / total * 100) : 0;
+      html += '<div class="progress-row">' +
+        '<span class="kelas">' + esc(k) + '</span>' +
+        '<div class="bar"><span style="width:' + pct + '%"></span></div>' +
+        '<span class="angka">' + done + ' / ' + total + ' siswa · ' + pct + '%</span>' +
+        '</div>';
+    });
+    el.progressList.innerHTML = html;
+    el.progressTotal.textContent = "Total: " + doneAll + " / " + TOTAL_SISWA + " siswa sudah mengerjakan (gabungan PAI + PAQ, dihitung unik per nama). Total pengerjaan: " + rows.length + ".";
+  }
+
+  /* ---------- Tabel hasil + filter ---------- */
+  function filteredRows() {
+    var fk = el.filterKelas.value;
+    var fm = el.filterMapel.value;
+    var q = el.searchNama.value.trim().toLowerCase();
+    return allRows.filter(function (r) {
+      if (fk && r.kelas !== fk) return false;
+      if (fm && (r.mapel || "").toUpperCase() !== fm) return false;
+      if (q && (r.nama || "").toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    });
+  }
+
+  function renderTable() {
+    var rows = filteredRows();
+    if (!allRows.length) {
+      el.resultBody.innerHTML = '<tr><td colspan="7">Belum ada siswa yang mengerjakan.</td></tr>';
+      el.resultCount.textContent = "";
+      return;
+    }
+    if (!rows.length) {
+      el.resultBody.innerHTML = '<tr><td colspan="7">Tidak ada hasil yang cocok dengan filter.</td></tr>';
+      el.resultCount.textContent = "Menampilkan 0 dari " + allRows.length + " pengerjaan.";
+      return;
+    }
+    var html = "";
+    rows.forEach(function (r) {
+      var mapelCls = (r.mapel || "").toUpperCase() === "PAQ" ? "paq" : "pai";
+      html += "<tr>" +
+        "<td>" + esc(r.kelas) + "</td>" +
+        "<td>" + esc(r.nama) + "</td>" +
+        '<td><span class="tag-mapel ' + mapelCls + '">' + esc(r.mapel) + "</span></td>" +
+        "<td>" + esc(r.versi) + "</td>" +
+        "<td>" + (r.benar === null ? "—" : esc(r.benar)) + "</td>" +
+        '<td class="skor-cell">' + (r.skor === null ? "—" : esc(r.skor)) + "</td>" +
+        "<td>" + esc(formatWaktu(r.waktuRaw)) + "</td>" +
+        "</tr>";
+    });
+    el.resultBody.innerHTML = html;
+    el.resultCount.textContent = "Menampilkan " + rows.length + " dari " + allRows.length + " pengerjaan (terbaru dulu).";
+  }
+
+  function renderAll() {
+    renderSummary(allRows);
+    renderTable();
+  }
+
+  function onData(rows) {
+    allRows = rows;
+    detectNewRows(rows);
+    renderAll();
+    el.lastUpdated.textContent = "Terakhir diperbarui: " + fmtJam.format(new Date()).replace(/\./g, ":") + " WITA";
+    el.connState.textContent = rows.length ? ("Terhubung · " + rows.length + " pengerjaan") : "Terhubung · sheet masih kosong";
+    if (!rows.length && !notifHistory.length) renderNotifs();
+  }
+
+  function onError() {
+    el.connState.textContent = "Gagal memuat — mencoba lagi…";
+  }
+
+  /* ---------- Ambil data: JSONP utama, CSV fallback ---------- */
+  function loadViaJsonp(done) {
+    var name = "__rekapCb" + (++jsonpSeq) + "_" + Date.now();
+    var script = document.createElement("script");
+    var finished = false;
+    var timer = setTimeout(function () { finish(false); }, 15000);
+    function finish(ok, rows) {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      try { delete window[name]; } catch (e) { window[name] = undefined; }
+      if (script.parentNode) script.parentNode.removeChild(script);
+      done(ok, rows);
+    }
+    window[name] = function (resp) {
+      try {
+        var table = resp && resp.table;
+        if (!table || !table.rows) { finish(false); return; }
+        var rows = [];
+        for (var i = 0; i < table.rows.length; i++) {
+          var cells = table.rows[i].c || [];
+          var nama = strCell(cells[2]).trim();
+          if (!nama) continue;
+          rows.push({
+            waktuRaw: strCell(cells[0]).trim(),
+            kelas: strCell(cells[1]).trim(),
+            nama: nama,
+            mapel: strCell(cells[3]).trim(),
+            versi: strCell(cells[4]).trim(),
+            benar: numCell(cells[5]),
+            jumlahSoal: numCell(cells[6]),
+            skor: numCell(cells[7]),
+            jawaban: strCell(cells[8]).trim()
+          });
+        }
+        rows.reverse(); /* terbaru dulu */
+        finish(true, rows);
+      } catch (e) { finish(false); }
+    };
+    script.onerror = function () { finish(false); };
+    script.src = JSONP_BASE + name + "&sheet=" + encodeURIComponent(SHEET_NAME) + "&headers=1&_cb=" + Date.now();
+    document.head.appendChild(script);
+  }
+
+  function parseCSV(text) {
+    var out = [], row = [], cur = "", inQ = false;
+    for (var i = 0; i < text.length; i++) {
+      var ch = text[i];
+      if (inQ) {
+        if (ch === '"') {
+          if (text[i + 1] === '"') { cur += '"'; i++; } else { inQ = false; }
+        } else { cur += ch; }
+      } else if (ch === '"') { inQ = true; }
+      else if (ch === ",") { row.push(cur); cur = ""; }
+      else if (ch === "\n" || ch === "\r") {
+        if (ch === "\r" && text[i + 1] === "\n") i++;
+        row.push(cur); cur = ""; out.push(row); row = [];
+      } else { cur += ch; }
+    }
+    if (cur !== "" || row.length) { row.push(cur); out.push(row); }
+    return out;
+  }
+
+  function loadViaCsv(done) {
+    fetch(CSV_URL + "&_cb=" + Date.now(), { cache: "no-store" })
+      .then(function (res) { if (!res.ok) throw new Error("HTTP " + res.status); return res.text(); })
+      .then(function (text) {
+        var parsed = parseCSV(text);
+        var rows = [];
+        for (var i = 1; i < parsed.length; i++) { /* baris 0 = header */
+          var r = parsed[i];
+          var nama = (r[2] || "").trim();
+          if (!nama) continue;
+          rows.push({
+            waktuRaw: (r[0] || "").trim(),
+            kelas: (r[1] || "").trim(),
+            nama: nama,
+            mapel: (r[3] || "").trim(),
+            versi: (r[4] || "").trim(),
+            benar: toScore(r[5]),
+            jumlahSoal: toScore(r[6]),
+            skor: toScore(r[7]),
+            jawaban: (r[8] || "").trim()
+          });
+        }
+        rows.reverse(); /* terbaru dulu */
+        done(true, rows);
+      })
+      .catch(function () { done(false); });
+  }
+
+  function load() {
+    loadViaJsonp(function (ok, rows) {
+      if (ok) { onData(rows); return; }
+      loadViaCsv(function (ok2, rows2) {
+        if (ok2) onData(rows2); else onError();
+      });
+    });
+  }
+
+  /* ---------- Filter events ---------- */
+  el.filterKelas.addEventListener("change", renderTable);
+  el.filterMapel.addEventListener("change", renderTable);
+  el.searchNama.addEventListener("input", renderTable);
+
+  /* ---------- Start: polling tiap 8 detik ---------- */
+  renderNotifs();
+  renderSummary([]);
+  load();
+  setInterval(load, POLL_MS);
+})();
+</script>
+</body>
+</html>
