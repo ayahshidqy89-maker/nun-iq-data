@@ -297,23 +297,39 @@
     if (!cell || typeof cell.v !== "number") return null;
     return cell.v;
   }
+
+  /* Sel waktu: bila objek tanggal gviz (v berupa "Date(...)"), pakai v
+     (UTC mentah); bila teks biasa, pakai f/teks apa adanya. */
+  function waktuCell(cell) {
+    if (!cell || cell.v === null || cell.v === undefined) return "";
+    if (typeof cell.v === "string" && cell.v.indexOf("Date(") === 0) return cell.v;
+    return strCell(cell);
+  }
   function toScore(txt) {
     var n = parseFloat(String(txt == null ? "" : txt).replace(",", "."));
     return isNaN(n) ? null : n;
   }
 
-  /* Waktu tampil: hari/bulan + jam (WITA). Coba parse tanggal, bila gagal tampilkan apa adanya. */
+  /* Waktu tampil: hari/bulan + jam (WITA). Timestamp di Sheet ditulis
+     Apps Script dalam UTC, jadi SEMUA bentuk waktu di sini dibaca
+     sebagai UTC lalu diformat ke Asia/Makassar. */
   function formatWaktu(raw) {
     var s = String(raw == null ? "" : raw).trim();
     if (!s) return "—";
-    var d = new Date(s);
-    if (!isNaN(d.getTime())) return fmtTanggal.format(d) + " WITA";
-    /* Format gviz "Date(2026,10,16,9,5,0)" */
+    /* Format gviz "Date(2026,10,16,9,5,0)" — bulan 0-based, nilai UTC. */
     var m = s.match(/Date\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+),\s*(\d+)(?:,\s*(\d+))?)?\)/);
     if (m) {
-      var d2 = new Date(+m[1], +m[2], +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0));
+      var d = new Date(Date.UTC(+m[1], +m[2], +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0)));
+      return fmtTanggal.format(d) + " WITA";
+    }
+    /* Format CSV/gviz "11/15/2026 23:00:57" — juga UTC. */
+    var m2 = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?/);
+    if (m2) {
+      var d2 = new Date(Date.UTC(+m2[3], +m2[1] - 1, +m2[2], +m2[4], +m2[5], +(m2[6] || 0)));
       return fmtTanggal.format(d2) + " WITA";
     }
+    var d3 = new Date(s);
+    if (!isNaN(d3.getTime())) return fmtTanggal.format(d3) + " WITA";
     return s;
   }
 
@@ -370,9 +386,14 @@
   /* Deteksi baris baru vs snapshot sebelumnya; baris baru -> kartu notifikasi. */
   function detectNewRows(rows) {
     if (firstLoad) {
-      /* Polling pertama: jadikan snapshot awal, jangan banjiri notifikasi lama. */
+      /* Polling pertama: jadikan snapshot awal, TAPI isi juga kartu
+         notifikasi dari pengerjaan terbaru — supaya guru yang baru
+         membuka dashboard tetap melihat siapa saja yang sudah selesai,
+         bukan hanya yang selesai sesudah dashboard dibuka. */
       for (var i = 0; i < rows.length; i++) seenKeys[rowKey(rows[i])] = true;
       firstLoad = false;
+      var n = Math.min(rows.length, MAX_NOTIF);
+      for (var k = n - 1; k >= 0; k--) pushNotif(rows[k]);
       return;
     }
     var fresh = [];
@@ -510,8 +531,8 @@
           var nama = strCell(cells[2]).trim();
           if (!nama) continue;
           rows.push({
-            waktuRaw: strCell(cells[0]).trim(),
-            kelas: strCell(cells[1]).trim(),
+            waktuRaw: waktuCell(cells[0]).trim(),
+            kelas: strCell(cells[1]).trim().replace(/^XI\s+/, "XI-"),
             nama: nama,
             mapel: strCell(cells[3]).trim(),
             versi: strCell(cells[4]).trim(),
@@ -561,7 +582,7 @@
           if (!nama) continue;
           rows.push({
             waktuRaw: (r[0] || "").trim(),
-            kelas: (r[1] || "").trim(),
+            kelas: (r[1] || "").trim().replace(/^XI\s+/, "XI-"),
             nama: nama,
             mapel: (r[3] || "").trim(),
             versi: (r[4] || "").trim(),

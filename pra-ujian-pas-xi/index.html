@@ -313,6 +313,35 @@ function hapusProgres(){
   try{ localStorage.removeItem(kunciSimpan()); }catch(e){}
 }
 
+/* ---------- Penanda sudah selesai (localStorage) ----------
+   Begitu jawaban berhasil dikumpulkan — atau ketahuan sudah tercatat
+   di Sheet — identitas ini ditandai selesai untuk mapel itu, supaya
+   kalau masuk lagi langsung tampil skor tercatat, bukan ujian baru.
+   Dicek DULU sebelum cek Sheet, jadi langsung walau Sheet lambat
+   memperbarui datanya. Kunci per (mapel, kelas, nama), sama seperti
+   kunci simpan progres. */
+function kunciSelesai(){
+  return "praujian-v1-done-" + state.mapel + "-" + state.kelas + "-" + state.nama;
+}
+function tandaiSelesai(hasil){
+  try{ localStorage.setItem(kunciSelesai(), JSON.stringify({ benar:hasil.benar, jumlah:hasil.jumlah, skor:hasil.skor })); }catch(e){}
+}
+function bacaSelesai(){
+  try{
+    var mentah = localStorage.getItem(kunciSelesai());
+    if(!mentah) return null;
+    var d = JSON.parse(mentah);
+    if(!d || typeof d.benar !== "number" || typeof d.jumlah !== "number" || typeof d.skor !== "number") return null;
+    return d;
+  }catch(e){ return null; }
+}
+function tampilSudahSelesai(hasil){
+  $("layar-identitas").hidden = true;
+  $("layar-soal").hidden = true;
+  $("layar-kunci").hidden = true;
+  tampilHasil(hasil, true, false);
+}
+
 document.querySelectorAll(".mapel").forEach(function(el){
   el.addEventListener("click", function(){
     document.querySelectorAll(".mapel").forEach(function(m){ m.classList.remove("pilih"); });
@@ -361,6 +390,27 @@ $("btn-mulai").addEventListener("click", function(){
     state.soal = state.pdpd ? SOAL_PDPD_PAQ : SOAL_PAQ;
   }
   state.sudahKumpul = false;
+  /* Sudah pernah kumpul? Penanda lokal dulu (instan), lalu cek Sheet
+     (lintas perangkat). Bila ketahuan sudah tercatat, langsung tampil
+     skor tercatat — jangan buka ujian baru. */
+  var selesai = bacaSelesai();
+  if(selesai){ tampilSudahSelesai(selesai); return; }
+  var btnMulai = $("btn-mulai");
+  btnMulai.disabled = true;
+  btnMulai.textContent = "Memeriksa...";
+  cekSudahMengerjakan(function(tercatat){
+    btnMulai.disabled = false;
+    btnMulai.textContent = "Mulai Mengerjakan";
+    if(tercatat){
+      tandaiSelesai(tercatat);
+      tampilSudahSelesai(tercatat);
+      return;
+    }
+    masukUjian();
+  });
+});
+
+function masukUjian(){
   var pulih = muatProgres();
   if(pulih){
     /* Lanjutkan dari progres tersimpan: siswa ini sudah masuk di dalam
@@ -384,7 +434,7 @@ $("btn-mulai").addEventListener("click", function(){
   bangunNav();
   tampilSoal(state.idx);
   window.scrollTo(0, 0);
-});
+}
 
 function bangunNav(){
   var nav = $("nav-soal");
@@ -574,6 +624,7 @@ function kirimJawaban(){
     if(tercatat){
       state.sudahKumpul = true;
       hapusProgres();
+      tandaiSelesai(tercatat);
       btn.disabled = false;
       btn.textContent = "Kumpulkan Jawaban";
       tampilHasil(tercatat, true, false);
@@ -607,6 +658,7 @@ function kirimJawaban(){
     }).then(function(){
       state.sudahKumpul = true;
       hapusProgres();
+      tandaiSelesai(hasil);
       btn.disabled = false;
       btn.textContent = "Kumpulkan Jawaban";
       tampilHasil(hasil, false, false);
