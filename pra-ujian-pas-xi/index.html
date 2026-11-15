@@ -553,15 +553,72 @@ $("btn-kunci-kembali").addEventListener("click", function(){
   window.scrollTo(0, 0);
 });
 
-/* ---------- Cek duplikat via gviz JSONP (tab "Rekap") ----------
-   Kolom: Timestamp | Kelas | Nama | Mapel | Versi | Benar | Jumlah Soal | Skor | Jawaban
-   -> c[2]=Nama, c[3]=Mapel, c[5]=Benar, c[6]=Jumlah Soal, c[7]=Skor. */
+/* ---------- Cek duplikat (tab "Rekap") ----------
+   Kolom: Timestamp | Kelas | Nama | Mapel | Versi | Benar | Jumlah Soal | Skor | Jawaban.
+   Percobaan 1: fetch CSV (cara yang dipakai dashboard — terbukti jalan
+   di browser). Percobaan 2 (bila fetch gagal): gviz JSONP seperti dulu.
+   Keduanya memanggil cb(hasil) dengan hasil {benar, jumlah, skor} bila
+   ketemu, atau null bila belum ada / cek gagal (fail-open: lanjut). */
+function parseCsvBaris(s){
+  var out = [], cur = "", dalam = false;
+  for(var i = 0; i < s.length; i++){
+    var c = s[i];
+    if(dalam){
+      if(c === '"'){ if(s[i+1] === '"'){ cur += '"'; i++; } else { dalam = false; } }
+      else { cur += c; }
+    } else if(c === '"'){ dalam = true; }
+    else if(c === ','){ out.push(cur); cur = ""; }
+    else { cur += c; }
+  }
+  out.push(cur);
+  return out;
+}
+function cariDiBaris(nm, mp, benarS, jumlahS, skorS){
+  if(!nm || !mp) return null;
+  if(nm.trim().toLowerCase() !== state.nama.trim().toLowerCase()) return null;
+  if(mp.trim().toUpperCase() !== state.mapel) return null;
+  var benar = parseInt(benarS, 10);
+  var jumlah = parseInt(jumlahS, 10);
+  var skor = parseFloat(String(skorS).replace(",", "."));
+  if(isNaN(benar) || isNaN(jumlah) || isNaN(skor)) return null;
+  return { benar:benar, jumlah:jumlah, skor:skor };
+}
+function cekSudahMengerjakan(cb){
+  if(SHEET_ID.indexOf("__") !== -1){
+    cb(null); /* backend belum dipasang: lewati cek, lanjut submit lokal */
+    return;
+  }
+  var selesai = false;
+  function done(hasil){ if(selesai) return; selesai = true; cb(hasil); }
+  if(typeof fetch === "undefined"){ cekViaJsonp(done); return; }
+  var urlCsv = "https://docs.google.com/spreadsheets/d/" + SHEET_ID
+    + "/gviz/tq?tqx=out:csv&sheet=" + encodeURIComponent("Rekap") + "&headers=1&_cb=" + Date.now();
+  var t1 = setTimeout(function(){ cekViaJsonp(done); }, 8000);
+  fetch(urlCsv, { cache: "no-store" }).then(function(res){
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    return res.text();
+  }).then(function(teks){
+    clearTimeout(t1);
+    var ketemu = null;
+    var baris = teks.split(/\r?\n/);
+    for(var i = 1; i < baris.length; i++){
+      var f = parseCsvBaris(baris[i]);
+      if(f.length < 8) continue;
+      var r = cariDiBaris(f[2], f[3], f[5], f[6], f[7]);
+      if(r) ketemu = r; /* baris terakhir menang */
+    }
+    done(ketemu);
+  }).catch(function(){
+    clearTimeout(t1);
+    cekViaJsonp(done);
+  });
+}
 function selGviz(c){
   if(!c) return "";
   if(typeof c.v !== "undefined" && c.v !== null) return String(c.v);
   return "";
 }
-function cekSudahMengerjakan(cb){
+function cekViaJsonp(cb){
   if(SHEET_ID.indexOf("__") !== -1){
     cb(null); /* backend belum dipasang: lewati cek, lanjut submit lokal */
     return;
