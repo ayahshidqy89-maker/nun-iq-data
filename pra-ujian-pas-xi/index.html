@@ -117,6 +117,7 @@ select:focus{outline:none;border-color:var(--hijau)}
     </div>
 
     <button type="button" class="btn" id="btn-mulai" disabled>Mulai Mengerjakan</button>
+    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 3.2 &middot; cek duplikat via CSV</p>
     <p class="ket" id="info-jadwal" hidden style="text-align:center;margin-top:12px"></p>
   </section>
 
@@ -397,7 +398,7 @@ $("btn-mulai").addEventListener("click", function(){
   if(selesai){ tampilSudahSelesai(selesai); return; }
   var btnMulai = $("btn-mulai");
   btnMulai.disabled = true;
-  btnMulai.textContent = "Memeriksa...";
+  btnMulai.textContent = "Memeriksa... (v3.2)";
   cekSudahMengerjakan(function(tercatat){
     btnMulai.disabled = false;
     btnMulai.textContent = "Mulai Mengerjakan";
