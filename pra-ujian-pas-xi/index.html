@@ -12,7 +12,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--teks);line-height:1.6}
 .wrap{max-width:720px;margin:0 auto;padding:16px 16px 48px}
-header{background:var(--hijau);color:#fff;border-radius:0 0 20px 20px;padding:28px 20px 24px;text-align:center;margin-bottom:20px}
+header{background:linear-gradient(135deg,#14532D 0%,#166534 60%,#15803D 100%);color:#fff;border-radius:0 0 20px 20px;padding:28px 20px 24px;text-align:center;margin-bottom:20px}
 header h1{font-size:1.45rem;font-weight:800;line-height:1.3}
 header p{opacity:.92;font-size:.95rem;margin-top:6px}
 header{position:relative}
@@ -29,8 +29,10 @@ header{position:relative}
 .mapel .ikon{font-size:2rem;display:block;margin-bottom:6px}
 .mapel .nama{font-weight:700;font-size:1.02rem}
 .mapel .sub{font-size:.85rem;color:var(--abu);margin-top:2px}
-.mapel:hover{border-color:var(--hijau2)}
+.mapel:hover{border-color:var(--hijau2);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.10)}
 .mapel.pilih{border-color:var(--hijau);background:var(--hijau-muda);box-shadow:0 0 0 2px var(--hijau) inset}
+.mapel.mapel-paq:hover{border-color:#1E40AF}
+.mapel.mapel-paq.pilih{border-color:#1E40AF;background:#DBEAFE;box-shadow:0 0 0 2px #1E40AF inset}
 label.lbl{display:block;font-weight:600;font-size:.92rem;margin:12px 0 6px}
 select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .dd{position:relative}
@@ -46,15 +48,17 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
 .dd-opt:hover{background:var(--hijau-muda)}
 .dd-opt[aria-selected="true"]{background:var(--hijau);color:#fff}
 .dd-opt:focus-visible{outline:none;background:var(--hijau-muda)}
-.btn{display:block;width:100%;padding:14px;font-size:1.05rem;font-weight:700;font-family:inherit;border:none;border-radius:12px;cursor:pointer;background:var(--hijau);color:#fff;margin-top:18px}
+.btn{display:block;width:100%;padding:14px;font-size:1.05rem;font-weight:700;font-family:inherit;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#166534,#14532D);color:#fff;margin-top:18px;box-shadow:0 4px 14px rgba(20,83,45,.30);transition:transform .12s,box-shadow .12s}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 20px rgba(20,83,45,.35)}
 .btn:disabled{background:#9CA3AF;cursor:not-allowed}
 .btn.sekunder{background:#fff;color:var(--hijau);border:2px solid var(--hijau);margin-top:10px}
 .btn.kecil{width:auto;display:inline-block;padding:10px 18px;font-size:.95rem;margin-top:0}
 .progres{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;font-weight:600;font-size:.92rem}
-.bar{height:8px;background:#E5E7EB;border-radius:99px;overflow:hidden;margin-bottom:16px}
-.bar i{display:block;height:100%;background:var(--hijau2);width:0%;transition:width .25s}
+.bar{height:12px;background:#E5E7EB;border-radius:99px;overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#22C55E,#166534);width:0%;transition:width .4s ease}
 .timer{font-weight:800;color:var(--hijau);background:var(--hijau-muda);border-radius:999px;padding:2px 10px;font-size:.9rem;white-space:nowrap}
 .timer.mepet{color:#fff;background:#B91C1C}
+.timer.jeda{color:#92400E;background:#FEF3C7}
 .peringatan{background:#FEF3C7;border:1px solid #F59E0B;color:#92400E;border-radius:12px;padding:10px 12px;margin:0 0 14px;font-size:.92rem}
 .pindah{text-align:center;color:#92400E;font-weight:700}
 .narasi{background:#F0FDF4;border-right:4px solid var(--hijau2);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:1rem}
@@ -62,11 +66,13 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
 .ar{font-family:'Noto Naskh Arabic',serif;font-size:1.25em;line-height:1.9}
 .gambar-soal{width:100%;max-width:520px;display:block;margin:0 auto 16px;border-radius:12px;border:1px solid #E5E7EB}
 .opsi{display:flex;flex-direction:column;gap:10px}
-.opsi label{display:flex;gap:10px;align-items:flex-start;border:2px solid var(--garis);border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff}
-.opsi label:hover{border-color:var(--hijau2)}
-.opsi label.pilih{border-color:var(--hijau);background:var(--hijau-muda)}
-.opsi input{margin-top:5px;accent-color:var(--hijau);width:18px;height:18px;flex:none}
-.opsi .huruf{font-weight:800;color:var(--hijau);flex:none}
+.opsi label{display:flex;gap:10px;align-items:flex-start;border:2px solid var(--warna,#D1D5DB);border-radius:14px;padding:12px 14px;cursor:pointer;background:#fff;position:relative;transition:transform .12s,box-shadow .12s,background .12s}
+.opsi label:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.opsi label.pilih{border-color:var(--warna);background:var(--warna);color:#fff;transform:scale(1.02);box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.opsi label.pilih .isi{color:#fff}
+.opsi input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.opsi .huruf{font-weight:800;color:#fff;background:var(--warna,#166534);border-radius:8px;padding:2px 9px;flex:none;line-height:1.5}
+.opsi label.pilih .huruf{background:#fff;color:var(--warna)}
 .opsi .isi{flex:1}
 .nav-soal{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:16px 0}
 @media(max-width:520px){.nav-soal{grid-template-columns:repeat(8,1fr)}}
@@ -75,8 +81,11 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
 .nav-soal button.aktif{outline:2px solid var(--hijau);outline-offset:1px}
 .nav-bawah{display:flex;gap:10px;justify-content:space-between}
 .nav-bawah .btn{margin-top:0}
-.hasil{text-align:center;padding:12px 4px}
-.skor-besar{font-size:4rem;font-weight:800;color:var(--hijau);line-height:1;margin:10px 0 4px}
+.hasil{text-align:center;padding:12px 4px;position:relative;overflow:hidden}
+.konfeti{position:absolute;top:0;left:0;width:8px;height:14px;border-radius:2px;pointer-events:none;animation:konfeti-jatuh 3s ease-in forwards}
+@keyframes konfeti-jatuh{from{transform:translateY(-20px) rotate(0deg);opacity:1}to{transform:translateY(320px) rotate(540deg);opacity:0}}
+.skor-besar{font-size:4rem;font-weight:800;color:var(--hijau);line-height:1;margin:10px 0 4px;animation:skor-pop .5s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes skor-pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
 .hasil .benar{font-size:1.05rem;font-weight:600}
 .hasil .pesan{font-size:1.25rem;font-weight:700;margin:14px 0 6px}
 .hasil .catat{color:var(--abu)}
@@ -112,7 +121,7 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
         <span class="nama">PAI &amp; Budi Pekerti</span>
         <span class="sub">40 soal &bull; pilihan ganda</span>
       </button>
-      <button type="button" class="mapel" id="mapel-paq" data-mapel="PAQ">
+      <button type="button" class="mapel mapel-paq" id="mapel-paq" data-mapel="PAQ">
         <span class="ikon">&#128214;</span>
         <span class="nama">PAQ (Muatan Lokal)</span>
         <span class="sub">40 soal &bull; pilihan ganda</span>
@@ -153,7 +162,7 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
     </div>
 
     <button type="button" class="btn" id="btn-mulai" disabled>Mulai Mengerjakan</button>
-    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 4.0 &middot; anti-curang v4 + timer 90 menit</p>
+    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 4.1 &middot; ala Wayground + timer jeda istirahat</p>
     <p class="ket" id="info-jadwal" hidden style="text-align:center;margin-top:12px"></p>
   </section>
 
@@ -448,6 +457,11 @@ function pesanTier(skor){
 var state = { mapel:null, kelas:"", nama:"", pdpd:false, soal:[], jawaban:[], idx:0, sudahKumpul:false, pindah:0, mulai:0, timerId:null, waktuHabis:false };
 var DURASI_UJIAN_MS = 90 * 60 * 1000; /* timer 90 menit */
 var HURUF = ["A","B","C","D","E"];
+/* Warna ubin jawaban ala Wayground — per POSISI tampil (A selalu
+   merah, B biru, C kuning, D hijau, E ungu), BUKAN per benar/salah.
+   Karena opsi diacak per siswa, warna tidak pernah menandai jawaban
+   benar. */
+var WARNA_OPSI = ["#E21B3C", "#1368CE", "#D89E00", "#26890C", "#7C3AED"];
 
 /* ---------- Anti-curang v4: acak unik per siswa ----------
    Benih = nama + kelas + mapel (FNV-1a 32-bit), PRNG mulberry32,
@@ -673,23 +687,45 @@ function hapusProgres(){
   try{ localStorage.removeItem(kunciSimpan()); }catch(e){}
 }
 
-/* ---------- Timer 90 menit ----------
+/* ---------- Timer 90 menit (dijeda pas istirahat) ----------
    Mulai saat siswa masuk ujian (baru atau lanjut). Deadline dihitung
    dari jam dinding (Date.now) supaya tahan reload / tutup tab —
    menutup halaman TIDAK menjeda timer. Pas habis, jawaban langsung
-   dikumpulkan otomatis. */
+   dikumpulkan otomatis.
+   JEDA ISTIRAHAT (v4.1): menit istirahat 09:45-10:00 TIDAK dihitung.
+   Jendela yang terpotong istirahat (XI-4 PAI Selasa, XI-2 PAI Kamis,
+   XI-7 PAQ Rabu, XI-6 PAQ Kamis) panjangnya 105 menit; 105 - 15 = 90,
+   jadi dengan jeda ini timer 90 menit pas sama dengan waktu kerja
+   di jendela. Selama istirahat, sisa waktu BEKU (tidak berkurang)
+   dan chip timer menampilkan "Istirahat". Asumsi: satu sesi ujian
+   dalam satu hari yang sama (jendela siang, tenggang 60 menit). */
 function fmtWaktu(ms){
   var total = Math.max(0, Math.ceil(ms / 1000));
   var m = Math.floor(total / 60), s = total % 60;
   return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
 }
-function sisaMs(){ return DURASI_UJIAN_MS - (Date.now() - state.mulai); }
+function menitIstirahat(a, b){
+  var d = new Date(a);
+  d.setHours(9, 45, 0, 0); var m1 = d.getTime();
+  d.setHours(10, 0, 0, 0); var m2 = d.getTime();
+  return Math.max(0, Math.min(b, m2) - Math.max(a, m1));
+}
+function sedangIstirahat(kini){
+  var d = new Date(kini);
+  return d.getHours() === 9 && d.getMinutes() >= 45;
+}
+function sisaMs(){
+  var kini = Date.now();
+  return DURASI_UJIAN_MS + menitIstirahat(state.mulai, kini) - (kini - state.mulai);
+}
 function perbaruiTimer(){
   var el = $("timer");
   if(!el) return;
   var sisa = sisaMs();
-  el.textContent = "⏱ " + fmtWaktu(sisa);
-  el.classList.toggle("mepet", sisa <= 10 * 60 * 1000);
+  var istirahat = sedangIstirahat(Date.now());
+  el.textContent = istirahat ? "⏸ Istirahat - " + fmtWaktu(sisa) : "⏱ " + fmtWaktu(sisa);
+  el.classList.toggle("mepet", !istirahat && sisa <= 10 * 60 * 1000);
+  el.classList.toggle("jeda", istirahat);
   if(sisa <= 0){ hentikanTimer(); state.waktuHabis = true; kirimJawaban(); }
 }
 function mulaiTimer(){
@@ -910,7 +946,7 @@ function tampilSoal(i){
   tampil.forEach(function(item, k){
     var cek = state.jawaban[i] === item.asli ? " checked" : "";
     var pil = state.jawaban[i] === item.asli ? " pilih" : "";
-    html += '<label class="' + pil + '"><input type="radio" name="opsi-soal" value="' + k + '"' + cek
+    html += '<label class="' + pil + '" style="--warna:' + WARNA_OPSI[k] + '"><input type="radio" name="opsi-soal" value="' + k + '"' + cek
       + '><span class="huruf">' + HURUF[k] + '.</span><span class="isi">' + arHtml(item.teks) + "</span></label>";
   });
   html += "</div>";
@@ -951,12 +987,35 @@ function hitungHasil(){
   return { benar:benar, jumlah:n, skor:skor, jawabanStr:jawabanStr };
 }
 
+/* ---------- Konfeti layar hasil (ala Wayground) ----------
+   Potongan warna-warni jatuh di dalam kartu hasil. Jumlah
+   menyesuaikan tier skor. Hanya hiasan — tidak mengubah skor. */
+function konfeti(skor){
+  var kartu = $("layar-hasil");
+  if(!kartu) return;
+  var warna = ["#E21B3C", "#1368CE", "#D89E00", "#26890C", "#7C3AED", "#F59E0B"];
+  var jumlah = skor >= 90 ? 60 : skor >= 75 ? 45 : skor >= 60 ? 30 : 15;
+  for(var i = 0; i < jumlah; i++){
+    var p = document.createElement("span");
+    p.className = "konfeti";
+    p.style.left = Math.floor(Math.random() * 100) + "%";
+    p.style.background = warna[i % warna.length];
+    p.style.animationDelay = (Math.random() * 0.9).toFixed(2) + "s";
+    if(Math.random() < 0.5) p.style.width = "6px";
+    kartu.appendChild(p);
+  }
+  setTimeout(function(){
+    var potongan = kartu.querySelectorAll(".konfeti");
+    for(var j = 0; j < potongan.length; j++) potongan[j].remove();
+  }, 4200);
+}
 function tampilHasil(hasil, sudahAda, backendBelum){
   hentikanTimer();
   $("hasil-nama").textContent = state.nama;
   $("hasil-kelas").textContent = state.kelas.replace("XI ", "XI-");
   $("hasil-mapel").textContent = state.mapel === "PAI" ? "PAI & Budi Pekerti" : "PAQ (Muatan Lokal)";
   $("hasil-skor").textContent = fmtSkor(hasil.skor);
+  $("hasil-skor").style.color = hasil.skor >= 90 ? "#B45309" : hasil.skor >= 75 ? "#15803D" : hasil.skor >= 60 ? "#1E40AF" : "#6B7280";
   $("hasil-benar").textContent = hasil.benar + " dari " + hasil.jumlah + " benar";
   $("hasil-pesan").textContent = pesanTier(hasil.skor);
   if(sudahAda){
@@ -983,6 +1042,7 @@ function tampilHasil(hasil, sudahAda, backendBelum){
   }
   $("layar-soal").hidden = true;
   $("layar-hasil").hidden = false;
+  if(!sudahAda) konfeti(hasil.skor);
   melodiSkor(hasil.skor);
   window.scrollTo(0, 0);
 }

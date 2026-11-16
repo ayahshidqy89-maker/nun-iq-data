@@ -110,18 +110,27 @@
   .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent-mid), var(--accent-2)); border-radius: 999px; transition: width 0.5s ease; }
   .total-line { margin-top: 12px; font-size: 0.92rem; font-weight: 700; color: var(--accent); }
 
+  /* ---------- Aksen warna kartu ringkasan (ala Wayground, v4.1) ---------- */
+  .card.stat-pai { border-top: 5px solid #16A34A; }
+  .card.stat-pai .big { color: #15803D; }
+  .card.stat-paq { border-top: 5px solid #2563EB; }
+  .card.stat-paq .big { color: #1E40AF; }
+  .card.stat-paq .badge-mapel.paq { background: #DBEAFE; color: #1E40AF; }
+  .card.stat-total { border-top: 5px solid #D97706; }
+  .card.stat-total .big { color: #B45309; }
+
   /* ---------- Notifikasi live ---------- */
   .notif-list { display: flex; flex-direction: column; gap: 10px; }
   .notif-card {
     background: var(--surface); border: 1px solid var(--line); border-left-width: 6px;
     border-radius: 14px; padding: 14px 16px; box-shadow: var(--shadow);
-    animation: slide-down 0.45s ease both;
+    animation: slide-down 0.45s cubic-bezier(.34,1.56,.64,1) both;
   }
   @keyframes slide-down {
-    from { opacity: 0; transform: translateY(-12px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
-  .notif-card.tier-90 { border-left-color: #14532D; background: #F0FDF4; }
+  .notif-card.tier-90 { border-left-color: #CA8A04; background: #FFFBEB; }
   .notif-card.tier-75 { border-left-color: #16A34A; background: #F0FDF4; }
   .notif-card.tier-60 { border-left-color: #CA8A04; background: #FEFCE8; }
   .notif-card.tier-low { border-left-color: #9CA3AF; background: #F9FAFB; }
@@ -183,19 +192,19 @@
 
   <h2 class="section-title">Ringkasan</h2>
   <div class="summary-grid">
-    <div class="card">
+    <div class="card stat-pai">
       <span class="badge-mapel">PAI</span>
       <div class="label">Siswa sudah mengerjakan</div>
       <div class="big" id="countPai">0 siswa</div>
       <div class="detail" id="avgPai">Rata-rata nilai: —</div>
     </div>
-    <div class="card">
-      <span class="badge-mapel">PAQ</span>
+    <div class="card stat-paq">
+      <span class="badge-mapel paq">PAQ</span>
       <div class="label">Siswa sudah mengerjakan</div>
       <div class="big" id="countPaq">0 siswa</div>
       <div class="detail" id="avgPaq">Rata-rata nilai: —</div>
     </div>
-    <div class="card">
+    <div class="card stat-total">
       <div class="label">Total pengerjaan</div>
       <div class="big" id="totalAttempts">0</div>
       <div class="detail" id="totalUnique">0 siswa unik sudah mengerjakan (dari 282 siswa)</div>
