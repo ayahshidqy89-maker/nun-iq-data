@@ -162,7 +162,7 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
     </div>
 
     <button type="button" class="btn" id="btn-mulai" disabled>Mulai Mengerjakan</button>
-    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 4.2 &middot; ala Wayground + jeda semua istirahat</p>
+    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 4.3 &middot; ala Wayground + ishoma sampai 13:00</p>
     <p class="ket" id="info-jadwal" hidden style="text-align:center;margin-top:12px"></p>
   </section>
 
@@ -692,9 +692,11 @@ function hapusProgres(){
    dari jam dinding (Date.now) supaya tahan reload / tutup tab —
    menutup halaman TIDAK menjeda timer. Pas habis, jawaban langsung
    dikumpulkan otomatis.
-   JEDA ISTIRAHAT (v4.1: 09:45-10:00; v4.2: SEMUA istirahat): menit
-   istirahat TIDAK dihitung — Senin-Kamis 09:45-10:00, 12:00-12:45
-   (siang; jam 6 real habis 12:00), 14:15-14:30; Jumat 09:30-09:45.
+   JEDA ISTIRAHAT (v4.1: 09:45-10:00; v4.2: SEMUA istirahat; v4.3:
+   koreksi Imron: ishoma 12:00-13:00): menit istirahat TIDAK dihitung
+   — Senin-Kamis 09:45-10:00, 12:00-13:00 (ISHOMA; jam 6 tulisan
+   sampai 12:15 tapi real habis 12:00, jam 7 masuk 13:00),
+   14:15-14:30; Jumat 09:30-09:45.
    Hanya istirahat 09:45 yang memotong jendela (4 jendela pagi,
    105 menit; 105 - 15 = 90, jadi timer pas sama dengan waktu kerja).
    Istirahat siang + 14:15 tidak memotong jendela mana pun — tapi
@@ -711,12 +713,12 @@ function fmtWaktu(ms){
   return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
 }
 /* Daftar istirahat sekolah (menit dari tengah malam, per hari):
-   Senin-Kamis: 09:45-10:00, 12:00-12:45 (siang; jam 6 real habis
-   12:00), 14:15-14:30. Jumat: 09:30-09:45 saja. */
+   Senin-Kamis: 09:45-10:00, 12:00-13:00 (ISHOMA; jam 6 real habis
+   12:00, jam 7 masuk 13:00), 14:15-14:30. Jumat: 09:30-09:45 saja. */
 function daftarIstirahat(kini){
   var hari = new Date(kini).getDay();
   if(hari === 5) return [[570, 585]];
-  if(hari >= 1 && hari <= 4) return [[585, 600], [720, 765], [855, 870]];
+  if(hari >= 1 && hari <= 4) return [[585, 600], [720, 780], [855, 870]];
   return [];
 }
 function menitIstirahat(a, b){
