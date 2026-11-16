@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <style>
   :root {
     --bg: #F0FDF4;
@@ -103,7 +104,9 @@
 
   /* ---------- Progres per kelas ---------- */
   .progress-list { display: flex; flex-direction: column; gap: 12px; }
-  .progress-row { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center; }
+  .progress-row { display: grid; grid-template-columns: 64px 1fr auto auto; gap: 12px; align-items: center; }
+  .btn-pdf-kelas { font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--accent); background: #fff; border: 1.5px solid var(--accent-2); border-radius: 999px; padding: 5px 10px; cursor: pointer; white-space: nowrap; }
+  .btn-pdf-kelas:hover { background: var(--accent-soft); }
   .progress-row .kelas { font-weight: 800; color: var(--accent); }
   .progress-row .angka { font-size: 0.88rem; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
   .bar { height: 12px; background: #E5E7EB; border-radius: 999px; overflow: hidden; }
@@ -631,6 +634,7 @@
         '<span class="kelas">' + esc(k) + '</span>' +
         '<span class="bar"><i style="width:' + pct + '%"></i></span>' +
         '<span class="angka">' + grup.length + ' pengerjaan &middot; rata-rata ' + rata + ' <span class="panah">' + (buka ? "▴" : "▾") + '</span></span>' +
+        '<button type="button" class="btn-pdf-kelas" data-pdf-kelas="' + esc(k) + '" title="Unduh hasil kelas ' + esc(k) + ' sebagai PDF">📄 PDF</button>' +
         '</div>';
       if (buka) {
         if (!grup.length) {
@@ -665,6 +669,117 @@
     var adaPindah = allRows.some(function (r) { return (r.pindah || 0) > 0; });
     el.resultCount.textContent = "Total " + allRows.length + " pengerjaan." +
       (adaPindah ? " ⚠️ = pindah layar (angka = berapa kali)." : "");
+  }
+
+  /* ---------- Unduh PDF hasil per kelas (permintaan Pak Rufiat, 17 Nov) ---------- */
+  /* Data laporan: SEMUA siswa roster kelas itu (urut roster), skor PAI/PAQ digabung
+     dari allRows; nama kiriman yang tidak ada di roster ditambah di akhir. */
+  function dataLaporanKelas(kelas) {
+    var kunciRoster = kelas.replace("XI-", "XI ");
+    var roster = SISWA[kunciRoster] || [];
+    var perNama = {};
+    allRows.forEach(function (r) {
+      if (r.kelas !== kelas) return;
+      var s = perNama[r.nama];
+      if (!s) s = perNama[r.nama] = { pai: null, paq: null, pindah: 0 };
+      if ((r.mapel || "").toUpperCase() === "PAQ") { s.paq = r.skor; s.pindah += (r.pindah || 0); }
+      else { s.pai = r.skor; s.pindah += (r.pindah || 0); }
+    });
+    var baris = [];
+    var diRoster = {};
+    roster.forEach(function (sw) {
+      diRoster[sw.nama] = true;
+      var s = perNama[sw.nama] || { pai: null, paq: null, pindah: 0 };
+      baris.push({ nama: sw.nama, pai: s.pai, paq: s.paq, pindah: s.pindah });
+    });
+    Object.keys(perNama).sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase(), "id"); }).forEach(function (nm) {
+      if (!diRoster[nm]) { var s = perNama[nm]; baris.push({ nama: nm, pai: s.pai, paq: s.paq, pindah: s.pindah }); }
+    });
+    var sudah = 0, jPai = 0, tPai = 0, jPaq = 0, tPaq = 0;
+    baris.forEach(function (b) {
+      if (b.pai !== null || b.paq !== null) sudah++;
+      if (b.pai !== null) { jPai++; tPai += b.pai; }
+      if (b.paq !== null) { jPaq++; tPaq += b.paq; }
+    });
+    return {
+      kelas: kelas,
+      tanggal: new Date(),
+      total: roster.length,
+      sudah: sudah,
+      rataPai: jPai ? (tPai / jPai).toFixed(1) : "—",
+      rataPaq: jPaq ? (tPaq / jPaq).toFixed(1) : "—",
+      baris: baris
+    };
+  }
+  function tanggalId(d) {
+    try { return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "long", year: "numeric" }).format(d); }
+    catch (e) { return d.toLocaleDateString("id-ID"); }
+  }
+  /* Jalur utama: jsPDF (CDN). Bila pustaka tidak termuat, jatuh ke jendela cetak. */
+  function unduhPdfKelas(kelas) {
+    var lap = dataLaporanKelas(kelas);
+    if (window.jspdf && window.jspdf.jsPDF) {
+      try { tulisPdfKelas(lap); return; } catch (e) {}
+    }
+    cetakLaporanKelas(lap);
+  }
+  function tulisPdfKelas(lap) {
+    var doc = new window.jspdf.jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
+    var M = 14, LEBAR = 182, y = 16;
+    var xNo = M, xNama = M + 10, xPai = M + 102, xPaq = M + 132, xPindah = M + 162;
+    function kepalaHalaman() {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(14);
+      doc.text("SMAN 4 BANJARMASIN", M, y); y += 7;
+      doc.setFontSize(12);
+      doc.text("Hasil Pra Ujian PAS \u2014 Kelas " + lap.kelas, M, y); y += 6;
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+      doc.text("Penilaian Akhir Semester \u2022 " + tanggalId(lap.tanggal), M, y); y += 3;
+      doc.setLineWidth(0.5); doc.line(M, y, M + LEBAR, y); y += 6;
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+      doc.text("Sudah mengerjakan: " + lap.sudah + " dari " + lap.total + " siswa  \u2022  Rata-rata PAI: " + lap.rataPai + "  \u2022  PAQ: " + lap.rataPaq, M, y); y += 8;
+      doc.setFillColor(20, 83, 45); doc.rect(M, y - 5, LEBAR, 7, "F");
+      doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
+      doc.text("No", xNo + 2, y); doc.text("Nama", xNama + 2, y);
+      doc.text("PAI", xPai + 2, y); doc.text("PAQ", xPaq + 2, y); doc.text("Pindah", xPindah + 2, y);
+      doc.setTextColor(0, 0, 0); doc.setFont("helvetica", "normal"); y += 2;
+    }
+    kepalaHalaman();
+    lap.baris.forEach(function (b, i) {
+      if (y > 272) { doc.addPage(); y = 16; kepalaHalaman(); }
+      if (i % 2 === 1) { doc.setFillColor(243, 244, 246); doc.rect(M, y - 5, LEBAR, 7, "F"); }
+      doc.setFontSize(10);
+      doc.text(String(i + 1), xNo + 2, y);
+      doc.text(b.nama, xNama + 2, y);
+      doc.text(b.pai === null ? "\u2014" : String(b.pai), xPai + 2, y);
+      doc.text(b.paq === null ? "\u2014" : String(b.paq), xPaq + 2, y);
+      doc.text(b.pindah > 0 ? (b.pindah + "x") : "\u2014", xPindah + 2, y);
+      y += 7;
+    });
+    y += 4;
+    doc.setFontSize(9); doc.setTextColor(107, 114, 128);
+    doc.text("Dicetak dari Dashboard Pra Ujian PAS XI", M, y);
+    doc.save("Hasil-Pra-Ujian-PAS-" + lap.kelas + ".pdf");
+  }
+  /* Fallback: jendela cetak (pengguna pilih "Save as PDF" di dialog cetak). */
+  function cetakLaporanKelas(lap) {
+    var html = "<!doctype html><html lang=\"id\"><head><meta charset=\"utf-8\"><title>Hasil Pra Ujian PAS \u2014 Kelas " + esc(lap.kelas) + "</title><style>" +
+      "body{font-family:Arial,sans-serif;margin:24px;color:#111}h1{font-size:18px;margin:0}h2{font-size:15px;margin:4px 0 2px}p{font-size:13px;margin:2px 0 12px}" +
+      "table{width:100%;border-collapse:collapse;font-size:13px}th{background:#14532D;color:#fff;text-align:left;padding:6px 8px}td{padding:6px 8px;border-bottom:1px solid #ddd}tr:nth-child(even) td{background:#F3F4F6}" +
+      "</style></head><body>" +
+      "<h1>SMAN 4 BANJARMASIN</h1><h2>Hasil Pra Ujian PAS \u2014 Kelas " + esc(lap.kelas) + "</h2>" +
+      "<p>Penilaian Akhir Semester \u2022 " + esc(tanggalId(lap.tanggal)) + "<br>Sudah mengerjakan: " + lap.sudah + " dari " + lap.total + " siswa \u2022 Rata-rata PAI: " + lap.rataPai + " \u2022 PAQ: " + lap.rataPaq + "</p>" +
+      "<table><thead><tr><th>No</th><th>Nama</th><th>PAI</th><th>PAQ</th><th>Pindah</th></tr></thead><tbody>";
+    lap.baris.forEach(function (b, i) {
+      html += "<tr><td>" + (i + 1) + "</td><td>" + esc(b.nama) + "</td><td>" + (b.pai === null ? "\u2014" : b.pai) + "</td><td>" + (b.paq === null ? "\u2014" : b.paq) + "</td><td>" + (b.pindah > 0 ? (b.pindah + "x") : "\u2014") + "</td></tr>";
+    });
+    html += "</tbody></table><p>Dicetak dari Dashboard Pra Ujian PAS XI</p></body></html>";
+    var w = null;
+    try { w = window.open("", "_blank"); } catch (e) { w = null; }
+    if (!w) { alert("Pop-up diblokir \u2014 izinkan pop-up untuk halaman ini, lalu coba lagi."); return; }
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+    w.print();
   }
 
   function renderAll() {
@@ -849,11 +964,15 @@
     renderTable();
   }
   el.resultBody.addEventListener("click", function (e) {
+    var btnPdf = e.target && e.target.closest ? e.target.closest(".btn-pdf-kelas") : null;
+    if (btnPdf && btnPdf.getAttribute("data-pdf-kelas")) { unduhPdfKelas(btnPdf.getAttribute("data-pdf-kelas")); return; }
     var baris = e.target && e.target.closest ? e.target.closest(".hasil-bar") : null;
     if (baris && baris.getAttribute("data-kelas")) alihHasilKelas(baris.getAttribute("data-kelas"));
   });
   el.resultBody.addEventListener("keydown", function (e) {
     if (e.key !== "Enter" && e.key !== " ") return;
+    var btnPdf = e.target && e.target.closest ? e.target.closest(".btn-pdf-kelas") : null;
+    if (btnPdf) return;
     var baris = e.target && e.target.closest ? e.target.closest(".hasil-bar") : null;
     if (baris && baris.getAttribute("data-kelas")) { e.preventDefault(); alihHasilKelas(baris.getAttribute("data-kelas")); }
   });
