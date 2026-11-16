@@ -297,6 +297,35 @@ function cekJadwal(kelas, mapel){
   }
   return { buka:false, alasan:"bukan-hari", jadwal:teksJadwal(daftar) };
 }
+/* Masa tenggang 60 menit sesudah jendela hari ini habis: progres yang
+   tersimpan masih boleh dilanjutkan. Tujuannya supaya siswa yang sedang
+   mengerjakan tidak terkunci di tengah jalan gara-gara reload/HP mati
+   persis sesudah jam habis. Sesudah 60 menit, kunci waktu berlaku penuh
+   — jadi yang sudah sempat mulai tidak bisa lanjut berjam-jam di luar
+   jadwal sementara yang belum mulai tetap terkunci. Batas bawahnya
+   menit >= akhir: sebelum jendela mulai, tenggang TIDAK berlaku
+   (tidak bisa masuk lebih awal). */
+function dalamTenggang(kelas, mapel){
+  var kini = new Date();
+  var menit = kini.getHours()*60 + kini.getMinutes();
+  var akhir = null;
+  function pertimbangkan(a){ if(akhir === null || a > akhir) akhir = a; }
+  for(var k = 0; k < JADWAL_KHUSUS.length; k++){
+    var s = JADWAL_KHUSUS[k];
+    if(s.kelas !== kelas || s.mapel !== mapel) continue;
+    var t = s.tanggal.split("-");
+    if(parseInt(t[0],10) === kini.getFullYear() && parseInt(t[1],10) === kini.getMonth()+1 && parseInt(t[2],10) === kini.getDate()){
+      pertimbangkan(menitDariJam(s.selesai));
+    }
+  }
+  var daftar = JADWAL[kelas] && JADWAL[kelas][mapel];
+  if(daftar){
+    for(var i = 0; i < daftar.length; i++){
+      if(daftar[i].hari === kini.getDay()) pertimbangkan(menitDariJam(daftar[i].selesai));
+    }
+  }
+  return akhir !== null && menit >= akhir && menit < akhir + 60;
+}
 function tampilKunci(cek){
   $("kunci-nama").textContent = state.nama;
   $("kunci-kelas").textContent = state.kelas.replace("XI ", "XI-");
@@ -459,8 +488,14 @@ $("btn-mulai").addEventListener("click", function(){
 function masukUjian(){
   var pulih = muatProgres();
   if(pulih){
-    /* Lanjutkan dari progres tersimpan: siswa ini sudah masuk di dalam
-       jendela sebelumnya, jadi kunci waktu tidak dicek lagi. */
+    /* Lanjutkan dari progres tersimpan — TAPI kunci waktu tetap dicek.
+       Boleh lanjut bila jendela sedang buka, atau masih dalam masa
+       tenggang 60 menit sesudah jendela hari ini habis. Di luar itu,
+       tampilkan layar kunci: supaya yang sudah sempat mulai tidak bisa
+       lanjut berjam-jam di luar jadwal sementara yang belum mulai
+       tetap terkunci. */
+    var cek = cekJadwal(state.kelas, state.mapel);
+    if(!cek.buka && !dalamTenggang(state.kelas, state.mapel)){ tampilKunci(cek); return; }
     state.jawaban = pulih.jawaban;
     state.idx = pulih.idx || 0;
   } else {
