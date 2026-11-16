@@ -81,6 +81,13 @@
   .detail-kelas .st-ok { font-weight: 800; color: var(--accent); }
   .detail-kelas .st-no { color: var(--ink-faint); }
   .ket-ding { font-size: 0.85rem; color: var(--ink-faint); margin: -6px 0 12px; font-weight: 600; }
+  .hasil-kelas { border-bottom: 1px solid var(--line); padding-bottom: 10px; margin-bottom: 10px; }
+  .hasil-kelas:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .hasil-bar { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 2px 0; }
+  .hasil-bar .kelas { font-weight: 800; color: var(--accent); min-width: 56px; }
+  .hasil-bar .angka { font-size: 0.88rem; font-weight: 700; color: var(--ink-soft); flex: 1; }
+  .hasil-bar .panah { font-weight: 800; color: var(--accent); }
+  .hasil-kelas .table-wrap { margin-top: 10px; }
 
   /* ---------- Ringkasan ---------- */
   .section-title { font-size: 1.05rem; font-weight: 800; color: var(--accent); margin: 28px 0 12px; }
@@ -138,6 +145,20 @@
     border: 1px solid var(--line-strong); border-radius: 12px; background: #FFFFFF; color: var(--ink);
   }
   .filters input[type="search"] { flex: 1 1 200px; min-width: 180px; }
+  .dd-asli { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  .filters .dd { flex: 1 1 160px; min-width: 150px; position: relative; }
+  .filters .dd-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid var(--line-strong); border-radius: 12px; padding: 10px 12px; font-family: inherit; font-size: 0.92rem; font-weight: 600; color: var(--ink); cursor: pointer; text-align: left; }
+  .filters .dd-btn:hover { border-color: var(--accent); }
+  .filters .dd-btn:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(20, 83, 45, 0.15); }
+  .filters .dd-btn[aria-expanded="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(20, 83, 45, 0.15); }
+  .filters .dd-btn .dd-panah { color: var(--accent); font-weight: 800; transition: transform 0.15s; }
+  .filters .dd-btn[aria-expanded="true"] .dd-panah { transform: rotate(180deg); }
+  .filters .dd-btn.dd-kosong .dd-label { color: var(--ink-faint); font-weight: 500; }
+  .filters .dd-list { position: absolute; left: 0; right: 0; top: calc(100% + 6px); background: #FFFFFF; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14); max-height: 240px; overflow-y: auto; z-index: 30; padding: 6px; }
+  .filters .dd-opt { display: block; width: 100%; text-align: left; background: none; border: none; border-radius: 8px; padding: 10px 12px; font-family: inherit; font-size: 0.92rem; font-weight: 600; color: var(--ink); cursor: pointer; }
+  .filters .dd-opt:hover { background: var(--accent-soft); }
+  .filters .dd-opt[aria-selected="true"] { background: var(--accent); color: #FFFFFF; }
+  .filters .dd-opt:focus-visible { outline: none; background: var(--accent-soft); }
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
   thead th {
@@ -218,27 +239,32 @@
   <h2 class="section-title">Hasil Pengerjaan</h2>
   <div class="card">
     <div class="filters">
-      <select id="filterKelas" aria-label="Filter kelas">
+      <div class="dd" id="dd-filter-kelas">
+        <button type="button" class="dd-btn" id="dd-filter-kelas-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Filter kelas">
+          <span class="dd-label">Semua kelas</span><span class="dd-panah">▾</span>
+        </button>
+        <div class="dd-list" id="dd-filter-kelas-list" role="listbox" hidden></div>
+      </div>
+      <select id="filterKelas" class="dd-asli" aria-hidden="true" tabindex="-1">
         <option value="">Semua kelas</option>
         <option>XI-1</option><option>XI-2</option><option>XI-3</option><option>XI-4</option>
         <option>XI-5</option><option>XI-6</option><option>XI-7</option><option>XI-8</option>
       </select>
-      <select id="filterMapel" aria-label="Filter mapel">
+      <div class="dd" id="dd-filter-mapel">
+        <button type="button" class="dd-btn" id="dd-filter-mapel-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Filter mapel">
+          <span class="dd-label">Semua mapel</span><span class="dd-panah">▾</span>
+        </button>
+        <div class="dd-list" id="dd-filter-mapel-list" role="listbox" hidden></div>
+      </div>
+      <select id="filterMapel" class="dd-asli" aria-hidden="true" tabindex="-1">
         <option value="">Semua mapel</option>
         <option value="PAI">PAI</option>
         <option value="PAQ">PAQ</option>
       </select>
       <input type="search" id="searchNama" placeholder="Cari nama siswa…" aria-label="Cari nama siswa" />
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Kelas</th><th>Nama</th><th>Mapel</th><th>Versi</th><th>Benar</th><th>Skor</th><th>Waktu</th></tr>
-        </thead>
-        <tbody id="resultBody">
-          <tr><td colspan="7">Belum ada siswa yang mengerjakan.</td></tr>
-        </tbody>
-      </table>
+    <div id="resultBody">
+      <div class="empty-note">Belum ada siswa yang mengerjakan.</div>
     </div>
     <div class="count-line" id="resultCount"></div>
   </div>
@@ -432,6 +458,7 @@
      Mulai pas interaksi pertama (aturan autoplay); tombol Musik di header;
      pilihan tersimpan di localStorage; volume 0.4. */
   var KUNCI_MUSIK_DASH = "praujian-dashboard-musik";
+  var musikDashDimulai = false; /* true sesudah play() pertama berhasil */
   function musikDashHidup() {
     try { return localStorage.getItem(KUNCI_MUSIK_DASH) !== "mati"; } catch (e) { return true; }
   }
@@ -441,7 +468,8 @@
     a.volume = 0.4;
     if (musikDashHidup()) {
       var p = a.play();
-      if (p && p.catch) p.catch(function () {});
+      if (p && p.then) { p.then(function () { musikDashDimulai = true; }, function () {}); }
+      else { musikDashDimulai = true; }
     } else {
       a.pause();
     }
@@ -627,33 +655,59 @@
     });
   }
 
+  /* Grup hasil: kelas -> false bila ditutup; kelas yang ada isinya default TERBUKA. */
+  var hasilTerbuka = {};
+
   function renderTable() {
     var rows = filteredRows();
     if (!allRows.length) {
-      el.resultBody.innerHTML = '<tr><td colspan="7">Belum ada siswa yang mengerjakan.</td></tr>';
+      el.resultBody.innerHTML = '<div class="empty-note">Belum ada siswa yang mengerjakan.</div>';
       el.resultCount.textContent = "";
       return;
     }
     if (!rows.length) {
-      el.resultBody.innerHTML = '<tr><td colspan="7">Tidak ada hasil yang cocok dengan filter.</td></tr>';
+      el.resultBody.innerHTML = '<div class="empty-note">Tidak ada hasil yang cocok dengan filter.</div>';
       el.resultCount.textContent = "Menampilkan 0 dari " + allRows.length + " pengerjaan.";
       return;
     }
+    var perKelas = {};
+    KELAS_LIST.forEach(function (k) { perKelas[k] = []; });
+    rows.forEach(function (r) { if (perKelas[r.kelas]) perKelas[r.kelas].push(r); });
     var html = "";
-    rows.forEach(function (r) {
-      var mapelCls = (r.mapel || "").toUpperCase() === "PAQ" ? "paq" : "pai";
-      html += "<tr>" +
-        "<td>" + esc(r.kelas) + "</td>" +
-        "<td>" + esc(r.nama) + "</td>" +
-        '<td><span class="tag-mapel ' + mapelCls + '">' + esc(r.mapel) + "</span></td>" +
-        "<td>" + esc(r.versi) + "</td>" +
-        "<td>" + (r.benar === null ? "—" : esc(r.benar)) + "</td>" +
-        '<td class="skor-cell">' + (r.skor === null ? "—" : esc(r.skor)) + "</td>" +
-        "<td>" + esc(formatWaktu(r.waktuRaw)) + "</td>" +
-        "</tr>";
+    var tampil = 0;
+    KELAS_LIST.forEach(function (k) {
+      var grup = perKelas[k];
+      if (!grup.length) return;
+      tampil += grup.length;
+      var buka = hasilTerbuka[k] === undefined ? true : !!hasilTerbuka[k];
+      var sum = 0, n = 0;
+      grup.forEach(function (r) { if (r.skor !== null) { sum += r.skor; n++; } });
+      var rata = n ? (sum / n).toFixed(1) : "—";
+      html += '<div class="hasil-kelas">' +
+        '<div class="hasil-bar" data-kelas="' + esc(k) + '" role="button" tabindex="0" aria-expanded="' + (buka ? "true" : "false") + '" title="Ketuk untuk buka/tutup hasil kelas ini">' +
+        '<span class="kelas">' + esc(k) + '</span>' +
+        '<span class="angka">' + grup.length + ' pengerjaan &middot; rata-rata ' + rata + '</span>' +
+        '<span class="panah">' + (buka ? "▴" : "▾") + '</span>' +
+        '</div>';
+      if (buka) {
+        html += '<div class="table-wrap"><table><thead><tr><th>Nama</th><th>Mapel</th><th>Versi</th><th>Benar</th><th>Skor</th><th>Waktu</th></tr></thead><tbody>';
+        grup.forEach(function (r) {
+          var mapelCls = (r.mapel || "").toUpperCase() === "PAQ" ? "paq" : "pai";
+          html += "<tr>" +
+            "<td>" + esc(r.nama) + "</td>" +
+            '<td><span class="tag-mapel ' + mapelCls + '">' + esc(r.mapel) + "</span></td>" +
+            "<td>" + esc(r.versi) + "</td>" +
+            "<td>" + (r.benar === null ? "—" : esc(r.benar)) + "</td>" +
+            '<td class="skor-cell">' + (r.skor === null ? "—" : esc(r.skor)) + "</td>" +
+            "<td>" + esc(formatWaktu(r.waktuRaw)) + "</td>" +
+            "</tr>";
+        });
+        html += '</tbody></table></div>';
+      }
+      html += '</div>';
     });
     el.resultBody.innerHTML = html;
-    el.resultCount.textContent = "Menampilkan " + rows.length + " dari " + allRows.length + " pengerjaan (terbaru dulu).";
+    el.resultCount.textContent = "Menampilkan " + tampil + " dari " + allRows.length + " pengerjaan (terbaru dulu).";
   }
 
   function renderAll() {
@@ -774,6 +828,76 @@
     });
   }
 
+  /* ---------- Dropdown custom bertema (ganti select native yang jadul) ----------
+     Select asli tetap ada (tersembunyi) supaya logika filter lama jalan:
+     dropdown custom cuma menulis value-nya + memicu "change". */
+  function buatDropdownDash(idBtn, idList, idSelect) {
+    var btn = document.getElementById(idBtn), list = document.getElementById(idList),
+        sel = document.getElementById(idSelect);
+    function tutupSemua() {
+      document.querySelectorAll(".dd-list").forEach(function (l) { l.hidden = true; });
+      document.querySelectorAll(".dd-btn").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
+    }
+    function bangunList() {
+      list.innerHTML = "";
+      var opts = sel.options;
+      for (var i = 0; i < opts.length; i++) {
+        (function (o) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "dd-opt";
+          b.setAttribute("role", "option");
+          b.setAttribute("data-value", o.value);
+          b.setAttribute("aria-selected", o.value === sel.value ? "true" : "false");
+          b.textContent = o.textContent;
+          b.addEventListener("click", function () {
+            sel.value = o.value;
+            sel.dispatchEvent(new Event("change"));
+            perbaruiLabel();
+            tutupSemua();
+          });
+          list.appendChild(b);
+        })(opts[i]);
+      }
+    }
+    function perbaruiLabel() {
+      var lbl = btn.querySelector(".dd-label");
+      var teks = "";
+      if (sel.value) {
+        for (var i = 0; i < sel.options.length; i++) {
+          if (sel.options[i].value === sel.value) { teks = sel.options[i].textContent; break; }
+        }
+      } else if (sel.options.length && sel.options[0]) {
+        teks = sel.options[0].textContent;
+      }
+      lbl.textContent = teks;
+      btn.classList.toggle("dd-kosong", !sel.value);
+      list.querySelectorAll(".dd-opt").forEach(function (o) {
+        o.setAttribute("aria-selected", o.getAttribute("data-value") === sel.value ? "true" : "false");
+      });
+    }
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var akanBuka = list.hidden;
+      tutupSemua();
+      if (akanBuka) {
+        bangunList();
+        list.hidden = false;
+        btn.setAttribute("aria-expanded", "true");
+      }
+    });
+    document.addEventListener("click", function (e) {
+      if (!list.hidden && e.target && e.target.closest && !e.target.closest("#" + idList) && !e.target.closest("#" + idBtn)) tutupSemua();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") tutupSemua();
+    });
+    perbaruiLabel();
+    return { bangun: bangunList, label: perbaruiLabel, tutup: tutupSemua };
+  }
+  buatDropdownDash("dd-filter-kelas-btn", "dd-filter-kelas-list", "filterKelas");
+  buatDropdownDash("dd-filter-mapel-btn", "dd-filter-mapel-list", "filterMapel");
+
   /* ---------- Filter events ---------- */
   el.filterKelas.addEventListener("change", renderTable);
   el.filterMapel.addEventListener("change", renderTable);
@@ -793,6 +917,13 @@
   var btnMusikDash = document.getElementById("btn-musik-dash");
   if (btnMusikDash) {
     btnMusikDash.addEventListener("click", function () {
+      var a = document.getElementById("musik-latar-dash");
+      if (musikDashHidup() && !musikDashDimulai && a && a.paused) {
+        /* Ketukan pertama di tombol Musik: musiknya belum pernah bunyi
+           (autoplay) — ketukan ini untuk menyalakan, bukan mematikan. */
+        putarMusikDash();
+        return;
+      }
       try {
         localStorage.setItem(KUNCI_MUSIK_DASH, musikDashHidup() ? "mati" : "hidup");
       } catch (e) {}
@@ -800,7 +931,11 @@
       putarMusikDash();
     });
   }
-  document.addEventListener("pointerdown", function () { putarMusikDash(); }, { once: true });
+  /* Mulai pas ketukan pertama di mana saja KECUALI di tombol Musik sendiri. */
+  document.addEventListener("pointerdown", function (e) {
+    if (e.target && e.target.closest && e.target.closest("#btn-musik-dash")) return;
+    putarMusikDash();
+  }, { once: true });
 
   /* ---------- Toggle detail per kelas (delegasi: daftar dibangun ulang tiap polling) ---------- */
   function alihDetailKelas(kelas) {
@@ -815,6 +950,22 @@
     if (e.key !== "Enter" && e.key !== " ") return;
     var baris = e.target && e.target.closest ? e.target.closest(".progress-row") : null;
     if (baris && baris.getAttribute("data-kelas")) { e.preventDefault(); alihDetailKelas(baris.getAttribute("data-kelas")); }
+  });
+
+  /* ---------- Toggle grup hasil per kelas (delegasi: daftar dibangun ulang tiap polling) ---------- */
+  function alihHasilKelas(kelas) {
+    var sedangBuka = hasilTerbuka[kelas] === undefined ? true : !!hasilTerbuka[kelas];
+    hasilTerbuka[kelas] = !sedangBuka;
+    renderTable();
+  }
+  el.resultBody.addEventListener("click", function (e) {
+    var baris = e.target && e.target.closest ? e.target.closest(".hasil-bar") : null;
+    if (baris && baris.getAttribute("data-kelas")) alihHasilKelas(baris.getAttribute("data-kelas"));
+  });
+  el.resultBody.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var baris = e.target && e.target.closest ? e.target.closest(".hasil-bar") : null;
+    if (baris && baris.getAttribute("data-kelas")) { e.preventDefault(); alihHasilKelas(baris.getAttribute("data-kelas")); }
   });
 
   /* ---------- Toggle suara ---------- */

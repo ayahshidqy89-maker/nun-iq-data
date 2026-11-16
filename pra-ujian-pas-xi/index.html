@@ -32,8 +32,20 @@ header{position:relative}
 .mapel:hover{border-color:var(--hijau2)}
 .mapel.pilih{border-color:var(--hijau);background:var(--hijau-muda);box-shadow:0 0 0 2px var(--hijau) inset}
 label.lbl{display:block;font-weight:600;font-size:.92rem;margin:12px 0 6px}
-select{width:100%;padding:12px 14px;font-size:1rem;font-family:inherit;border:2px solid var(--garis);border-radius:10px;background:#fff;color:var(--teks)}
-select:focus{outline:none;border-color:var(--hijau)}
+select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.dd{position:relative}
+.dd-btn{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;border:2px solid var(--garis);border-radius:10px;padding:12px 14px;font-family:inherit;font-size:1rem;font-weight:600;color:var(--teks);cursor:pointer;text-align:left;transition:border-color .15s,box-shadow .15s}
+.dd-btn:hover{border-color:var(--hijau2)}
+.dd-btn:focus-visible{outline:none;border-color:var(--hijau);box-shadow:0 0 0 3px rgba(22,101,52,.18)}
+.dd-btn[aria-expanded="true"]{border-color:var(--hijau);box-shadow:0 0 0 3px rgba(22,101,52,.18)}
+.dd-btn .dd-panah{color:var(--hijau);font-weight:800;transition:transform .15s}
+.dd-btn[aria-expanded="true"] .dd-panah{transform:rotate(180deg)}
+.dd-btn.dd-kosong .dd-label{color:#9CA3AF;font-weight:500}
+.dd-list{position:absolute;left:0;right:0;top:calc(100% + 6px);background:#fff;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.14);max-height:240px;overflow-y:auto;z-index:30;padding:6px}
+.dd-opt{display:block;width:100%;text-align:left;background:none;border:none;border-radius:8px;padding:10px 12px;font-family:inherit;font-size:.95rem;font-weight:600;color:var(--teks);cursor:pointer}
+.dd-opt:hover{background:var(--hijau-muda)}
+.dd-opt[aria-selected="true"]{background:var(--hijau);color:#fff}
+.dd-opt:focus-visible{outline:none;background:var(--hijau-muda)}
 .btn{display:block;width:100%;padding:14px;font-size:1.05rem;font-weight:700;font-family:inherit;border:none;border-radius:12px;cursor:pointer;background:var(--hijau);color:#fff;margin-top:18px}
 .btn:disabled{background:#9CA3AF;cursor:not-allowed}
 .btn.sekunder{background:#fff;color:var(--hijau);border:2px solid var(--hijau);margin-top:10px}
@@ -104,8 +116,14 @@ select:focus{outline:none;border-color:var(--hijau)}
     </div>
 
     <div class="langkah" style="margin-top:20px">Langkah 2 &mdash; Pilih Kelas &amp; Nama</div>
-    <label class="lbl" for="pilih-kelas">Kelas</label>
-    <select id="pilih-kelas">
+    <label class="lbl" for="dd-kelas-btn">Kelas</label>
+    <div class="dd" id="dd-kelas">
+      <button type="button" class="dd-btn dd-kosong" id="dd-kelas-btn" aria-haspopup="listbox" aria-expanded="false">
+        <span class="dd-label">-- Pilih kelas --</span><span class="dd-panah">&#9662;</span>
+      </button>
+      <div class="dd-list" id="dd-kelas-list" role="listbox" hidden></div>
+    </div>
+    <select id="pilih-kelas" class="dd-asli" aria-hidden="true" tabindex="-1">
       <option value="">-- Pilih kelas --</option>
       <option value="XI 1">XI-1</option>
       <option value="XI 2">XI-2</option>
@@ -118,14 +136,20 @@ select:focus{outline:none;border-color:var(--hijau)}
     </select>
 
     <div id="bungkus-nama" hidden>
-      <label class="lbl" for="pilih-nama">Nama</label>
-      <select id="pilih-nama">
+      <label class="lbl" for="dd-nama-btn">Nama</label>
+      <div class="dd" id="dd-nama">
+        <button type="button" class="dd-btn dd-kosong" id="dd-nama-btn" aria-haspopup="listbox" aria-expanded="false">
+          <span class="dd-label">-- Pilih nama --</span><span class="dd-panah">&#9662;</span>
+        </button>
+        <div class="dd-list" id="dd-nama-list" role="listbox" hidden></div>
+      </div>
+      <select id="pilih-nama" class="dd-asli" aria-hidden="true" tabindex="-1">
         <option value="">-- Pilih nama --</option>
       </select>
     </div>
 
     <button type="button" class="btn" id="btn-mulai" disabled>Mulai Mengerjakan</button>
-    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 3.4 &middot; musik latar</p>
+    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 3.5 &middot; dropdown bertema</p>
     <p class="ket" id="info-jadwal" hidden style="text-align:center;margin-top:12px"></p>
   </section>
 
@@ -264,6 +288,7 @@ document.addEventListener("click", function(e){
    header; pilihan tersimpan di localStorage ("praujian-musik" = "mati"
    bila dimatikan; default hidup). Volume 0.4 supaya lembut — ini ujian. */
 var KUNCI_MUSIK = "praujian-musik";
+var musikDimulai = false; /* true sesudah play() pertama berhasil */
 function musikHidup(){
   try{ return localStorage.getItem(KUNCI_MUSIK) !== "mati"; }catch(e){ return true; }
 }
@@ -273,7 +298,8 @@ function putarMusik(){
   a.volume = 0.4;
   if(musikHidup()){
     var p = a.play();
-    if(p && p.catch) p.catch(function(){});
+    if(p && p.then){ p.then(function(){ musikDimulai = true; }, function(){}); }
+    else { musikDimulai = true; }
   } else {
     a.pause();
   }
@@ -289,13 +315,94 @@ function perbaruiTombolMusik(){
 var btnMusik = $("btn-musik");
 if(btnMusik){
   btnMusik.addEventListener("click", function(){
+    var a = $("musik-latar");
+    if(musikHidup() && !musikDimulai && a && a.paused){
+      /* Ketukan pertama di tombol Musik: musiknya belum pernah bunyi
+         (autoplay) — ketukan ini untuk menyalakan, bukan mematikan. */
+      putarMusik();
+      return;
+    }
     try{ localStorage.setItem(KUNCI_MUSIK, musikHidup() ? "mati" : "hidup"); }catch(e){}
     perbaruiTombolMusik();
     putarMusik();
   });
 }
 perbaruiTombolMusik();
-document.addEventListener("pointerdown", function(){ putarMusik(); }, { once: true });
+/* Mulai pas ketukan pertama di mana saja KECUALI di tombol Musik sendiri
+   (supaya starter ini kada langsung dimatikan lagi oleh klik tombol itu). */
+document.addEventListener("pointerdown", function(e){
+  if(e.target && e.target.closest && e.target.closest("#btn-musik")) return;
+  putarMusik();
+}, { once: true });
+
+/* ---------- Dropdown custom bertema (ganti select native yang jadul) ----------
+   Select asli tetap ada (tersembunyi) supaya semua logika lama jalan:
+   dropdown custom cuma menulis value-nya + memicu "change". */
+function buatDropdown(idBtn, idList, idSelect){
+  var btn = $(idBtn), list = $(idList), sel = $(idSelect);
+  function tutupSemua(){
+    document.querySelectorAll(".dd-list").forEach(function(l){ l.hidden = true; });
+    document.querySelectorAll(".dd-btn").forEach(function(b){ b.setAttribute("aria-expanded", "false"); });
+  }
+  function bangunList(){
+    list.innerHTML = "";
+    var opts = sel.options;
+    for(var i = 0; i < opts.length; i++){
+      (function(o){
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "dd-opt";
+        b.setAttribute("role", "option");
+        b.setAttribute("data-value", o.value);
+        b.setAttribute("aria-selected", o.value === sel.value ? "true" : "false");
+        b.textContent = o.textContent;
+        b.addEventListener("click", function(){
+          sel.value = o.value;
+          sel.dispatchEvent(new Event("change"));
+          perbaruiLabel();
+          tutupSemua();
+        });
+        list.appendChild(b);
+      })(opts[i]);
+    }
+  }
+  function perbaruiLabel(){
+    var lbl = btn.querySelector(".dd-label");
+    var teks = "";
+    if(sel.value){
+      for(var i = 0; i < sel.options.length; i++){
+        if(sel.options[i].value === sel.value){ teks = sel.options[i].textContent; break; }
+      }
+    } else if(sel.options.length && sel.options[0]){
+      teks = sel.options[0].textContent;
+    }
+    lbl.textContent = teks;
+    btn.classList.toggle("dd-kosong", !sel.value);
+    list.querySelectorAll(".dd-opt").forEach(function(o){
+      o.setAttribute("aria-selected", o.getAttribute("data-value") === sel.value ? "true" : "false");
+    });
+  }
+  btn.addEventListener("click", function(e){
+    e.stopPropagation();
+    var akanBuka = list.hidden;
+    tutupSemua();
+    if(akanBuka){
+      bangunList();
+      list.hidden = false;
+      btn.setAttribute("aria-expanded", "true");
+    }
+  });
+  document.addEventListener("click", function(e){
+    if(!list.hidden && e.target && e.target.closest && !e.target.closest("#" + idList) && !e.target.closest("#" + idBtn)) tutupSemua();
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") tutupSemua();
+  });
+  perbaruiLabel();
+  return { bangun: bangunList, label: perbaruiLabel, tutup: tutupSemua };
+}
+var ddKelas = buatDropdown("dd-kelas-btn", "dd-kelas-list", "pilih-kelas");
+var ddNama = buatDropdown("dd-nama-btn", "dd-nama-list", "pilih-nama");
 
 /* ---------- Util ---------- */
 function $(id){ return document.getElementById(id); }
@@ -561,6 +668,7 @@ $("pilih-kelas").addEventListener("change", function(){
   } else {
     $("bungkus-nama").hidden = true;
   }
+  ddNama.label();
   perbaruiTombolMulai();
 });
 
@@ -742,6 +850,8 @@ $("btn-ulang").addEventListener("click", function(){
   $("pilih-kelas").value = "";
   $("pilih-nama").innerHTML = '<option value="">-- Pilih nama --</option>';
   $("bungkus-nama").hidden = true;
+  ddKelas.label();
+  ddNama.label();
   perbaruiTombolMulai();
 });
 
