@@ -69,6 +69,18 @@
     font-family: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer;
   }
   .btn-suara.mati { opacity: 0.75; }
+  .progress-item { border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+  .progress-item:last-child { border-bottom: none; }
+  .progress-row { cursor: pointer; }
+  .progress-row .panah { font-weight: 800; color: var(--accent); margin-left: 6px; }
+  .detail-kelas { margin: 10px 0 6px; font-size: 0.9rem; }
+  .detail-kelas .ringkas { font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+  .detail-kelas table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .detail-kelas th { text-align: left; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); background: var(--accent-soft); padding: 7px 10px; border-bottom: 2px solid var(--line-strong); }
+  .detail-kelas td { padding: 7px 10px; border-bottom: 1px solid var(--line); }
+  .detail-kelas .st-ok { font-weight: 800; color: var(--accent); }
+  .detail-kelas .st-no { color: var(--ink-faint); }
+  .ket-ding { font-size: 0.85rem; color: var(--ink-faint); margin: -6px 0 12px; font-weight: 600; }
 
   /* ---------- Ringkasan ---------- */
   .section-title { font-size: 1.05rem; font-weight: 800; color: var(--accent); margin: 28px 0 12px; }
@@ -165,6 +177,8 @@
       <span class="pill" id="lastUpdated">Terakhir diperbarui: —</span>
       <span class="pill" id="connState">Menunggu data…</span>
       <button type="button" class="btn-suara" id="btn-suara-dash" aria-pressed="true">&#128266; Suara: Hidup</button>
+      <button type="button" class="btn-suara" id="btn-tes-bunyi" title="Coba bunyi ding">&#128276; Tes bunyi</button>
+      <button type="button" class="btn-suara" id="btn-musik-dash" aria-pressed="true">&#127925; Musik: Hidup</button>
     </div>
   </header>
 
@@ -196,6 +210,7 @@
   </div>
 
   <h2 class="section-title">Notifikasi Live — Baru Selesai Mengerjakan</h2>
+  <p class="ket-ding">🔔 Ding berbunyi tiap ada kiriman baru sesudah dashboard dibuka. Bila belum ada yang mengerjakan, dashboard diam — itu normal. Ketuk “Tes bunyi” untuk memeriksa suara perangkat.</p>
   <div class="notif-list" id="notifList">
     <div class="empty-note">Belum ada siswa yang mengerjakan.</div>
   </div>
@@ -231,6 +246,8 @@
   <footer>Dashboard Pemantauan — Pra Ujian PAS Kelas XI · SMAN 4 Banjarmasin</footer>
 </div>
 
+<audio id="musik-latar-dash" src="https://assets.mixkit.co/music/973/973.mp3" loop preload="auto"></audio>
+
 <script>
 (function () {
   "use strict";
@@ -247,6 +264,10 @@
     "XI-1": 34, "XI-2": 33, "XI-3": 35, "XI-4": 36,
     "XI-5": 36, "XI-6": 36, "XI-7": 35, "XI-8": 35
   };
+
+  /* Daftar nama per kelas (roster resmi, sama dengan LKPD) — untuk detail
+     siapa sudah/belum per mapel. Kunci "XI 1" pakai spasi (format Sheet). */
+  var SISWA = {"XI 1":[{"nama":"Abdullah","jk":"L","pdpd":false},{"nama":"Agustina ramadani","jk":"P","pdpd":false},{"nama":"Alya naisila","jk":"P","pdpd":false},{"nama":"Amelia yasmien","jk":"P","pdpd":false},{"nama":"Annisa maulita","jk":"P","pdpd":false},{"nama":"Aqela afifah zahra","jk":"P","pdpd":false},{"nama":"Chesya putri maharani","jk":"P","pdpd":false},{"nama":"Dinda zahra amalia","jk":"P","pdpd":false},{"nama":"Erika prisilia maharani","jk":"P","pdpd":false},{"nama":"Fathul jannah","jk":"P","pdpd":false},{"nama":"Febriani assalamiyah","jk":"P","pdpd":false},{"nama":"Ira barira","jk":"P","pdpd":false},{"nama":"Lidiya athiffa","jk":"P","pdpd":false},{"nama":"M. David Rizaldi","jk":"L","pdpd":false},{"nama":"M. Nazmi Al kiram","jk":"L","pdpd":false},{"nama":"M. raihan mirzani putra","jk":"L","pdpd":false},{"nama":"Maheswara aydin zhafir","jk":"L","pdpd":false},{"nama":"Muhammad rifky mahdani","jk":"L","pdpd":false},{"nama":"Nabila sholehah","jk":"P","pdpd":false},{"nama":"Najwa syifa setyawati","jk":"P","pdpd":false},{"nama":"Naufal nabil amin","jk":"L","pdpd":false},{"nama":"Nazla ihya amira","jk":"P","pdpd":false},{"nama":"Ni'ma maulida","jk":"P","pdpd":false},{"nama":"Nor aini","jk":"P","pdpd":false},{"nama":"Nur hilmi","jk":"L","pdpd":false},{"nama":"Nur sifa","jk":"P","pdpd":false},{"nama":"Nurul Husna","jk":"P","pdpd":false},{"nama":"Risda amaliya","jk":"P","pdpd":false},{"nama":"Said segaf","jk":"L","pdpd":false},{"nama":"Septia putri asifa","jk":"P","pdpd":false},{"nama":"Syalsa madina putri","jk":"P","pdpd":false},{"nama":"Syifa nur najla","jk":"P","pdpd":false},{"nama":"Valentino Rahim","jk":"L","pdpd":false},{"nama":"Zanatun ni'mah","jk":"P","pdpd":false}],"XI 2":[{"nama":"Adra Achmad Dikri","jk":"L","pdpd":false},{"nama":"Al Fatir Muhammad","jk":"L","pdpd":false},{"nama":"Annisa Nazhifah Aqila Syammnur","jk":"P","pdpd":false},{"nama":"Arrizqy Gunawan","jk":"L","pdpd":false},{"nama":"Asyifa","jk":"P","pdpd":false},{"nama":"Bintang Ptratama","jk":"L","pdpd":false},{"nama":"Eva Solina Mutiara Sari","jk":"P","pdpd":false},{"nama":"Hairullah Azhar","jk":"L","pdpd":false},{"nama":"Illiyana Putri","jk":"P","pdpd":false},{"nama":"Kallia Dwi Sekar Indraputri","jk":"P","pdpd":false},{"nama":"Lam Kamalia","jk":"P","pdpd":false},{"nama":"M. Aulia All Halifi","jk":"L","pdpd":false},{"nama":"M. Samsul Arifin","jk":"L","pdpd":false},{"nama":"Maya","jk":"P","pdpd":false},{"nama":"Mirel Danisha Erika Putri","jk":"P","pdpd":false},{"nama":"Muhammad Daniel Iskandar","jk":"L","pdpd":false},{"nama":"Muhammad Raffa Aditya","jk":"L","pdpd":false},{"nama":"Muthia Noor Maulida","jk":"P","pdpd":false},{"nama":"Narumi Dwi Sajida","jk":"P","pdpd":false},{"nama":"Nayla Riana","jk":"P","pdpd":false},{"nama":"Nazwa Nor Amelia","jk":"P","pdpd":false},{"nama":"Nina Rubianty","jk":"P","pdpd":false},{"nama":"Norafifah","jk":"P","pdpd":false},{"nama":"Nur Medina Putri","jk":"P","pdpd":false},{"nama":"Nurul Aini","jk":"P","pdpd":false},{"nama":"Rahmadania","jk":"P","pdpd":false},{"nama":"Rico Irwanto","jk":"L","pdpd":false},{"nama":"Rizki Alya Rosyifa","jk":"P","pdpd":false},{"nama":"Salsabila Nadhifa","jk":"P","pdpd":false},{"nama":"Shinta Aurel","jk":"P","pdpd":false},{"nama":"Sonia Syaidin","jk":"P","pdpd":false},{"nama":"Titian Angkasa Mukti","jk":"L","pdpd":false},{"nama":"Yarisca Yuanita Herliyan","jk":"P","pdpd":false}],"XI 3":[{"nama":"Afrida Sulisty Wati","jk":"P","pdpd":false},{"nama":"Ahmad Fadillah","jk":"L","pdpd":false},{"nama":"Ahmadi Fikrie","jk":"L","pdpd":true},{"nama":"Akhmad Rafiannor","jk":"L","pdpd":false},{"nama":"Ali Hannan","jk":"L","pdpd":false},{"nama":"Alvina Noor Annisa","jk":"P","pdpd":false},{"nama":"Alya Rahma","jk":"P","pdpd":false},{"nama":"Budiman","jk":"L","pdpd":false},{"nama":"Dhea Safitri","jk":"P","pdpd":false},{"nama":"Firdausatul Holiliyah","jk":"P","pdpd":false},{"nama":"Fitri Yani","jk":"P","pdpd":false},{"nama":"Hanafi Al Parisi","jk":"L","pdpd":false},{"nama":"Hayatun Nida","jk":"P","pdpd":false},{"nama":"I Putu Aditya","jk":"L","pdpd":false},{"nama":"Keishya Anggraeni Apriliani Halatu","jk":"P","pdpd":false},{"nama":"M. Barakati","jk":"L","pdpd":false},{"nama":"M. Rizqi Ramadhan","jk":"L","pdpd":false},{"nama":"Marwa","jk":"P","pdpd":false},{"nama":"Maulida Wulan Sari","jk":"P","pdpd":false},{"nama":"Mawarni Sarita","jk":"P","pdpd":false},{"nama":"Muhammad Mufti Akbar","jk":"L","pdpd":false},{"nama":"Muhammad Nazriel","jk":"L","pdpd":false},{"nama":"Muhammad Rizky","jk":"L","pdpd":false},{"nama":"Nadira Saufina","jk":"P","pdpd":false},{"nama":"Nadya Assyifa","jk":"P","pdpd":false},{"nama":"Nahrisah","jk":"P","pdpd":false},{"nama":"Naysila Aprilia","jk":"P","pdpd":false},{"nama":"Nazwa Fitria Rusda","jk":"P","pdpd":false},{"nama":"Nizar Adha","jk":"L","pdpd":false},{"nama":"Nur Hilma Aulia","jk":"P","pdpd":false},{"nama":"Nur Ijjati","jk":"P","pdpd":false},{"nama":"Putri Amanda Riduan","jk":"P","pdpd":false},{"nama":"Reni Amalia","jk":"P","pdpd":false},{"nama":"Rika Puteri","jk":"P","pdpd":false},{"nama":"Subhan Fitriansyah","jk":"L","pdpd":true}],"XI 4":[{"nama":"Achmad Zaini","jk":"L","pdpd":false},{"nama":"Ahmad Yasin","jk":"L","pdpd":false},{"nama":"Annisa Humaira","jk":"P","pdpd":false},{"nama":"Aura Cinta Ma'rifatuz Zakiyyah","jk":"P","pdpd":false},{"nama":"Faisal Habibi","jk":"L","pdpd":false},{"nama":"Hana Nur Aprilia","jk":"P","pdpd":false},{"nama":"Hikmah","jk":"P","pdpd":false},{"nama":"Ibrahim Siddiq","jk":"L","pdpd":false},{"nama":"Jekri Ahmadia","jk":"L","pdpd":false},{"nama":"Julia","jk":"P","pdpd":false},{"nama":"Khairul Rahman","jk":"P","pdpd":false},{"nama":"M. Aditya Sakhbani","jk":"L","pdpd":false},{"nama":"M. Anis Mahbubi","jk":"L","pdpd":false},{"nama":"M. Teguh Pratama","jk":"L","pdpd":false},{"nama":"M.Daffi Annur","jk":"L","pdpd":false},{"nama":"Melati","jk":"P","pdpd":false},{"nama":"Muhammad Abdillah","jk":"L","pdpd":false},{"nama":"Muhammad Fariz Rizaldi","jk":"L","pdpd":false},{"nama":"Muhammad Rizky","jk":"L","pdpd":false},{"nama":"Nina Hafizah","jk":"P","pdpd":false},{"nama":"Noor Aida","jk":"P","pdpd":false},{"nama":"Nopiyana Yaumi","jk":"P","pdpd":false},{"nama":"Novi Lita Sari","jk":"P","pdpd":false},{"nama":"Nur Haliza","jk":"P","pdpd":false},{"nama":"Nur Raudhatul Jannah","jk":"P","pdpd":false},{"nama":"Pahri Aprianor","jk":"L","pdpd":false},{"nama":"Rafika Rahmadani","jk":"P","pdpd":false},{"nama":"Rahma Humaira","jk":"P","pdpd":false},{"nama":"Rahmat Ramadhan","jk":"L","pdpd":false},{"nama":"Ridho Akbar","jk":"L","pdpd":false},{"nama":"Risa","jk":"P","pdpd":false},{"nama":"Riska Amalia","jk":"L","pdpd":false},{"nama":"Supian","jk":"L","pdpd":true},{"nama":"Virgiawan Saputra Hector Lawdy","jk":"P","pdpd":false},{"nama":"Yogi Saputra","jk":"L","pdpd":false},{"nama":"Zahratunnissa","jk":"P","pdpd":false}],"XI 5":[{"nama":"Adit Ahmad","jk":"L","pdpd":false},{"nama":"Ahmad Nazril Ilham","jk":"L","pdpd":false},{"nama":"Alya Fadillah","jk":"P","pdpd":true},{"nama":"Arafat Khalipatullah","jk":"L","pdpd":false},{"nama":"Ari Rido","jk":"L","pdpd":false},{"nama":"Asyifa Nazwa","jk":"P","pdpd":false},{"nama":"Dahlia","jk":"P","pdpd":false},{"nama":"Dini Nur Amalia","jk":"P","pdpd":false},{"nama":"Hilma Lia Shifa","jk":"P","pdpd":false},{"nama":"Imam Mahdi","jk":"L","pdpd":false},{"nama":"Imam Pratama","jk":"L","pdpd":false},{"nama":"Jascya Laras Watie","jk":"P","pdpd":false},{"nama":"Jihan Kamila","jk":"P","pdpd":false},{"nama":"M. Noor Fadillah","jk":"L","pdpd":false},{"nama":"M. Parin","jk":"L","pdpd":false},{"nama":"Maharani Az Zahra","jk":"P","pdpd":false},{"nama":"Marwah","jk":"P","pdpd":false},{"nama":"Muhammad Ahyar","jk":"L","pdpd":false},{"nama":"Muhammad Rizkini","jk":"L","pdpd":false},{"nama":"Muhammad Willyandi Fadila","jk":"L","pdpd":false},{"nama":"Nabila Azkia","jk":"P","pdpd":false},{"nama":"Naila Popy","jk":"P","pdpd":false},{"nama":"Naufal Zaki","jk":"L","pdpd":false},{"nama":"Nayla Putri Syawal","jk":"P","pdpd":false},{"nama":"Nikita Nayla Saputri","jk":"P","pdpd":false},{"nama":"Nur Naila","jk":"P","pdpd":false},{"nama":"Nutril Rachman","jk":"L","pdpd":false},{"nama":"Putri Ramadani","jk":"P","pdpd":false},{"nama":"Regina Salsabila","jk":"P","pdpd":false},{"nama":"Ridani Ramadhan","jk":"L","pdpd":false},{"nama":"Rizki Aulia","jk":"L","pdpd":false},{"nama":"Shinta Noor Sya'adah","jk":"P","pdpd":false},{"nama":"Siti Nasywa","jk":"P","pdpd":false},{"nama":"Siti Sanayah","jk":"P","pdpd":false},{"nama":"Vania Gittarizkiya Sandy","jk":"P","pdpd":false},{"nama":"Zaini Zen","jk":"L","pdpd":false}],"XI 6":[{"nama":"Ahmad Fauzan","jk":"L","pdpd":false},{"nama":"Ahmad Nabil","jk":"L","pdpd":false},{"nama":"Aira Putri Utami","jk":"P","pdpd":false},{"nama":"Amelia Putri","jk":"P","pdpd":false},{"nama":"Ananda Shafira","jk":"P","pdpd":false},{"nama":"Annisa Nabila","jk":"P","pdpd":false},{"nama":"Aprilia Indriani","jk":"P","pdpd":false},{"nama":"Arismawan Noer","jk":"L","pdpd":false},{"nama":"Giyad Madan Atmaraga","jk":"L","pdpd":false},{"nama":"Hana Maulida","jk":"P","pdpd":false},{"nama":"Heri Apriadi","jk":"L","pdpd":false},{"nama":"Lintang Ramadhan","jk":"L","pdpd":false},{"nama":"M. Hafiz","jk":"L","pdpd":false},{"nama":"M. Herru Taufan","jk":"L","pdpd":false},{"nama":"M. Naufal Abdillah","jk":"L","pdpd":false},{"nama":"Maidina Noor Haliza","jk":"P","pdpd":true},{"nama":"Muhammad Fadhil","jk":"L","pdpd":false},{"nama":"Muhammad Hafidz Hutama Mandala P","jk":"L","pdpd":false},{"nama":"Muhammad Haykal","jk":"L","pdpd":true},{"nama":"Muhammad Kahfi","jk":"L","pdpd":false},{"nama":"Muhammad Raffi","jk":"L","pdpd":false},{"nama":"Muhammad Ragil","jk":"L","pdpd":false},{"nama":"Muhammad Rizki Fitrianyah","jk":"L","pdpd":false},{"nama":"Nida Azkiya","jk":"P","pdpd":false},{"nama":"Nor Sapa Zakiah","jk":"P","pdpd":false},{"nama":"Nur Sifa Aulia","jk":"P","pdpd":false},{"nama":"Nuur Asfia","jk":"P","pdpd":false},{"nama":"Putri Aulia Yasmin","jk":"P","pdpd":false},{"nama":"Putri Marsela","jk":"P","pdpd":false},{"nama":"Putri Zahra Ramadhani","jk":"P","pdpd":false},{"nama":"Rahma Ahya Dewi Sehan","jk":"P","pdpd":false},{"nama":"Ramadania","jk":"P","pdpd":false},{"nama":"Raudatun Nisa","jk":"P","pdpd":false},{"nama":"Surianyah","jk":"P","pdpd":false},{"nama":"Tiara Ramadan","jk":"P","pdpd":false},{"nama":"Yuhan Firlana","jk":"P","pdpd":false}],"XI 7":[{"nama":"Aira Novi Yanti","jk":"P","pdpd":false},{"nama":"Amelia","jk":"P","pdpd":false},{"nama":"Annasya Almira Mecca","jk":"P","pdpd":false},{"nama":"Arifin Noor","jk":"L","pdpd":false},{"nama":"Dewi Nur Azizah","jk":"P","pdpd":false},{"nama":"Fairuz Azzahroh","jk":"P","pdpd":false},{"nama":"Feri Santoso","jk":"L","pdpd":false},{"nama":"Gadis Zliana Safitri","jk":"P","pdpd":false},{"nama":"Hasnuriadi","jk":"L","pdpd":false},{"nama":"Hayatus Syifa","jk":"P","pdpd":false},{"nama":"Iqfa Adelia","jk":"P","pdpd":false},{"nama":"Jahra Azka Febrina","jk":"P","pdpd":false},{"nama":"M. Luthfi Fadhillah","jk":"L","pdpd":false},{"nama":"M. Rafi Anshori","jk":"L","pdpd":false},{"nama":"Maratul Fadilah","jk":"P","pdpd":false},{"nama":"Masriyeh","jk":"P","pdpd":false},{"nama":"Mery Feronika","jk":"P","pdpd":false},{"nama":"Muhammad Alfarisi","jk":"L","pdpd":false},{"nama":"Muhammad Amrullah","jk":"L","pdpd":false},{"nama":"Muhammad Hafiz Aufa","jk":"L","pdpd":false},{"nama":"Muhammad Jaky","jk":"L","pdpd":false},{"nama":"Muhammad Rafi","jk":"L","pdpd":false},{"nama":"Nabila Putri","jk":"P","pdpd":false},{"nama":"Norma Yunita","jk":"P","pdpd":false},{"nama":"Novita Lestari","jk":"P","pdpd":true},{"nama":"Nur Aisya","jk":"P","pdpd":false},{"nama":"Nur Elisa","jk":"P","pdpd":false},{"nama":"Nur Rayfa","jk":"P","pdpd":false},{"nama":"Nursyifa","jk":"P","pdpd":false},{"nama":"Prayudha","jk":"L","pdpd":false},{"nama":"Raka Maulana","jk":"L","pdpd":false},{"nama":"Sanjaya Gilang Permana","jk":"L","pdpd":false},{"nama":"Satria Ramadhan","jk":"L","pdpd":false},{"nama":"Sayid Muhamad Rafa'i","jk":"L","pdpd":false},{"nama":"Zairatun Nisa","jk":"P","pdpd":false}],"XI 8":[{"nama":"Ahmad Fadilah","jk":"L","pdpd":false},{"nama":"Akhmad Insan Badali","jk":"L","pdpd":false},{"nama":"Ahmad Riziq","jk":"L","pdpd":false},{"nama":"Aira Zahra Nur","jk":"P","pdpd":false},{"nama":"Alena","jk":"P","pdpd":false},{"nama":"Anis Marsyla","jk":"P","pdpd":false},{"nama":"Artika Hapsari","jk":"P","pdpd":false},{"nama":"Aulia Rahmah","jk":"P","pdpd":false},{"nama":"Chintya Arlina","jk":"P","pdpd":false},{"nama":"Dea Amelia Rahma","jk":"P","pdpd":false},{"nama":"Gusti Muhammad Rifqi","jk":"L","pdpd":false},{"nama":"Hamina Pahlika","jk":"P","pdpd":false},{"nama":"Humairo Putri Nadhira","jk":"P","pdpd":false},{"nama":"Intan Naimah Rahadian","jk":"P","pdpd":false},{"nama":"Khairunnisa","jk":"P","pdpd":false},{"nama":"Laila Nur Madina","jk":"P","pdpd":false},{"nama":"M. Noor Affandi Nugraha","jk":"L","pdpd":false},{"nama":"Mahmuda Tu Husna","jk":"P","pdpd":false},{"nama":"Muhammad Aditya","jk":"L","pdpd":false},{"nama":"Muhammad Altio","jk":"L","pdpd":false},{"nama":"Muhammad Arsyad","jk":"L","pdpd":false},{"nama":"Muhammad Ikhsan","jk":"L","pdpd":false},{"nama":"Muhammad Rasyid","jk":"L","pdpd":false},{"nama":"Muhammad Riduwan","jk":"L","pdpd":false},{"nama":"Muhammad Zein Raja'i","jk":"L","pdpd":false},{"nama":"Noor Radiyah","jk":"P","pdpd":false},{"nama":"Prima Wahyu Praditha","jk":"L","pdpd":false},{"nama":"Putri Juwita","jk":"P","pdpd":false},{"nama":"Putri Mardina","jk":"P","pdpd":false},{"nama":"Putri Regina","jk":"P","pdpd":false},{"nama":"Risma Yunita","jk":"P","pdpd":false},{"nama":"Riza Muttaqin Azzaky","jk":"L","pdpd":false},{"nama":"Said Muhammad Ihsan Ridhoni","jk":"L","pdpd":false},{"nama":"Syifa Olivia Safitri","jk":"P","pdpd":false},{"nama":"Ulfa Carera Maesya","jk":"P","pdpd":false}]};
   var KELAS_LIST = ["XI-1", "XI-2", "XI-3", "XI-4", "XI-5", "XI-6", "XI-7", "XI-8"];
 
   var JSONP_BASE = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
@@ -370,8 +391,8 @@
     if (ctxAudioDash.state === "suspended") { ctxAudioDash.resume(); }
     return ctxAudioDash;
   }
-  function nadaDash(freq, mulai, dur, vol) {
-    if (!suaraDashHidup()) return;
+  function nadaDash(freq, mulai, dur, vol, paksa) {
+    if (!paksa && !suaraDashHidup()) return;
     var ctx = audioCtxDash();
     if (!ctx) return;
     var o = ctx.createOscillator(), g = ctx.createGain();
@@ -386,15 +407,50 @@
     o.start(t);
     o.stop(t + dur + 0.05);
   }
-  function bunyiDing() {
-    nadaDash(880, 0, 0.25, 0.1);
-    nadaDash(1318.5, 0.12, 0.3, 0.09);
+  function bunyiDing(paksa) {
+    nadaDash(880, 0, 0.25, 0.1, paksa);
+    nadaDash(1318.5, 0.12, 0.3, 0.09, paksa);
   }
   function perbaruiTombolSuaraDash() {
     var b = document.getElementById("btn-suara-dash");
     if (!b) return;
     var hidup = suaraDashHidup();
     b.textContent = (hidup ? "🔊" : "🔇") + " Suara: " + (hidup ? "Hidup" : "Mati");
+    b.classList.toggle("mati", !hidup);
+    b.setAttribute("aria-pressed", hidup ? "true" : "false");
+  }
+
+  /* Buka kunci audio saat interaksi pertama (aturan autoplay browser:
+     AudioContext yang dibuat sebelum ketukan pertama tetap "suspended",
+     jadi ding polling bisa diam walau suara hidup). */
+  function bukaKunciAudio() { audioCtxDash(); }
+  ["pointerdown", "keydown"].forEach(function (ev) {
+    document.addEventListener(ev, bukaKunciAudio, { once: true });
+  });
+
+  /* ---------- Musik latar (mp3 yang sama dengan LKPD supervisi) ----------
+     Mulai pas interaksi pertama (aturan autoplay); tombol Musik di header;
+     pilihan tersimpan di localStorage; volume 0.4. */
+  var KUNCI_MUSIK_DASH = "praujian-dashboard-musik";
+  function musikDashHidup() {
+    try { return localStorage.getItem(KUNCI_MUSIK_DASH) !== "mati"; } catch (e) { return true; }
+  }
+  function putarMusikDash() {
+    var a = document.getElementById("musik-latar-dash");
+    if (!a) return;
+    a.volume = 0.4;
+    if (musikDashHidup()) {
+      var p = a.play();
+      if (p && p.catch) p.catch(function () {});
+    } else {
+      a.pause();
+    }
+  }
+  function perbaruiTombolMusikDash() {
+    var b = document.getElementById("btn-musik-dash");
+    if (!b) return;
+    var hidup = musikDashHidup();
+    b.textContent = "🎵 Musik: " + (hidup ? "Hidup" : "Mati");
     b.classList.toggle("mati", !hidup);
     b.setAttribute("aria-pressed", hidup ? "true" : "false");
   }
@@ -459,6 +515,58 @@
   }
 
   /* ---------- Ringkasan + progres ---------- */
+  /* ---------- Detail per kelas: siapa sudah/belum per mapel ---------- */
+  var detailTerbuka = {}; /* kelas -> true bila panel detailnya dibuka */
+
+  /* Status tiap siswa di satu kelas: {nama, pai: skor|true|null, paq: ...}.
+     pai/paq = skor (angka) bila tercatat, true bila sudah kumpul tapi skor
+     tidak kebaca, null bila belum mengerjakan mapel itu. */
+  function statusKelas(kelas, rows) {
+    var daftar = SISWA[kelas.replace("XI-", "XI ")] || [];
+    var ada = {};
+    rows.forEach(function (r) {
+      if (r.kelas !== kelas) return;
+      var m = (r.mapel || "").toUpperCase();
+      if (m !== "PAI" && m !== "PAQ") return;
+      var k = (r.nama || "").toLowerCase();
+      if (!ada[k]) ada[k] = {};
+      ada[k][m] = (typeof r.skor === "number") ? r.skor : true;
+    });
+    var out = daftar.map(function (s) {
+      var st = ada[(s.nama || "").toLowerCase()] || {};
+      return { nama: s.nama, pai: ("PAI" in st) ? st.PAI : null, paq: ("PAQ" in st) ? st.PAQ : null };
+    });
+    out.sort(function (a, b) {
+      var x = (a.nama || "").toLowerCase(), y = (b.nama || "").toLowerCase();
+      return x < y ? -1 : (x > y ? 1 : 0);
+    });
+    return out;
+  }
+
+  function selStatus(v) {
+    if (v === null) return '<span class="st-no">— belum</span>';
+    if (v === true) return '<span class="st-ok">✓</span>';
+    return '<span class="st-ok">✓ ' + esc(v) + '</span>';
+  }
+
+  function htmlDetailKelas(kelas, rows) {
+    var st = statusKelas(kelas, rows);
+    var nPai = 0, nPaq = 0, nNol = 0;
+    st.forEach(function (s) {
+      if (s.pai !== null) nPai++;
+      if (s.paq !== null) nPaq++;
+      if (s.pai === null && s.paq === null) nNol++;
+    });
+    var total = st.length;
+    var h = '<div class="ringkas">PAI: ' + nPai + '/' + total + ' sudah &middot; PAQ: ' + nPaq + '/' + total +
+      ' sudah &middot; Belum sama sekali: ' + nNol + '</div>' +
+      '<table><thead><tr><th>Nama</th><th>PAI</th><th>PAQ</th></tr></thead><tbody>';
+    st.forEach(function (s) {
+      h += '<tr><td>' + esc(s.nama) + '</td><td>' + selStatus(s.pai) + '</td><td>' + selStatus(s.paq) + '</td></tr>';
+    });
+    return h + '</tbody></table>';
+  }
+
   function renderSummary(rows) {
     var byMapel = { PAI: { names: {}, sum: 0, n: 0 }, PAQ: { names: {}, sum: 0, n: 0 } };
     var uniqueAll = {};
@@ -490,10 +598,16 @@
       var total = KELAS_TOTAL[k];
       doneAll += done;
       var pct = total ? Math.round(done / total * 100) : 0;
-      html += '<div class="progress-row">' +
+      var buka = !!detailTerbuka[k];
+      html += '<div class="progress-item">' +
+        '<div class="progress-row" data-kelas="' + esc(k) + '" role="button" tabindex="0" aria-expanded="' + (buka ? "true" : "false") + '" title="Ketuk untuk lihat detail siapa sudah/belum">' +
         '<span class="kelas">' + esc(k) + '</span>' +
         '<div class="bar"><span style="width:' + pct + '%"></span></div>' +
-        '<span class="angka">' + done + ' / ' + total + ' siswa · ' + pct + '%</span>' +
+        '<span class="angka">' + done + ' / ' + total + ' siswa · ' + pct + '%' +
+        '<span class="panah">' + (buka ? "▴" : "▾") + '</span></span>' +
+        '</div>' +
+        '<div class="detail-kelas" id="detail-' + esc(k) + '"' + (buka ? "" : " hidden") + '>' +
+        (buka ? htmlDetailKelas(k, rows) : "") + '</div>' +
         '</div>';
     });
     el.progressList.innerHTML = html;
@@ -664,6 +778,44 @@
   el.filterKelas.addEventListener("change", renderTable);
   el.filterMapel.addEventListener("change", renderTable);
   el.searchNama.addEventListener("input", renderTable);
+
+  /* ---------- Tes bunyi: selalu berbunyi (untuk memeriksa suara perangkat) ---------- */
+  var btnTesBunyi = document.getElementById("btn-tes-bunyi");
+  if (btnTesBunyi) {
+    btnTesBunyi.addEventListener("click", function () {
+      audioCtxDash();
+      bunyiDing(true);
+    });
+  }
+
+  /* ---------- Tombol Musik ---------- */
+  perbaruiTombolMusikDash();
+  var btnMusikDash = document.getElementById("btn-musik-dash");
+  if (btnMusikDash) {
+    btnMusikDash.addEventListener("click", function () {
+      try {
+        localStorage.setItem(KUNCI_MUSIK_DASH, musikDashHidup() ? "mati" : "hidup");
+      } catch (e) {}
+      perbaruiTombolMusikDash();
+      putarMusikDash();
+    });
+  }
+  document.addEventListener("pointerdown", function () { putarMusikDash(); }, { once: true });
+
+  /* ---------- Toggle detail per kelas (delegasi: daftar dibangun ulang tiap polling) ---------- */
+  function alihDetailKelas(kelas) {
+    detailTerbuka[kelas] = !detailTerbuka[kelas];
+    renderSummary(allRows);
+  }
+  el.progressList.addEventListener("click", function (e) {
+    var baris = e.target && e.target.closest ? e.target.closest(".progress-row") : null;
+    if (baris && baris.getAttribute("data-kelas")) alihDetailKelas(baris.getAttribute("data-kelas"));
+  });
+  el.progressList.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var baris = e.target && e.target.closest ? e.target.closest(".progress-row") : null;
+    if (baris && baris.getAttribute("data-kelas")) { e.preventDefault(); alihDetailKelas(baris.getAttribute("data-kelas")); }
+  });
 
   /* ---------- Toggle suara ---------- */
   perbaruiTombolSuaraDash();
