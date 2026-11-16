@@ -63,6 +63,12 @@
     background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(255, 255, 255, 0.35);
     padding: 4px 12px; border-radius: 999px; color: #FFFFFF;
   }
+  .btn-suara {
+    background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 4px 12px; border-radius: 999px; color: #FFFFFF;
+    font-family: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  }
+  .btn-suara.mati { opacity: 0.75; }
 
   /* ---------- Ringkasan ---------- */
   .section-title { font-size: 1.05rem; font-weight: 800; color: var(--accent); margin: 28px 0 12px; }
@@ -158,6 +164,7 @@
       <span class="pill"><span class="dot" id="pollDot"></span>Polling aktif · tiap 8 detik</span>
       <span class="pill" id="lastUpdated">Terakhir diperbarui: —</span>
       <span class="pill" id="connState">Menunggu data…</span>
+      <button type="button" class="btn-suara" id="btn-suara-dash" aria-pressed="true">&#128266; Suara: Hidup</button>
     </div>
   </header>
 
@@ -347,6 +354,51 @@
     return { cls: "tier-low", msg: "Jangan menyerah! 📖" };
   }
 
+  /* ---------- Suara (WebAudio, tanpa berkas) ----------
+     Ding lembut tiap ada kiriman baru (bukan saat pertama dibuka).
+     Tombol speaker di header; pilihan tersimpan di localStorage. */
+  var ctxAudioDash = null;
+  var KUNCI_SUARA_DASH = "praujian-dashboard-suara";
+  function suaraDashHidup() {
+    try { return localStorage.getItem(KUNCI_SUARA_DASH) !== "mati"; } catch (e) { return true; }
+  }
+  function audioCtxDash() {
+    if (!ctxAudioDash) {
+      try { ctxAudioDash = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch (e) { return null; }
+    }
+    if (ctxAudioDash.state === "suspended") { ctxAudioDash.resume(); }
+    return ctxAudioDash;
+  }
+  function nadaDash(freq, mulai, dur, vol) {
+    if (!suaraDashHidup()) return;
+    var ctx = audioCtxDash();
+    if (!ctx) return;
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = "triangle";
+    o.frequency.value = freq;
+    var t = ctx.currentTime + mulai;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol || 0.1, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start(t);
+    o.stop(t + dur + 0.05);
+  }
+  function bunyiDing() {
+    nadaDash(880, 0, 0.25, 0.1);
+    nadaDash(1318.5, 0.12, 0.3, 0.09);
+  }
+  function perbaruiTombolSuaraDash() {
+    var b = document.getElementById("btn-suara-dash");
+    if (!b) return;
+    var hidup = suaraDashHidup();
+    b.textContent = (hidup ? "🔊" : "🔇") + " Suara: " + (hidup ? "Hidup" : "Mati");
+    b.classList.toggle("mati", !hidup);
+    b.setAttribute("aria-pressed", hidup ? "true" : "false");
+  }
+
   /* ---------- Notifikasi live ---------- */
   function pushNotif(r) {
     var t = tierOf(r.skor);
@@ -403,6 +455,7 @@
     }
     /* Notifikasi diurutkan: yang paling baru (paling atas di Sheet) tampil paling atas. */
     for (var m = fresh.length - 1; m >= 0; m--) pushNotif(fresh[m]);
+    if (fresh.length) bunyiDing();
   }
 
   /* ---------- Ringkasan + progres ---------- */
@@ -611,6 +664,19 @@
   el.filterKelas.addEventListener("change", renderTable);
   el.filterMapel.addEventListener("change", renderTable);
   el.searchNama.addEventListener("input", renderTable);
+
+  /* ---------- Toggle suara ---------- */
+  perbaruiTombolSuaraDash();
+  var btnSuaraDash = document.getElementById("btn-suara-dash");
+  if (btnSuaraDash) {
+    btnSuaraDash.addEventListener("click", function () {
+      try {
+        localStorage.setItem(KUNCI_SUARA_DASH, suaraDashHidup() ? "mati" : "hidup");
+      } catch (e) {}
+      perbaruiTombolSuaraDash();
+      if (suaraDashHidup()) bunyiDing();
+    });
+  }
 
   /* ---------- Start: polling tiap 8 detik ---------- */
   renderNotifs();
