@@ -215,6 +215,9 @@ var HURUF = ["A","B","C","D","E"];
    XI-4 PAI Selasa 08:15-10:45 = 3 JP, dihitung sesi panjang (satu-satunya
    sesi PAI XI-4). Jumat XI-3 PAI 08:00-09:00 = 2 JP x 30 menit.
    XI-1, XI-2, XI-8 tidak dibatasi (di luar jadwal Imron).
+   JADWAL_KHUSUS = jendela tanggal tertentu, SEKALI SAJA (bukan mingguan),
+   diperiksa dulu sebelum JADWAL mingguan — untuk pengganti sesi yang
+   terpotong (mis. razia) tanpa mengubah aturan 1 JP.
    Hari: 1=Senin, 2=Selasa, 3=Rabu, 4=Kamis, 5=Jumat (getDay).
    Pengecekan memakai jam perangkat siswa (WITA): penertib supaya jawaban
    tidak bocor antar kelas, BUKAN pengaman anti-curang mutlak. */
@@ -230,18 +233,48 @@ var JADWAL = {
   "XI 7": { "PAI": [ {hari:1, mulai:"08:15", selesai:"09:45"} ],
             "PAQ": [ {hari:3, mulai:"09:00", selesai:"10:45"} ] }
 };
+/* Jendela khusus XI-7 PAI Kamis 19 Nov 2026 15:15–16:00 (1 JP) — pengganti
+   sesi Senin 16 Nov yang terpotong razia atribut rambut & kelengkapan
+   (siswa baru masuk, sisa ~15 menit, tidak cukup untuk 40 soal).
+   Hanya berlaku tanggal itu; Kamis berikutnya TIDAK terbuka. */
+var JADWAL_KHUSUS = [
+  { kelas:"XI 7", mapel:"PAI", tanggal:"2026-11-19", label:"Kamis, 19 November 2026", mulai:"15:15", selesai:"16:00" }
+];
 var NAMA_HARI = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 function menitDariJam(j){ var p = j.split(":"); return parseInt(p[0],10)*60 + parseInt(p[1],10); }
 function teksJadwal(daftar){
   return daftar.map(function(w){ return NAMA_HARI[w.hari] + " " + w.mulai + "–" + w.selesai; }).join(", ");
 }
+function teksJadwalLengkap(kelas, mapel){
+  var teks = "";
+  var daftar = JADWAL[kelas] && JADWAL[kelas][mapel];
+  if(daftar) teks = teksJadwal(daftar);
+  var khusus = [];
+  for(var k = 0; k < JADWAL_KHUSUS.length; k++){
+    var s = JADWAL_KHUSUS[k];
+    if(s.kelas === kelas && s.mapel === mapel) khusus.push(s.label + " " + s.mulai + "–" + s.selesai + " (jendela khusus)");
+  }
+  if(khusus.length) teks = teks ? teks + ", " + khusus.join(", ") : khusus.join(", ");
+  return teks;
+}
 function namaMapel(m){ return m === "PAI" ? "PAI & Budi Pekerti" : "PAQ (Muatan Lokal)"; }
 function cekJadwal(kelas, mapel){
-  var daftar = JADWAL[kelas] && JADWAL[kelas][mapel];
-  if(!daftar) return { buka:true }; /* XI-1, XI-2, XI-8: tidak dibatasi */
   var kini = new Date();
   var hari = kini.getDay();
   var menit = kini.getHours()*60 + kini.getMinutes();
+  /* Jendela khusus tanggal tertentu — diperiksa dulu. */
+  for(var k = 0; k < JADWAL_KHUSUS.length; k++){
+    var s = JADWAL_KHUSUS[k];
+    if(s.kelas !== kelas || s.mapel !== mapel) continue;
+    var t = s.tanggal.split("-");
+    if(parseInt(t[0],10) === kini.getFullYear() && parseInt(t[1],10) === kini.getMonth()+1 && parseInt(t[2],10) === kini.getDate()){
+      if(menit < menitDariJam(s.mulai)) return { buka:false, alasan:"belum", mulai:s.mulai, selesai:s.selesai };
+      if(menit < menitDariJam(s.selesai)) return { buka:true };
+      return { buka:false, alasan:"tutup", mulai:s.mulai, selesai:s.selesai };
+    }
+  }
+  var daftar = JADWAL[kelas] && JADWAL[kelas][mapel];
+  if(!daftar) return { buka:true }; /* XI-1, XI-2, XI-8: tidak dibatasi */
   for(var i = 0; i < daftar.length; i++){
     var w = daftar[i];
     if(w.hari === hari){
@@ -266,7 +299,7 @@ function tampilKunci(cek){
     $("kunci-judul").textContent = "Bukan Jadwal Hari Ini";
     $("kunci-pesan").textContent = "Pra ujian untuk kelas dan mapel ini tidak dibuka hari ini.";
   }
-  $("kunci-jadwal").textContent = "Jadwal " + state.kelas.replace("XI ", "XI-") + " — " + namaMapel(state.mapel) + ": " + teksJadwal(JADWAL[state.kelas][state.mapel]) + " WITA.";
+  $("kunci-jadwal").textContent = "Jadwal " + state.kelas.replace("XI ", "XI-") + " — " + namaMapel(state.mapel) + ": " + teksJadwalLengkap(state.kelas, state.mapel) + " WITA.";
   $("layar-identitas").hidden = true;
   $("layar-soal").hidden = true;
   $("layar-hasil").hidden = true;
@@ -278,7 +311,7 @@ function perbaruiTombolMulai(){
   $("btn-mulai").disabled = !(state.mapel && state.kelas && state.nama);
   var info = $("info-jadwal");
   if(state.mapel && state.kelas && JADWAL[state.kelas] && JADWAL[state.kelas][state.mapel]){
-    info.textContent = "Jadwal pra ujian kelas ini: " + teksJadwal(JADWAL[state.kelas][state.mapel]) + " WITA. Di luar jadwal itu aplikasi terkunci.";
+    info.textContent = "Jadwal pra ujian kelas ini: " + teksJadwalLengkap(state.kelas, state.mapel) + " WITA. Di luar jadwal itu aplikasi terkunci.";
     info.hidden = false;
   } else {
     info.hidden = true;
