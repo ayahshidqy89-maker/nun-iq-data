@@ -214,7 +214,13 @@ var HURUF = ["A","B","C","D","E"];
    (Revisi III). Jam 1 JP dipakai persiapan/evaluasi, bukan ujian.
    XI-4 PAI Selasa 08:15-10:45 = 3 JP, dihitung sesi panjang (satu-satunya
    sesi PAI XI-4). Jumat XI-3 PAI 08:00-09:00 = 2 JP x 30 menit.
-   XI-1, XI-2, XI-8 tidak dibatasi (di luar jadwal Imron).
+   XI-1, XI-2 (Pak Rufiat Syafiin) dan XI-8 (Pak Muhammad Fakhruzzainie)
+   juga dikunci ke jam 2 JP (ke atas) guru masing-masing (Revisi III):
+   XI-1 PAI Kamis 07:30-09:00, PAQ Selasa 14:30-16:00; XI-2 PAI Kamis
+   09:00-10:45, PAQ Rabu 14:30-16:00; XI-8 PAI Jumat 10:45-11:45
+   (JP 7-8 x 30 menit), PAQ Rabu 07:30-09:00. Jam 1 JP mereka
+   (XI-1 PAI Senin 13:30-14:15, XI-2 PAI Rabu 10:00-10:45, XI-8 PAI
+   Senin 08:15-09:00) bukan jendela — sama seperti kelas Imron.
    JADWAL_KHUSUS = jendela tanggal tertentu, SEKALI SAJA (bukan mingguan),
    diperiksa dulu sebelum JADWAL mingguan — untuk pengganti sesi yang
    terpotong (mis. razia) tanpa mengubah aturan 1 JP.
@@ -222,6 +228,10 @@ var HURUF = ["A","B","C","D","E"];
    Pengecekan memakai jam perangkat siswa (WITA): penertib supaya jawaban
    tidak bocor antar kelas, BUKAN pengaman anti-curang mutlak. */
 var JADWAL = {
+  "XI 1": { "PAI": [ {hari:4, mulai:"07:30", selesai:"09:00"} ],
+            "PAQ": [ {hari:2, mulai:"14:30", selesai:"16:00"} ] },
+  "XI 2": { "PAI": [ {hari:4, mulai:"09:00", selesai:"10:45"} ],
+            "PAQ": [ {hari:3, mulai:"14:30", selesai:"16:00"} ] },
   "XI 3": { "PAI": [ {hari:5, mulai:"08:00", selesai:"09:00"} ],
             "PAQ": [ {hari:4, mulai:"12:45", selesai:"14:15"} ] },
   "XI 4": { "PAI": [ {hari:2, mulai:"08:15", selesai:"10:45"} ],
@@ -231,7 +241,9 @@ var JADWAL = {
   "XI 6": { "PAI": [ {hari:3, mulai:"12:45", selesai:"14:15"} ],
             "PAQ": [ {hari:4, mulai:"09:00", selesai:"10:45"} ] },
   "XI 7": { "PAI": [ {hari:1, mulai:"08:15", selesai:"09:45"} ],
-            "PAQ": [ {hari:3, mulai:"09:00", selesai:"10:45"} ] }
+            "PAQ": [ {hari:3, mulai:"09:00", selesai:"10:45"} ] },
+  "XI 8": { "PAI": [ {hari:5, mulai:"10:45", selesai:"11:45"} ],
+            "PAQ": [ {hari:3, mulai:"07:30", selesai:"09:00"} ] }
 };
 /* Jendela khusus XI-7 PAI Kamis 19 Nov 2026 15:15–16:00 (1 JP) — pengganti
    sesi Senin 16 Nov yang terpotong razia atribut rambut & kelengkapan
@@ -274,7 +286,7 @@ function cekJadwal(kelas, mapel){
     }
   }
   var daftar = JADWAL[kelas] && JADWAL[kelas][mapel];
-  if(!daftar) return { buka:true }; /* XI-1, XI-2, XI-8: tidak dibatasi */
+  if(!daftar) return { buka:true }; /* kelas tanpa jadwal: tidak dibatasi */
   for(var i = 0; i < daftar.length; i++){
     var w = daftar[i];
     if(w.hari === hari){
