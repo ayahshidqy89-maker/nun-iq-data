@@ -53,6 +53,10 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
 .progres{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;font-weight:600;font-size:.92rem}
 .bar{height:8px;background:#E5E7EB;border-radius:99px;overflow:hidden;margin-bottom:16px}
 .bar i{display:block;height:100%;background:var(--hijau2);width:0%;transition:width .25s}
+.timer{font-weight:800;color:var(--hijau);background:var(--hijau-muda);border-radius:999px;padding:2px 10px;font-size:.9rem;white-space:nowrap}
+.timer.mepet{color:#fff;background:#B91C1C}
+.peringatan{background:#FEF3C7;border:1px solid #F59E0B;color:#92400E;border-radius:12px;padding:10px 12px;margin:0 0 14px;font-size:.92rem}
+.pindah{text-align:center;color:#92400E;font-weight:700}
 .narasi{background:#F0FDF4;border-right:4px solid var(--hijau2);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:1rem}
 .stem{font-size:1.08rem;font-weight:600;margin-bottom:14px}
 .ar{font-family:'Noto Naskh Arabic',serif;font-size:1.25em;line-height:1.9}
@@ -149,7 +153,7 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
     </div>
 
     <button type="button" class="btn" id="btn-mulai" disabled>Mulai Mengerjakan</button>
-    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 3.6 &middot; musik autoplay + hasil per kelas</p>
+    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 4.0 &middot; anti-curang v4 + timer 90 menit</p>
     <p class="ket" id="info-jadwal" hidden style="text-align:center;margin-top:12px"></p>
   </section>
 
@@ -167,8 +171,9 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
   <section id="layar-soal" hidden>
     <div class="card">
       <p class="info-identitas"><b id="info-nama"></b> &bull; <span id="info-kelas"></span> &bull; <span id="info-mapel"></span></p>
-      <div class="progres"><span id="progres-teks">Soal 1 dari 40</span><span id="progres-jawab">0 dijawab</span></div>
+      <div class="progres"><span id="progres-teks">Soal 1 dari 40</span><span class="timer" id="timer">⏱ 90:00</span><span id="progres-jawab">0 dijawab</span></div>
       <div class="bar"><i id="progres-bar"></i></div>
+      <div class="peringatan" id="peringatan-pindah" hidden>⚠️ Kamu pindah layar <b id="pindah-jumlah">0x</b> — tetap di halaman ujian. Setiap pindah tercatat dan terlihat guru.</div>
       <div id="kotak-soal"></div>
       <div class="nav-bawah">
         <button type="button" class="btn sekunder kecil" id="btn-sebelum">&larr; Sebelum</button>
@@ -197,6 +202,7 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
     <p class="info-identitas"><b id="hasil-nama"></b> &bull; <span id="hasil-kelas"></span> &bull; <span id="hasil-mapel"></span></p>
     <div class="skor-besar" id="hasil-skor">0</div>
     <p class="benar" id="hasil-benar"></p>
+    <p class="pindah" id="hasil-pindah" hidden></p>
     <p class="pesan" id="hasil-pesan"></p>
     <p class="catat" id="hasil-catat">Jawabanmu sudah tercatat.</p>
     <button type="button" class="btn sekunder" id="btn-ulang">Kembali ke Beranda</button>
@@ -439,8 +445,54 @@ function pesanTier(skor){
 }
 
 /* ---------- State ---------- */
-var state = { mapel:null, kelas:"", nama:"", pdpd:false, soal:[], jawaban:[], idx:0, sudahKumpul:false };
+var state = { mapel:null, kelas:"", nama:"", pdpd:false, soal:[], jawaban:[], idx:0, sudahKumpul:false, pindah:0, mulai:0, timerId:null, waktuHabis:false };
+var DURASI_UJIAN_MS = 90 * 60 * 1000; /* timer 90 menit */
 var HURUF = ["A","B","C","D","E"];
+
+/* ---------- Anti-curang v4: acak unik per siswa ----------
+   Benih = nama + kelas + mapel (FNV-1a 32-bit), PRNG mulberry32,
+   Fisher-Yates — jadi acakan tiap siswa beda, TAPI tetap sama bila
+   ia masuk lagi (progres tersimpan tidak kacau), beda antara PAI
+   lawan PAQ, dan beda lawan siswa lain. Yang diacak: urutan soal
+   DAN urutan opsi tiap soal — jadi "nomor 5 = B" tidak berlaku
+   untuk siapa pun. Build script memeriksa di Python: bila ada dua
+   siswa yang acakannya sama persis, build GAGAL (jaminan diperiksa,
+   bukan cuma diharap). */
+function hashFNV(str){
+  var h = 2166136261;
+  for(var i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+function prngMulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function acakArray(arr, rand){
+  var a = arr.slice();
+  for(var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(rand() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function siapkanAcak(){
+  var benih = hashFNV(state.mapel + "|" + state.kelas + "|" + state.nama);
+  var rand = prngMulberry32(benih);
+  /* Salin dalam-dalam supaya array global SOAL_* tidak ikut teracak. */
+  var salinan = state.soal.map(function(s){
+    return Object.assign({}, s, { opsi: s.opsi.slice() });
+  });
+  state.soal = acakArray(salinan, rand);
+  state.soal.forEach(function(s){
+    var randQ = prngMulberry32((benih ^ hashFNV("Q" + s.no)) >>> 0);
+    var idx = acakArray(s.opsi.map(function(o, k){ return k; }), randQ);
+    s.opsiTampil = idx.map(function(k){ return { teks: s.opsi[k], asli: k }; });
+  });
+}
 
 /* ---------- Jadwal akses (kunci waktu) ----------
    Pra ujian XI-3..XI-7 hanya dibuka pada jam pelajaran 2 JP (ke atas) Imron
@@ -605,7 +657,7 @@ function kunciSimpan(){
 }
 function simpanProgres(){
   try{
-    localStorage.setItem(kunciSimpan(), JSON.stringify({ jawaban: state.jawaban, idx: state.idx }));
+    localStorage.setItem(kunciSimpan(), JSON.stringify({ jawaban: state.jawaban, idx: state.idx, pindah: state.pindah, mulai: state.mulai }));
   }catch(e){}
 }
 function muatProgres(){
@@ -620,6 +672,66 @@ function muatProgres(){
 function hapusProgres(){
   try{ localStorage.removeItem(kunciSimpan()); }catch(e){}
 }
+
+/* ---------- Timer 90 menit ----------
+   Mulai saat siswa masuk ujian (baru atau lanjut). Deadline dihitung
+   dari jam dinding (Date.now) supaya tahan reload / tutup tab —
+   menutup halaman TIDAK menjeda timer. Pas habis, jawaban langsung
+   dikumpulkan otomatis. */
+function fmtWaktu(ms){
+  var total = Math.max(0, Math.ceil(ms / 1000));
+  var m = Math.floor(total / 60), s = total % 60;
+  return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+}
+function sisaMs(){ return DURASI_UJIAN_MS - (Date.now() - state.mulai); }
+function perbaruiTimer(){
+  var el = $("timer");
+  if(!el) return;
+  var sisa = sisaMs();
+  el.textContent = "⏱ " + fmtWaktu(sisa);
+  el.classList.toggle("mepet", sisa <= 10 * 60 * 1000);
+  if(sisa <= 0){ hentikanTimer(); state.waktuHabis = true; kirimJawaban(); }
+}
+function mulaiTimer(){
+  hentikanTimer();
+  perbaruiTimer();
+  state.timerId = setInterval(perbaruiTimer, 1000);
+}
+function hentikanTimer(){
+  if(state.timerId){ clearInterval(state.timerId); state.timerId = null; }
+}
+
+/* ---------- Deteksi pindah layar ----------
+   visibilitychange = pindah tab / aplikasi lain (HP + laptop);
+   blur = jendela kehilangan fokus (Alt+Tab di laptop, layar belah).
+   Keduanya dihitung SATU kejadian bila rapat (< 2 detik).
+   Hanya dihitung saat layar soal terbuka. Kebijakan (sesuai arahan):
+   peringatan + hitungan tercatat, TIDAK langsung digagalkan — bisa
+   saja tidak sengaja (telepon masuk, layar terkunci). Hitungan
+   tersimpan di progres dan dikirim bersama jawaban ke Sheet. */
+var pindahTerakhir = 0;
+function perbaruiPeringatanPindah(){
+  var el = $("peringatan-pindah");
+  if(!el) return;
+  if(state.pindah > 0){
+    el.hidden = false;
+    $("pindah-jumlah").textContent = state.pindah + "x";
+  } else {
+    el.hidden = true;
+  }
+}
+function catatPindah(){
+  if($("layar-soal").hidden) return;
+  var kini = Date.now();
+  if(kini - pindahTerakhir < 2000) return;
+  pindahTerakhir = kini;
+  state.pindah++;
+  simpanProgres();
+  perbaruiPeringatanPindah();
+  if(suaraHidup()) nada(220, 0, 0.15, "sine", 0.12);
+}
+document.addEventListener("visibilitychange", function(){ if(document.hidden) catatPindah(); });
+window.addEventListener("blur", function(){ catatPindah(); });
 
 /* ---------- Penanda sudah selesai (localStorage) ----------
    Begitu jawaban berhasil dikumpulkan — atau ketahuan sudah tercatat
@@ -706,7 +818,7 @@ $("btn-mulai").addEventListener("click", function(){
   if(selesai){ tampilSudahSelesai(selesai); return; }
   var btnMulai = $("btn-mulai");
   btnMulai.disabled = true;
-  btnMulai.textContent = "Memeriksa... (v3.2)";
+  btnMulai.textContent = "Memeriksa... (v4.0)";
   cekSudahMengerjakan(function(tercatat){
     btnMulai.disabled = false;
     btnMulai.textContent = "Mulai Mengerjakan";
@@ -720,6 +832,7 @@ $("btn-mulai").addEventListener("click", function(){
 });
 
 function masukUjian(){
+  siapkanAcak();
   var pulih = muatProgres();
   if(pulih){
     /* Lanjutkan dari progres tersimpan — TAPI kunci waktu tetap dicek.
@@ -732,13 +845,18 @@ function masukUjian(){
     if(!cek.buka && !dalamTenggang(state.kelas, state.mapel)){ tampilKunci(cek); return; }
     state.jawaban = pulih.jawaban;
     state.idx = pulih.idx || 0;
+    state.pindah = pulih.pindah || 0;
+    state.mulai = pulih.mulai || Date.now();
   } else {
     state.jawaban = [];
     for(var j = 0; j < state.soal.length; j++) state.jawaban.push(null);
     state.idx = 0;
+    state.pindah = 0;
+    state.mulai = Date.now();
     var cek = cekJadwal(state.kelas, state.mapel);
     if(!cek.buka){ tampilKunci(cek); return; }
   }
+  if(sisaMs() <= 0){ state.waktuHabis = true; kirimJawaban(); return; }
   $("info-nama").textContent = state.nama;
   $("info-kelas").textContent = state.kelas.replace("XI ", "XI-");
   $("info-mapel").textContent = state.mapel === "PAI" ? "PAI & Budi Pekerti" : "PAQ (Muatan Lokal)";
@@ -746,6 +864,8 @@ function masukUjian(){
   $("layar-hasil").hidden = true;
   $("layar-soal").hidden = false;
   $("konfirm-kosong").hidden = true;
+  perbaruiPeringatanPindah();
+  mulaiTimer();
   bangunNav();
   tampilSoal(state.idx);
   window.scrollTo(0, 0);
@@ -786,18 +906,21 @@ function tampilSoal(i){
   }
   html += '<p class="stem">' + (i + 1) + ". " + arHtml(s.stem) + "</p>";
   html += '<div class="opsi">';
-  s.opsi.forEach(function(op, k){
-    var cek = state.jawaban[i] === k ? " checked" : "";
-    var pil = state.jawaban[i] === k ? " pilih" : "";
+  var tampil = s.opsiTampil || s.opsi.map(function(op, k){ return { teks: op, asli: k }; });
+  tampil.forEach(function(item, k){
+    var cek = state.jawaban[i] === item.asli ? " checked" : "";
+    var pil = state.jawaban[i] === item.asli ? " pilih" : "";
     html += '<label class="' + pil + '"><input type="radio" name="opsi-soal" value="' + k + '"' + cek
-      + '><span class="huruf">' + HURUF[k] + '.</span><span class="isi">' + arHtml(op) + "</span></label>";
+      + '><span class="huruf">' + HURUF[k] + '.</span><span class="isi">' + arHtml(item.teks) + "</span></label>";
   });
   html += "</div>";
   $("kotak-soal").innerHTML = html;
 
   document.querySelectorAll("#kotak-soal input[type=radio]").forEach(function(r){
     r.addEventListener("change", function(){
-      state.jawaban[state.idx] = parseInt(r.value, 10);
+      var s2 = state.soal[state.idx];
+      var tampil2 = s2.opsiTampil || s2.opsi.map(function(op, k){ return { teks: op, asli: k }; });
+      state.jawaban[state.idx] = tampil2[parseInt(r.value, 10)].asli;
       tampilSoal(state.idx);
     });
   });
@@ -829,6 +952,7 @@ function hitungHasil(){
 }
 
 function tampilHasil(hasil, sudahAda, backendBelum){
+  hentikanTimer();
   $("hasil-nama").textContent = state.nama;
   $("hasil-kelas").textContent = state.kelas.replace("XI ", "XI-");
   $("hasil-mapel").textContent = state.mapel === "PAI" ? "PAI & Budi Pekerti" : "PAQ (Muatan Lokal)";
@@ -844,6 +968,18 @@ function tampilHasil(hasil, sudahAda, backendBelum){
   } else {
     $("hasil-catat").textContent = "Jawabanmu sudah tercatat.";
     $("hasil-judul").textContent = "Skor Kamu";
+  }
+  var elPindah = $("hasil-pindah");
+  if(elPindah){
+    if(!sudahAda && state.pindah > 0){
+      elPindah.hidden = false;
+      elPindah.textContent = "Pindah layar: " + state.pindah + "x (tercatat).";
+    } else {
+      elPindah.hidden = true;
+    }
+  }
+  if(state.waktuHabis && !sudahAda && !backendBelum){
+    $("hasil-catat").textContent = "Waktu 90 menit habis — jawaban dikumpulkan otomatis.";
   }
   $("layar-soal").hidden = true;
   $("layar-hasil").hidden = false;
@@ -1023,7 +1159,8 @@ function kirimJawaban(){
       benar: hasil.benar,
       jumlahSoal: hasil.jumlah,
       skor: hasil.skor,
-      jawaban: hasil.jawabanStr
+      jawaban: hasil.jawabanStr,
+      pindah: state.pindah
     };
     fetch(WEBGAS_URL, {
       method: "POST",

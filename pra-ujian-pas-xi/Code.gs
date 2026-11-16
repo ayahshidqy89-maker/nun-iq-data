@@ -18,10 +18,14 @@
  * (Klien mengirim POST mode "no-cors" sehingga tidak bisa membaca
  * respons ini — yang penting baris ganda tidak tercatat.)
  *
+ * PERUBAHAN v3 (17 Nov 2026): kolom ke-10 "Pindah Layar" — jumlah
+ * kali siswa pindah layar/tab selama ujian (anti-curang v4).
+ * doPost memastikan header J1 terisi bila masih kosong.
+ *
  * Sheet tujuan: "Rekap Pra Ujian PAS XI"
  *   https://docs.google.com/spreadsheets/d/1LNFMvGZhm6zfMzzNbN271B3Onj5A_bJTcapfd69gxlE
  * Tab: "Rekap" — kolom: Timestamp | Kelas | Nama | Mapel | Versi |
- *   Benar | Jumlah Soal | Skor | Jawaban
+ *   Benar | Jumlah Soal | Skor | Jawaban | Pindah Layar
  */
 
 var SHEET_ID = "1LNFMvGZhm6zfMzzNbN271B3Onj5A_bJTcapfd69gxlE";
@@ -51,6 +55,7 @@ function doPost(e) {
         }))
         .setMimeType(ContentService.MimeType.JSON);
     }
+    if (!sh.getRange(1, 10).getValue()) sh.getRange(1, 10).setValue("Pindah Layar");
     sh.appendRow([
       new Date(),
       d.kelas || "",
@@ -60,7 +65,8 @@ function doPost(e) {
       d.benar || 0,
       d.jumlahSoal || 0,
       d.skor || 0,
-      d.jawaban || ""     // string digit, satu digit per soal ("-" bila kosong)
+      d.jawaban || "",    // string digit, satu digit per soal ("-" bila kosong)
+      d.pindah || 0       // v3: jumlah pindah layar selama ujian
     ]);
     return ContentService
       .createTextOutput(JSON.stringify({ ok: true }))

@@ -84,6 +84,7 @@
   .hasil-kelas { border-bottom: 1px solid var(--line); padding-bottom: 10px; margin-bottom: 10px; }
   .hasil-kelas:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
   .hasil-kelas .table-wrap { margin-top: 10px; }
+  .tanda-pindah { color: #B45309; font-weight: 800; font-size: 0.85rem; white-space: nowrap; }
 
   /* ---------- Ringkasan ---------- */
   .section-title { font-size: 1.05rem; font-weight: 800; color: var(--accent); margin: 28px 0 12px; }
@@ -628,17 +629,23 @@
         } else {
           var perSiswa = {};
           grup.forEach(function (r) {
-            if (!perSiswa[r.nama]) perSiswa[r.nama] = { pai: null, paq: null };
-            if ((r.mapel || "").toUpperCase() === "PAQ") perSiswa[r.nama].paq = r.skor;
-            else perSiswa[r.nama].pai = r.skor;
+            if (!perSiswa[r.nama]) perSiswa[r.nama] = { pai: null, paq: null, paiPindah: 0, paqPindah: 0 };
+            if ((r.mapel || "").toUpperCase() === "PAQ") { perSiswa[r.nama].paq = r.skor; perSiswa[r.nama].paqPindah = r.pindah || 0; }
+            else { perSiswa[r.nama].pai = r.skor; perSiswa[r.nama].paiPindah = r.pindah || 0; }
           });
+          function selSkor(nilai, pindah) {
+            if (nilai === null) return "—";
+            var t = esc(nilai);
+            if (pindah > 0) t += ' <span class="tanda-pindah" title="Pindah layar ' + pindah + 'x">⚠️' + pindah + '</span>';
+            return t;
+          }
           var nama2 = Object.keys(perSiswa).sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase(), "id"); });
           html += '<div class="table-wrap"><table><thead><tr><th>Nama</th><th>PAI</th><th>PAQ</th></tr></thead><tbody>';
           nama2.forEach(function (nm) {
             var s = perSiswa[nm];
             html += "<tr><td>" + esc(nm) + "</td>" +
-              '<td class="skor-cell">' + (s.pai === null ? "—" : esc(s.pai)) + "</td>" +
-              '<td class="skor-cell">' + (s.paq === null ? "—" : esc(s.paq)) + "</td></tr>";
+              '<td class="skor-cell">' + selSkor(s.pai, s.paiPindah) + "</td>" +
+              '<td class="skor-cell">' + selSkor(s.paq, s.paqPindah) + "</td></tr>";
           });
           html += '</tbody></table></div>';
         }
@@ -646,7 +653,9 @@
       html += '</div>';
     });
     el.resultBody.innerHTML = html;
-    el.resultCount.textContent = "Total " + allRows.length + " pengerjaan.";
+    var adaPindah = allRows.some(function (r) { return (r.pindah || 0) > 0; });
+    el.resultCount.textContent = "Total " + allRows.length + " pengerjaan." +
+      (adaPindah ? " ⚠️ = pindah layar (angka = berapa kali)." : "");
   }
 
   function renderAll() {
@@ -699,7 +708,8 @@
             benar: numCell(cells[5]),
             jumlahSoal: numCell(cells[6]),
             skor: numCell(cells[7]),
-            jawaban: strCell(cells[8]).trim()
+            jawaban: strCell(cells[8]).trim(),
+            pindah: numCell(cells[9]) || 0
           });
         }
         rows.reverse(); /* terbaru dulu */
@@ -749,7 +759,8 @@
             benar: toScore(r[5]),
             jumlahSoal: toScore(r[6]),
             skor: toScore(r[7]),
-            jawaban: (r[8] || "").trim()
+            jawaban: (r[8] || "").trim(),
+            pindah: toScore(r[9]) || 0
           });
         }
         rows.reverse(); /* terbaru dulu */
