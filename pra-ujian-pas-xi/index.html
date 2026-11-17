@@ -455,7 +455,7 @@ function pesanTier(skor){
 }
 
 /* ---------- State ---------- */
-var state = { mapel:null, kelas:"", nama:"", pdpd:false, soal:[], jawaban:[], idx:0, sudahKumpul:false, pindah:0, mulai:0, timerId:null, waktuHabis:false, lanjutan:false, jawabanPulih:null, pindahLama:0, tercatat:null, wakeLockSentinel:null };
+var state = { mapel:null, kelas:"", nama:"", pdpd:false, soal:[], jawaban:[], idx:0, sudahKumpul:false, pindah:0, mulai:0, durasiMs:0, timerId:null, waktuHabis:false, lanjutan:false, jawabanPulih:null, pindahLama:0, tercatat:null, wakeLockSentinel:null };
 var DURASI_UJIAN_MS = 90 * 60 * 1000; /* timer 90 menit */
 var HURUF = ["A","B","C","D","E"];
 /* Warna ubin jawaban ala Wayground — per POSISI tampil (A selalu
@@ -751,9 +751,36 @@ function sedangIstirahat(kini){
   }
   return false;
 }
+/* Durasi timer per sesi: 90 menit, KECUALI sesi yang tepotong ishoma
+   (istirahat kedua, 12:00-13:00) yang realnya cuma 75 menit — jam ke-6
+   real 30 menit (11:30-12:00) dan jam ke-7 real 30 menit (13:00-13:30).
+   Sesi tepotong ishoma: jendela 10:45-12:15 (jam 5+6) dan 12:45-14:15
+   (jam 7+8). Timer 75 menit = waktu kerja real; sesi lain tetap 90. */
+function durasiUjianMs(kelas, mapel){
+  var kini = new Date();
+  var ishomaAwal = 720, ishomaAkhir = 780; /* 12:00-13:00 */
+  function tepotong(mulai, selesai){
+    return menitDariJam(mulai) < ishomaAkhir && menitDariJam(selesai) > ishomaAwal;
+  }
+  for(var k = 0; k < JADWAL_KHUSUS.length; k++){
+    var s = JADWAL_KHUSUS[k];
+    if(s.kelas !== kelas || s.mapel !== mapel) continue;
+    var t = s.tanggal.split("-");
+    if(parseInt(t[0],10) === kini.getFullYear() && parseInt(t[1],10) === kini.getMonth()+1 && parseInt(t[2],10) === kini.getDate()){
+      if(tepotong(s.mulai, s.selesai)) return 75 * 60 * 1000;
+    }
+  }
+  var daftar = JADWAL[kelas] && JADWAL[kelas][mapel];
+  if(daftar){
+    for(var i = 0; i < daftar.length; i++){
+      if(daftar[i].hari === kini.getDay() && tepotong(daftar[i].mulai, daftar[i].selesai)) return 75 * 60 * 1000;
+    }
+  }
+  return DURASI_UJIAN_MS;
+}
 function sisaMs(){
   var kini = Date.now();
-  return DURASI_UJIAN_MS + menitIstirahat(state.mulai, kini) - (kini - state.mulai);
+  return (state.durasiMs || DURASI_UJIAN_MS) + menitIstirahat(state.mulai, kini) - (kini - state.mulai);
 }
 function perbaruiTimer(){
   var el = $("timer");
@@ -1061,6 +1088,7 @@ function masukUjian(){
     var cek = cekJadwal(state.kelas, state.mapel);
     if(!cek.buka && !(state.lanjutan && dalamTenggang(state.kelas, state.mapel))){ tampilKunci(cek); return; }
   }
+  state.durasiMs = durasiUjianMs(state.kelas, state.mapel);
   if(sisaMs() <= 0){ state.waktuHabis = true; kirimJawaban(); return; }
   $("info-nama").textContent = state.nama;
   $("info-kelas").textContent = state.kelas.replace("XI ", "XI-");
