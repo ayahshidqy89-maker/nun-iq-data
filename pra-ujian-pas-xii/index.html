@@ -528,11 +528,15 @@ var JADWAL = {
   "XII 8": { "PAI": [ {hari:4, mulai:"14:30", selesai:"16:00"} ] },
   "XII 9": { "PAI": [ {hari:2, mulai:"07:30", selesai:"09:00"} ] }
 };
-/* JADWAL_KHUSUS saat ini KOSONG — belum ada jendela khusus XII.
-   Bila nanti ada sesi XII yang terpotong (mis. razia), tambahkan entri
-   di sini; mekanisme lanjutan kiriman v4.7 (tombol Lanjutkan + pemulihan
-   jawaban dari Sheet) tetap ada dan aktif di jendela khusus itu. */
-var JADWAL_KHUSUS = [];
+/* JADWAL_KHUSUS — jendela susulan pekan depan (keputusan Imron 18 Nov 2026):
+   XII-3, XII-6, XII-9 yang jendelanya terlewat sebelum aplikasi live
+   (17 Nov 17:14). Mekanisme lanjutan kiriman v4.7 (tombol Lanjutkan +
+   pemulihan jawaban dari Sheet) tetap ada dan aktif di jendela khusus itu. */
+var JADWAL_KHUSUS = [
+  { kelas:"XII 3", mapel:"PAI", tanggal:"2026-11-23", label:"Senin, 23 November 2026", mulai:"10:00", selesai:"11:30" },
+  { kelas:"XII 6", mapel:"PAI", tanggal:"2026-11-23", label:"Senin, 23 November 2026", mulai:"14:30", selesai:"16:00" },
+  { kelas:"XII 9", mapel:"PAI", tanggal:"2026-11-24", label:"Selasa, 24 November 2026", mulai:"07:30", selesai:"09:00" }
+];
 var NAMA_HARI = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 function menitDariJam(j){ var p = j.split(":"); return parseInt(p[0],10)*60 + parseInt(p[1],10); }
 function teksJadwal(daftar){
