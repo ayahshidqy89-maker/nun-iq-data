@@ -681,19 +681,19 @@
     allRows.forEach(function (r) {
       if (r.kelas !== kelas) return;
       var s = perNama[r.nama];
-      if (!s) s = perNama[r.nama] = { pai: null, paq: null, pindah: 0 };
-      if ((r.mapel || "").toUpperCase() === "PAQ") { s.paq = r.skor; s.pindah += (r.pindah || 0); }
-      else { s.pai = r.skor; s.pindah += (r.pindah || 0); }
+      if (!s) s = perNama[r.nama] = { pai: null, paq: null, pindahPai: 0, pindahPaq: 0 };
+      if ((r.mapel || "").toUpperCase() === "PAQ") { s.paq = r.skor; s.pindahPaq += (r.pindah || 0); }
+      else { s.pai = r.skor; s.pindahPai += (r.pindah || 0); }
     });
     var baris = [];
     var diRoster = {};
     roster.forEach(function (sw) {
       diRoster[sw.nama] = true;
-      var s = perNama[sw.nama] || { pai: null, paq: null, pindah: 0 };
-      baris.push({ nama: sw.nama, pai: s.pai, paq: s.paq, pindah: s.pindah });
+      var s = perNama[sw.nama] || { pai: null, paq: null, pindahPai: 0, pindahPaq: 0 };
+      baris.push({ nama: sw.nama, pai: s.pai, paq: s.paq, pindahPai: s.pindahPai, pindahPaq: s.pindahPaq });
     });
     Object.keys(perNama).sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase(), "id"); }).forEach(function (nm) {
-      if (!diRoster[nm]) { var s = perNama[nm]; baris.push({ nama: nm, pai: s.pai, paq: s.paq, pindah: s.pindah }); }
+      if (!diRoster[nm]) { var s = perNama[nm]; baris.push({ nama: nm, pai: s.pai, paq: s.paq, pindahPai: s.pindahPai, pindahPaq: s.pindahPaq }); }
     });
     var sudah = 0, jPai = 0, tPai = 0, jPaq = 0, tPaq = 0;
     baris.forEach(function (b) {
@@ -726,7 +726,7 @@
   function tulisPdfKelas(lap) {
     var doc = new window.jspdf.jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
     var M = 14, LEBAR = 182, y = 16;
-    var xNo = M, xNama = M + 10, xPai = M + 102, xPaq = M + 132, xPindah = M + 162;
+    var xNo = M, xNama = M + 10, xPai = M + 78, xPaq = M + 103, xPindahPai = M + 128, xPindahPaq = M + 155;
     function kepalaHalaman() {
       doc.setFont("helvetica", "bold"); doc.setFontSize(14);
       doc.text("SMAN 4 BANJARMASIN", M, y); y += 7;
@@ -740,7 +740,7 @@
       doc.setFillColor(20, 83, 45); doc.rect(M, y - 5, LEBAR, 7, "F");
       doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
       doc.text("No", xNo + 2, y); doc.text("Nama", xNama + 2, y);
-      doc.text("PAI", xPai + 2, y); doc.text("PAQ", xPaq + 2, y); doc.text("Pindah", xPindah + 2, y);
+      doc.text("PAI", xPai + 2, y); doc.text("PAQ", xPaq + 2, y); doc.text("Pindah PAI", xPindahPai + 2, y); doc.text("Pindah PAQ", xPindahPaq + 2, y);
       doc.setTextColor(0, 0, 0); doc.setFont("helvetica", "normal"); y += 2;
     }
     kepalaHalaman();
@@ -752,7 +752,8 @@
       doc.text(b.nama, xNama + 2, y);
       doc.text(b.pai === null ? "\u2014" : String(b.pai), xPai + 2, y);
       doc.text(b.paq === null ? "\u2014" : String(b.paq), xPaq + 2, y);
-      doc.text(b.pindah > 0 ? (b.pindah + "x") : "\u2014", xPindah + 2, y);
+      doc.text(b.pindahPai > 0 ? (b.pindahPai + "x") : "\u2014", xPindahPai + 2, y);
+      doc.text(b.pindahPaq > 0 ? (b.pindahPaq + "x") : "\u2014", xPindahPaq + 2, y);
       y += 7;
     });
     y += 4;
@@ -768,9 +769,9 @@
       "</style></head><body>" +
       "<h1>SMAN 4 BANJARMASIN</h1><h2>Hasil Pra Ujian PAS \u2014 Kelas " + esc(lap.kelas) + "</h2>" +
       "<p>Penilaian Akhir Semester \u2022 " + esc(tanggalId(lap.tanggal)) + "<br>Sudah mengerjakan: " + lap.sudah + " dari " + lap.total + " siswa \u2022 Rata-rata PAI: " + lap.rataPai + " \u2022 PAQ: " + lap.rataPaq + "</p>" +
-      "<table><thead><tr><th>No</th><th>Nama</th><th>PAI</th><th>PAQ</th><th>Pindah</th></tr></thead><tbody>";
+      "<table><thead><tr><th>No</th><th>Nama</th><th>PAI</th><th>PAQ</th><th>Pindah PAI</th><th>Pindah PAQ</th></tr></thead><tbody>";
     lap.baris.forEach(function (b, i) {
-      html += "<tr><td>" + (i + 1) + "</td><td>" + esc(b.nama) + "</td><td>" + (b.pai === null ? "\u2014" : b.pai) + "</td><td>" + (b.paq === null ? "\u2014" : b.paq) + "</td><td>" + (b.pindah > 0 ? (b.pindah + "x") : "\u2014") + "</td></tr>";
+      html += "<tr><td>" + (i + 1) + "</td><td>" + esc(b.nama) + "</td><td>" + (b.pai === null ? "\u2014" : b.pai) + "</td><td>" + (b.paq === null ? "\u2014" : b.paq) + "</td><td>" + (b.pindahPai > 0 ? (b.pindahPai + "x") : "\u2014") + "</td><td>" + (b.pindahPaq > 0 ? (b.pindahPaq + "x") : "\u2014") + "</td></tr>";
     });
     html += "</tbody></table><p>Dicetak dari Dashboard Pra Ujian PAS XI</p></body></html>";
     var w = null;

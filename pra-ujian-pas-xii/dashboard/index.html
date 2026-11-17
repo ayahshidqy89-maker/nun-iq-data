@@ -719,7 +719,7 @@
       doc.setFillColor(20, 83, 45); doc.rect(M, y - 5, LEBAR, 7, "F");
       doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
       doc.text("No", xNo + 2, y); doc.text("Nama", xNama + 2, y);
-      doc.text("PAI", xPai + 2, y); doc.text("Pindah", xPindah + 2, y);
+      doc.text("PAI", xPai + 2, y); doc.text("Pindah PAI", xPindah + 2, y);
       doc.setTextColor(0, 0, 0); doc.setFont("helvetica", "normal"); y += 2;
     }
     kepalaHalaman();
@@ -746,7 +746,7 @@
       "</style></head><body>" +
       "<h1>SMAN 4 BANJARMASIN</h1><h2>Hasil Pra Ujian PAS \u2014 Kelas " + esc(lap.kelas) + "</h2>" +
       "<p>Penilaian Akhir Semester \u2022 " + esc(tanggalId(lap.tanggal)) + "<br>Sudah mengerjakan: " + lap.sudah + " dari " + lap.total + " siswa \u2022 Rata-rata PAI: " + lap.rataPai + "</p>" +
-      "<table><thead><tr><th>No</th><th>Nama</th><th>PAI</th><th>Pindah</th></tr></thead><tbody>";
+      "<table><thead><tr><th>No</th><th>Nama</th><th>PAI</th><th>Pindah PAI</th></tr></thead><tbody>";
     lap.baris.forEach(function (b, i) {
       html += "<tr><td>" + (i + 1) + "</td><td>" + esc(b.nama) + "</td><td>" + (b.pai === null ? "\u2014" : b.pai) + "</td><td>" + (b.pindah > 0 ? (b.pindah + "x") : "\u2014") + "</td></tr>";
     });
