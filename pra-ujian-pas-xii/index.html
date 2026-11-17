@@ -766,7 +766,10 @@ function hentikanTimer(){
    diminta saat layar soal dibuka, diminta ulang tiap halaman kembali
    terlihat, dilepas saat jawaban dikirim.
    Keduanya dihitung SATU kejadian bila rapat (< 2 detik).
-   Hanya dihitung saat layar soal terbuka. Kebijakan (sesuai arahan):
+   Hanya dihitung saat layar soal terbuka DAN bukan pas istirahat.
+   Pindah selama istirahat TIDAK dihitung — pas istirahat siswa boleh
+   keluar layar (HP otomatis keluar / layar terkunci / buka aplikasi
+   lain); yang dihitung hanya pindah pas jam belajar. Kebijakan (sesuai arahan):
    peringatan + hitungan tercatat, TIDAK langsung digagalkan — bisa
    saja tidak sengaja (telepon masuk, layar terkunci). Hitungan
    tersimpan di progres dan dikirim bersama jawaban ke Sheet. */
@@ -783,6 +786,7 @@ function perbaruiPeringatanPindah(){
 }
 function catatPindah(){
   if($("layar-soal").hidden) return;
+  if(sedangIstirahat(Date.now())) return;
   var kini = Date.now();
   if(kini - pindahTerakhir < 2000) return;
   pindahTerakhir = kini;
