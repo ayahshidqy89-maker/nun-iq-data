@@ -447,7 +447,7 @@ function pesanTier(skor){
 }
 
 /* ---------- State ---------- */
-var state = { mapel:"PAI", kelas:"", nama:"", pdpd:false, soal:[], jawaban:[], idx:0, sudahKumpul:false, pindah:0, mulai:0, timerId:null, waktuHabis:false, lanjutan:false, jawabanPulih:null, pindahLama:0, tercatat:null };
+var state = { mapel:"PAI", kelas:"", nama:"", pdpd:false, soal:[], jawaban:[], idx:0, sudahKumpul:false, pindah:0, mulai:0, timerId:null, waktuHabis:false, lanjutan:false, jawabanPulih:null, pindahLama:0, tercatat:null, wakeLockSentinel:null };
 var DURASI_UJIAN_MS = 90 * 60 * 1000; /* timer 90 menit */
 var HURUF = ["A","B","C","D","E"];
 /* Warna ubin jawaban ala Wayground — per POSISI tampil (A selalu
@@ -753,7 +753,18 @@ function hentikanTimer(){
 
 /* ---------- Deteksi pindah layar ----------
    visibilitychange = pindah tab / aplikasi lain (HP + laptop);
+   halaman jadi hidden -> layar pasti tidak terlihat -> dihitung.
    blur = jendela kehilangan fokus (Alt+Tab di laptop, layar belah).
+   Blur TIDAK langsung dihitung: tarik tirai notifikasi HP ke bawah
+   cuma memicu blur (halaman tetap terlihat) dan harus aman — maka
+   blur dicek tertunda 2 detik: bila focus kembali dalam 2 detik,
+   batal (bukan pindah). Sesudah 2 detik, hitung HANYA bila halaman
+   masih terlihat (!document.hidden) dan fokus belum kembali
+   (!document.hasFocus()); bila halaman hidden, jalur blur diam saja
+   (sudah dihitung visibilitychange — hindari hitung ganda).
+   Layar HP yang mati sendiri dicegah Screen Wake Lock (lihat bawah):
+   diminta saat layar soal dibuka, diminta ulang tiap halaman kembali
+   terlihat, dilepas saat jawaban dikirim.
    Keduanya dihitung SATU kejadian bila rapat (< 2 detik).
    Hanya dihitung saat layar soal terbuka. Kebijakan (sesuai arahan):
    peringatan + hitungan tercatat, TIDAK langsung digagalkan — bisa
@@ -780,8 +791,49 @@ function catatPindah(){
   perbaruiPeringatanPindah();
   if(suaraHidup()) nada(220, 0, 0.15, "sine", 0.12);
 }
-document.addEventListener("visibilitychange", function(){ if(document.hidden) catatPindah(); });
-window.addEventListener("blur", function(){ catatPindah(); });
+var pindahTimerBlur = null;
+/* ---------- Screen Wake Lock (layar HP jangan mati sendiri) ----------
+   Diminta saat layar soal dibuka; browser melepasnya otomatis saat
+   halaman hidden, jadi diminta ulang tiap halaman kembali terlihat.
+   Dilepas saat jawaban dikirim. Bila tidak didukung, diam saja. */
+function mintaWakeLock(){
+  if(!("wakeLock" in navigator) || !navigator.wakeLock || !navigator.wakeLock.request) return;
+  if(state.wakeLockSentinel && !state.wakeLockSentinel.released) return;
+  state.wakeLockSentinel = null;
+  try {
+    var p = navigator.wakeLock.request("screen");
+    if(p && p.then){
+      p.then(function(s){
+        state.wakeLockSentinel = s;
+        if(s && s.addEventListener){
+          s.addEventListener("release", function(){ if(state.wakeLockSentinel === s) state.wakeLockSentinel = null; });
+        }
+      }).catch(function(){ state.wakeLockSentinel = null; });
+    }
+  } catch(e){ /* wake lock tidak didukung / ditolak — ujian tetap jalan */ }
+}
+function lepasWakeLock(){
+  if(state.wakeLockSentinel && state.wakeLockSentinel.release){
+    try { state.wakeLockSentinel.release(); } catch(e){}
+  }
+  state.wakeLockSentinel = null;
+}
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden){ state.wakeLockSentinel = null; catatPindah(); }
+  else if(!$("layar-soal").hidden){ mintaWakeLock(); }
+});
+window.addEventListener("blur", function(){
+  if(pindahTimerBlur){ clearTimeout(pindahTimerBlur); }
+  pindahTimerBlur = setTimeout(function(){
+    pindahTimerBlur = null;
+    if(document.hidden) return;
+    if(document.hasFocus()) return;
+    catatPindah();
+  }, 2000);
+});
+window.addEventListener("focus", function(){
+  if(pindahTimerBlur){ clearTimeout(pindahTimerBlur); pindahTimerBlur = null; }
+});
 
 /* ---------- Penanda sudah selesai (localStorage) ----------
    Begitu jawaban berhasil dikumpulkan — atau ketahuan sudah tercatat
@@ -985,6 +1037,7 @@ function masukUjian(){
   $("layar-identitas").hidden = true;
   $("layar-hasil").hidden = true;
   $("layar-soal").hidden = false;
+  mintaWakeLock();
   $("konfirm-kosong").hidden = true;
   perbaruiPeringatanPindah();
   mulaiTimer();
@@ -1284,6 +1337,7 @@ function cekViaJsonp(cb){
 /* ---------- Submit ---------- */
 function kirimJawaban(){
   if(state.sudahKumpul) return;
+  lepasWakeLock();
   var hasil = hitungHasil();
   var btn = $("btn-kumpul");
   btn.disabled = true;
