@@ -23,7 +23,6 @@ header p{opacity:.92;font-size:.95rem;margin-top:6px}
 .card h2{font-size:1.15rem;margin-bottom:4px}
 .card .ket{color:var(--abu);font-size:.92rem;margin-bottom:14px}
 .mapel-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:520px){.mapel{padding:10px;column-gap:8px}.mapel .ikon{font-size:1.4rem}.mapel .nama{font-size:.9rem}.mapel .sub{font-size:.78rem}}
 .mapel{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"ikon nama" "ikon sub";column-gap:12px;align-items:center;text-align:left;border:2px solid var(--garis);border-radius:14px;padding:12px 14px;cursor:pointer;background:#fff;font-family:inherit;transition:.15s}
 .mapel .ikon{grid-area:ikon;font-size:1.7rem;margin-bottom:0}
 .mapel .nama{grid-area:nama;font-weight:700;font-size:1rem}
@@ -32,6 +31,7 @@ header p{opacity:.92;font-size:.95rem;margin-top:6px}
 .mapel.pilih{border-color:var(--hijau);background:var(--hijau-muda);box-shadow:0 0 0 2px var(--hijau) inset}
 .mapel.mapel-paq:hover{border-color:#1E40AF}
 .mapel.mapel-paq.pilih{border-color:#1E40AF;background:#DBEAFE;box-shadow:0 0 0 2px #1E40AF inset}
+@media(max-width:520px){.mapel{padding:10px;column-gap:8px;row-gap:2px;grid-template-areas:"ikon nama" "sub sub"}.mapel .ikon{font-size:1.4rem}.mapel .nama{font-size:.9rem}.mapel .sub{font-size:.78rem}}
 label.lbl{display:block;font-weight:600;font-size:.92rem;margin:12px 0 6px}
 select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .dd{position:relative}
