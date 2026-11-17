@@ -22,6 +22,15 @@
  * kali siswa pindah layar/tab selama ujian (anti-curang v4).
  * doPost memastikan header J1 terisi bila masih kosong.
  *
+ * PERUBAHAN v4 (17 Nov 2026): "Lanjutan kiriman" — bila d.lanjutan
+ * true dan baris (kelas, nama, mapel) sudah ada, baris itu DIPERBARUI
+ * di tempat (skor/jawaban/pindah baru menimpa yang lama) dan respons
+ * {ok:true, lanjutan:true}. Ini untuk siswa yang sudah kumpul dengan
+ * banyak soal kosong (mis. Fariz 7.5, Nur 57.5) lalu melanjutkan di
+ * jendela khusus Jumat: jawaban lama tetap, soal kosong diisi, skor
+ * akhir menimpa skor lama — tanpa baris ganda. Bukan lanjutan + sudah
+ * ada -> tetap ditolak sebagai duplikat (v2).
+ *
  * Sheet tujuan: "Rekap Pra Ujian PAS XI"
  *   https://docs.google.com/spreadsheets/d/1LNFMvGZhm6zfMzzNbN271B3Onj5A_bJTcapfd69gxlE
  * Tab: "Rekap" — kolom: Timestamp | Kelas | Nama | Mapel | Versi |
@@ -42,12 +51,31 @@ function doPost(e) {
     var nama = String(d.nama || "").trim().toLowerCase();
     var mapel = String(d.mapel || "").trim().toUpperCase();
     var kelas = normalKelas(d.kelas);
+    if (!sh.getRange(1, 10).getValue()) sh.getRange(1, 10).setValue("Pindah Layar");
     var data = sh.getDataRange().getValues();
     for (var i = 1; i < data.length; i++) {
       var r = data[i];
       if (normalKelas(r[1]) !== kelas) continue;
       if (String(r[2] || "").trim().toLowerCase() !== nama) continue;
       if (String(r[3] || "").trim().toUpperCase() !== mapel) continue;
+      if (d.lanjutan === true) {
+        // Lanjutan kiriman (v4): timpa baris lama di tempat (baris Sheet = i+1).
+        sh.getRange(i + 1, 1, 1, 10).setValues([[
+          new Date(),
+          d.kelas || "",
+          d.nama || "",
+          d.mapel || "",
+          d.versi || "",
+          d.benar || 0,
+          d.jumlahSoal || 0,
+          d.skor || 0,
+          d.jawaban || "",
+          d.pindah || 0
+        ]]);
+        return ContentService
+          .createTextOutput(JSON.stringify({ ok: true, lanjutan: true }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
       return ContentService
         .createTextOutput(JSON.stringify({
           ok: true, duplikat: true,
@@ -55,7 +83,6 @@ function doPost(e) {
         }))
         .setMimeType(ContentService.MimeType.JSON);
     }
-    if (!sh.getRange(1, 10).getValue()) sh.getRange(1, 10).setValue("Pindah Layar");
     sh.appendRow([
       new Date(),
       d.kelas || "",

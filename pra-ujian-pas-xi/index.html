@@ -161,7 +161,7 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
     </div>
 
     <button type="button" class="btn" id="btn-mulai" disabled>Mulai Mengerjakan</button>
-    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 4.6 &middot; lanjutan XI-4 Jumat</p>
+    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 4.7 &middot; lanjutan kiriman Jumat</p>
     <p class="ket" id="info-jadwal" hidden style="text-align:center;margin-top:12px"></p>
   </section>
 
@@ -213,6 +213,7 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
     <p class="pindah" id="hasil-pindah" hidden></p>
     <p class="pesan" id="hasil-pesan"></p>
     <p class="catat" id="hasil-catat">Jawabanmu sudah tercatat.</p>
+    <button type="button" class="btn" id="btn-lanjutkan" hidden>📝 Lanjutkan — Isi Soal yang Masih Kosong</button>
     <button type="button" class="btn sekunder" id="btn-ulang">Kembali ke Beranda</button>
   </section>
 
@@ -454,7 +455,7 @@ function pesanTier(skor){
 }
 
 /* ---------- State ---------- */
-var state = { mapel:null, kelas:"", nama:"", pdpd:false, soal:[], jawaban:[], idx:0, sudahKumpul:false, pindah:0, mulai:0, timerId:null, waktuHabis:false };
+var state = { mapel:null, kelas:"", nama:"", pdpd:false, soal:[], jawaban:[], idx:0, sudahKumpul:false, pindah:0, mulai:0, timerId:null, waktuHabis:false, lanjutan:false, jawabanPulih:null, pindahLama:0, tercatat:null };
 var DURASI_UJIAN_MS = 90 * 60 * 1000; /* timer 90 menit */
 var HURUF = ["A","B","C","D","E"];
 /* Warna ubin jawaban ala Wayground — per POSISI tampil (A selalu
@@ -832,6 +833,16 @@ function tampilSudahSelesai(hasil){
   $("layar-soal").hidden = true;
   $("layar-kunci").hidden = true;
   tampilHasil(hasil, true, false);
+  var btnLanjut = $("btn-lanjutkan");
+  if(btnLanjut){
+    if(bolehLanjutKiriman(state.kelas, state.mapel) && hasil && hasil.jawaban){
+      state.tercatat = hasil;
+      btnLanjut.hidden = false;
+      $("hasil-catat").textContent = "Skor di atas adalah skor yang sudah tercatat. Hari ini jendela khusus dibuka — kamu bisa melanjutkan: jawaban yang sudah diisi tetap, isi soal yang masih kosong.";
+    } else {
+      btnLanjut.hidden = true;
+    }
+  }
 }
 
 document.querySelectorAll(".mapel").forEach(function(el){
@@ -883,11 +894,14 @@ $("btn-mulai").addEventListener("click", function(){
     state.soal = state.pdpd ? SOAL_PDPD_PAQ : SOAL_PAQ;
   }
   state.sudahKumpul = false;
+  state.lanjutan = false; state.jawabanPulih = null; state.pindahLama = 0; state.tercatat = null;
   /* Sudah pernah kumpul? Penanda lokal dulu (instan), lalu cek Sheet
      (lintas perangkat). Bila ketahuan sudah tercatat, langsung tampil
-     skor tercatat — jangan buka ujian baru. */
+     skor tercatat — jangan buka ujian baru. KECUALI hari ini jendela
+     khusus (lanjutan kiriman v4.7): penanda lokal tidak mengunci,
+     baris Sheet diambil untuk memulihkan jawaban. */
   var selesai = bacaSelesai();
-  if(selesai){ tampilSudahSelesai(selesai); return; }
+  if(selesai && !bolehLanjutKiriman(state.kelas, state.mapel)){ tampilSudahSelesai(selesai); return; }
   var btnMulai = $("btn-mulai");
   btnMulai.disabled = true;
   btnMulai.textContent = "Memeriksa... (v4.0)";
@@ -899,6 +913,7 @@ $("btn-mulai").addEventListener("click", function(){
       tampilSudahSelesai(tercatat);
       return;
     }
+    if(selesai){ tampilSudahSelesai(selesai); return; }
     masukUjian();
   });
 });
@@ -909,6 +924,48 @@ $("btn-mulai").addEventListener("click", function(){
    sudah diisi TETAP. Tanpa ini, deadline hari asal sudah lewat dan
    jawaban langsung terkumpul otomatis begitu masuk. Lanjutan di hari
    yang sama TIDAK direset (timer terus berjalan). */
+/* Lanjutan kiriman (v4.7): siswa yang SUDAH kumpul boleh masuk lagi HANYA
+   di jendela khusus hari ini (mis. XI-4 Jumat 20 Nov) untuk mengisi soal
+   yang masih kosong — jawaban yang sudah diisi dipulihkan dari Sheet dan
+   WAJIB tetap terisi. Di luar jendela khusus, aturan anti-ulang berlaku
+   penuh (sudah kumpul = terkunci). */
+function jendelaKhususHariIni(kelas, mapel){
+  var kini = new Date();
+  for(var k = 0; k < JADWAL_KHUSUS.length; k++){
+    var s = JADWAL_KHUSUS[k];
+    if(s.kelas !== kelas || s.mapel !== mapel) continue;
+    var t = s.tanggal.split("-");
+    if(parseInt(t[0],10) === kini.getFullYear() && parseInt(t[1],10) === kini.getMonth()+1 && parseInt(t[2],10) === kini.getDate()) return s;
+  }
+  return null;
+}
+function bolehLanjutKiriman(kelas, mapel){
+  if(!jendelaKhususHariIni(kelas, mapel)) return false;
+  var cek = cekJadwal(kelas, mapel);
+  return cek.buka || dalamTenggang(kelas, mapel);
+}
+/* Pulihkan jawaban dari string Sheet (urutan tampil, digit = indeks asli,
+   "-" = kosong). Bila string lebih pendek dari jumlah soal, berarti nol
+   depan hilang karena Sheet mengubahnya jadi angka — tambal dengan "0"
+   di depan (hanya nol depan yang bisa hilang); sisanya (bila ada) "-". */
+function pulihkanJawaban(str, jumlah){
+  str = String(str || "");
+  if(str.length < jumlah){
+    var kurang = jumlah - str.length;
+    var tambal = "";
+    for(var p = 0; p < kurang; p++) tambal += (p === 0 ? "0" : "-");
+    str = tambal + str;
+  }
+  if(str.length > jumlah) str = str.slice(0, jumlah);
+  var out = [];
+  for(var i = 0; i < jumlah; i++){
+    var c = str.charAt(i);
+    if(c === "-" || c === ""){ out.push(null); continue; }
+    var v = parseInt(c, 10);
+    out.push(isNaN(v) ? null : v);
+  }
+  return out;
+}
 function mulaiBaruUntukHariIni(mulaiLama){
   if(!mulaiLama) return Date.now();
   var d = new Date(mulaiLama), k = new Date();
@@ -932,13 +989,21 @@ function masukUjian(){
     state.pindah = pulih.pindah || 0;
     state.mulai = mulaiBaruUntukHariIni(pulih.mulai);
   } else {
-    state.jawaban = [];
-    for(var j = 0; j < state.soal.length; j++) state.jawaban.push(null);
-    state.idx = 0;
+    if(state.jawabanPulih){
+      /* Lanjutan kiriman: jawaban lama dipulihkan, langsung ke soal
+         kosong pertama. Timer BARU 90 menit dari jam masuk hari ini. */
+      state.jawaban = state.jawabanPulih;
+      state.idx = 0;
+      for(var j = 0; j < state.jawaban.length; j++){ if(state.jawaban[j] === null){ state.idx = j; break; } }
+    } else {
+      state.jawaban = [];
+      for(var j = 0; j < state.soal.length; j++) state.jawaban.push(null);
+      state.idx = 0;
+    }
     state.pindah = 0;
     state.mulai = Date.now();
     var cek = cekJadwal(state.kelas, state.mapel);
-    if(!cek.buka){ tampilKunci(cek); return; }
+    if(!cek.buka && !(state.lanjutan && dalamTenggang(state.kelas, state.mapel))){ tampilKunci(cek); return; }
   }
   if(sisaMs() <= 0){ state.waktuHabis = true; kirimJawaban(); return; }
   $("info-nama").textContent = state.nama;
@@ -1101,12 +1166,24 @@ $("btn-ulang").addEventListener("click", function(){
   $("layar-identitas").hidden = false;
   document.querySelectorAll(".mapel").forEach(function(m){ m.classList.remove("pilih"); });
   state.mapel = null; state.kelas = ""; state.nama = "";
+  state.lanjutan = false; state.jawabanPulih = null; state.pindahLama = 0; state.tercatat = null;
   $("pilih-kelas").value = "";
   $("pilih-nama").innerHTML = '<option value="">-- Pilih nama --</option>';
   $("bungkus-nama").hidden = true;
   ddKelas.label();
   ddNama.label();
   perbaruiTombolMulai();
+});
+
+$("btn-lanjutkan").addEventListener("click", function(){
+  var t = state.tercatat;
+  if(!t) return;
+  state.lanjutan = true;
+  state.pindahLama = t.pindah || 0;
+  state.jawabanPulih = pulihkanJawaban(t.jawaban || "", state.soal.length);
+  state.sudahKumpul = false;
+  $("layar-hasil").hidden = true;
+  masukUjian();
 });
 
 $("btn-kunci-kembali").addEventListener("click", function(){
@@ -1135,7 +1212,7 @@ function parseCsvBaris(s){
   out.push(cur);
   return out;
 }
-function cariDiBaris(nm, mp, benarS, jumlahS, skorS){
+function cariDiBaris(nm, mp, benarS, jumlahS, skorS, jawabanS, pindahS){
   if(!nm || !mp) return null;
   if(nm.trim().toLowerCase() !== state.nama.trim().toLowerCase()) return null;
   if(mp.trim().toUpperCase() !== state.mapel) return null;
@@ -1143,7 +1220,7 @@ function cariDiBaris(nm, mp, benarS, jumlahS, skorS){
   var jumlah = parseInt(jumlahS, 10);
   var skor = parseFloat(String(skorS).replace(",", "."));
   if(isNaN(benar) || isNaN(jumlah) || isNaN(skor)) return null;
-  return { benar:benar, jumlah:jumlah, skor:skor };
+  return { benar:benar, jumlah:jumlah, skor:skor, jawaban:jawabanS || "", pindah:parseInt(pindahS, 10) || 0 };
 }
 function cekSudahMengerjakan(cb){
   if(SHEET_ID.indexOf("__") !== -1){
@@ -1166,7 +1243,7 @@ function cekSudahMengerjakan(cb){
     for(var i = 1; i < baris.length; i++){
       var f = parseCsvBaris(baris[i]);
       if(f.length < 8) continue;
-      var r = cariDiBaris(f[2], f[3], f[5], f[6], f[7]);
+      var r = cariDiBaris(f[2], f[3], f[5], f[6], f[7], f[8], f[9]);
       if(r) ketemu = r; /* baris terakhir menang */
     }
     done(ketemu);
@@ -1219,7 +1296,7 @@ function cekViaJsonp(cb){
         var jumlah = parseInt(selGviz(c[6]), 10);
         var skor = parseFloat(selGviz(c[7]));
         if(isNaN(benar) || isNaN(jumlah) || isNaN(skor)) continue;
-        ketemu = { benar:benar, jumlah:jumlah, skor:skor }; /* baris terakhir menang */
+        ketemu = { benar:benar, jumlah:jumlah, skor:skor, jawaban:selGviz(c[8]), pindah:parseInt(selGviz(c[9]), 10) || 0 }; /* baris terakhir menang */
       }
       done(ketemu);
     }catch(err){ done(null); }
@@ -1240,7 +1317,7 @@ function kirimJawaban(){
   btn.disabled = true;
   btn.textContent = "Memeriksa...";
   cekSudahMengerjakan(function(tercatat){
-    if(tercatat){
+    if(tercatat && !state.lanjutan){
       state.sudahKumpul = true;
       hapusProgres();
       tandaiSelesai(tercatat);
@@ -1268,7 +1345,8 @@ function kirimJawaban(){
       jumlahSoal: hasil.jumlah,
       skor: hasil.skor,
       jawaban: hasil.jawabanStr,
-      pindah: state.pindah
+      pindah: state.pindah + (state.pindahLama || 0),
+      lanjutan: state.lanjutan ? true : false
     };
     fetch(WEBGAS_URL, {
       method: "POST",
