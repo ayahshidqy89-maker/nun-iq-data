@@ -1,0 +1,979 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" href="data:," />
+<title>Dashboard Pemantauan — Pra Ujian PAS Kelas XII</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<style>
+  :root {
+    --bg: #F0FDF4;
+    --surface: #FFFFFF;
+    --ink: #111827;
+    --ink-soft: #4B5563;
+    --ink-faint: #6B7280;
+    --line: #D1FAE5;
+    --line-strong: #BBF7D0;
+    --accent: #14532D;
+    --accent-2: #166534;
+    --accent-soft: #DCFCE7;
+    --accent-mid: #22C55E;
+    --gold: #CA8A04;
+    --gold-soft: #FEF9C3;
+    --grey-soft: #F3F4F6;
+    --red: #B91C1C;
+    --red-soft: #FEE2E2;
+    --shadow: 0 1px 3px rgba(20, 83, 45, 0.08), 0 4px 14px rgba(20, 83, 45, 0.06);
+    --shadow-lg: 0 4px 10px rgba(20, 83, 45, 0.10), 0 12px 32px rgba(20, 83, 45, 0.08);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: clamp(14px, 3vw, 32px) clamp(14px, 3.5vw, 32px) 48px; }
+
+  /* ---------- Header ---------- */
+  header.top {
+    background: linear-gradient(135deg, var(--accent) 0%, #166534 60%, #15803D 100%);
+    color: #FFFFFF;
+    border-radius: 20px;
+    padding: clamp(20px, 4vw, 32px);
+    box-shadow: var(--shadow-lg);
+  }
+  header.top h1 { margin: 0; font-size: clamp(1.25rem, 4.5vw, 1.9rem); font-weight: 800; line-height: 1.25; }
+  header.top p.sub { margin: 8px 0 0; font-size: 1rem; font-weight: 600; color: #BBF7D0; }
+  header.top p.desc { margin: 10px 0 0; font-size: 0.9rem; color: #DCFCE7; max-width: 60ch; }
+  .status-line { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 0.85rem; font-weight: 600; }
+  .status-line .dot {
+    display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+    background: #4ADE80; margin-right: 6px; vertical-align: middle;
+    animation: pulse-dot 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  .status-line .pill {
+    background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 4px 12px; border-radius: 999px; color: #FFFFFF;
+  }
+  .btn-suara {
+    background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 4px 12px; border-radius: 999px; color: #FFFFFF;
+    font-family: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  }
+  .btn-suara.mati { opacity: 0.75; }
+  .progress-item { border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+  .progress-item:last-child { border-bottom: none; }
+  .progress-row { cursor: pointer; }
+  .progress-row .panah { font-weight: 800; color: var(--accent); margin-left: 6px; }
+  .detail-kelas { margin: 10px 0 6px; font-size: 0.9rem; }
+  .detail-kelas .ringkas { font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+  .detail-kelas table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .detail-kelas th { text-align: left; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); background: var(--accent-soft); padding: 7px 10px; border-bottom: 2px solid var(--line-strong); }
+  .detail-kelas td { padding: 7px 10px; border-bottom: 1px solid var(--line); }
+  .detail-kelas .st-ok { font-weight: 800; color: var(--accent); }
+  .detail-kelas .st-no { color: var(--ink-faint); }
+  .ket-ding { font-size: 0.85rem; color: var(--ink-faint); margin: -6px 0 12px; font-weight: 600; }
+  .hasil-kelas { border-bottom: 1px solid var(--line); padding-bottom: 10px; margin-bottom: 10px; }
+  .hasil-kelas:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .hasil-kelas .table-wrap { margin-top: 10px; }
+  .tanda-pindah { color: #B45309; font-weight: 800; font-size: 0.85rem; white-space: nowrap; }
+
+  /* ---------- Ringkasan ---------- */
+  .section-title { font-size: 1.05rem; font-weight: 800; color: var(--accent); margin: 28px 0 12px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 16px; padding: 18px 20px; box-shadow: var(--shadow);
+  }
+  .card .label { font-size: 0.82rem; font-weight: 700; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
+  .card .big { font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1.15; margin-top: 4px; }
+  .card .detail { font-size: 0.9rem; color: var(--ink-soft); margin-top: 4px; }
+  .card .badge-mapel {
+    display: inline-block; background: var(--accent-soft); color: var(--accent);
+    font-weight: 800; font-size: 0.78rem; padding: 3px 10px; border-radius: 999px; margin-bottom: 6px;
+  }
+
+  /* ---------- Progres per kelas ---------- */
+  .progress-list { display: flex; flex-direction: column; gap: 12px; }
+  .progress-row { display: grid; grid-template-columns: 64px 1fr auto auto; gap: 12px; align-items: center; }
+  .btn-pdf-kelas { font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--accent); background: #fff; border: 1.5px solid var(--accent-2); border-radius: 999px; padding: 5px 10px; cursor: pointer; white-space: nowrap; }
+  .btn-pdf-kelas:hover { background: var(--accent-soft); }
+  .progress-row .kelas { font-weight: 800; color: var(--accent); }
+  .progress-row .angka { font-size: 0.88rem; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
+  .bar { height: 12px; background: #E5E7EB; border-radius: 999px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent-mid), var(--accent-2)); border-radius: 999px; transition: width 0.5s ease; }
+  .total-line { margin-top: 12px; font-size: 0.92rem; font-weight: 700; color: var(--accent); }
+
+  /* ---------- Aksen warna kartu ringkasan (ala Wayground, v4.1) ---------- */
+  .card.stat-pai { border-top: 5px solid #16A34A; }
+  .card.stat-pai .big { color: #15803D; }
+  .card.stat-total { border-top: 5px solid #D97706; }
+  .card.stat-total .big { color: #B45309; }
+
+  /* ---------- Notifikasi live ---------- */
+  .notif-list { display: flex; flex-direction: column; gap: 10px; }
+  .notif-card {
+    background: var(--surface); border: 1px solid var(--line); border-left-width: 6px;
+    border-radius: 14px; padding: 14px 16px; box-shadow: var(--shadow);
+    animation: slide-down 0.45s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes slide-down {
+    from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .notif-card.tier-90 { border-left-color: #CA8A04; background: #FFFBEB; }
+  .notif-card.tier-75 { border-left-color: #16A34A; background: #F0FDF4; }
+  .notif-card.tier-60 { border-left-color: #CA8A04; background: #FEFCE8; }
+  .notif-card.tier-low { border-left-color: #9CA3AF; background: #F9FAFB; }
+  .notif-card .msg { font-size: 1.02rem; font-weight: 800; color: var(--ink); }
+  .notif-card .meta { font-size: 0.9rem; color: var(--ink-soft); margin-top: 4px; }
+  .notif-card .meta b { color: var(--accent); }
+  .notif-card .skor { font-size: 0.9rem; font-weight: 800; color: var(--accent); margin-top: 2px; }
+  .notif-card .waktu { font-size: 0.8rem; color: var(--ink-faint); margin-top: 2px; }
+  .empty-note {
+    background: var(--surface); border: 1px dashed var(--line-strong); border-radius: 14px;
+    padding: 22px; text-align: center; color: var(--ink-soft); font-weight: 600;
+  }
+
+  /* ---------- Filter + tabel ---------- */
+  /* (Hasil Pengerjaan kini kyk Progres per Kelas — tanpa filter.) */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  thead th {
+    text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--accent); background: var(--accent-soft);
+    padding: 10px 12px; border-bottom: 2px solid var(--line-strong); white-space: nowrap;
+  }
+  tbody td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:nth-child(even) td { background: #F9FAFB; }
+  tbody tr:hover td { background: #F0FDF4; }
+  td.skor-cell { font-weight: 800; color: var(--accent); }
+  .tag-mapel {
+    display: inline-block; padding: 2px 10px; border-radius: 999px;
+    font-size: 0.8rem; font-weight: 800;
+  }
+  .tag-mapel.pai { background: var(--accent-soft); color: var(--accent); }
+  .count-line { font-size: 0.88rem; color: var(--ink-faint); margin-top: 10px; font-weight: 600; }
+
+  footer { margin-top: 32px; font-size: 0.82rem; color: var(--ink-faint); text-align: center; }
+  @media (max-width: 640px) {
+    .progress-row { grid-template-columns: 56px 1fr; }
+    .progress-row .angka { grid-column: 2; }
+    .card .big { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <h1>Dashboard Pemantauan — Pra Ujian PAS Kelas XII</h1>
+    <p class="sub">SMAN 4 Banjarmasin</p>
+    <p class="desc">Pemantauan live pengerjaan Pra Ujian PAS PAI kelas XII-1 s.d. XII-9. Data diperbarui otomatis dari Google Sheet.</p>
+    <div class="status-line">
+      <span class="pill"><span class="dot" id="pollDot"></span>Polling aktif · tiap 8 detik</span>
+      <span class="pill" id="lastUpdated">Terakhir diperbarui: —</span>
+      <span class="pill" id="connState">Menunggu data…</span>
+      <button type="button" class="btn-suara" id="btn-suara-dash" aria-pressed="true">&#128266; Suara: Hidup</button>
+      <button type="button" class="btn-suara" id="btn-tes-bunyi" title="Coba bunyi ding">&#128276; Tes bunyi</button>
+      <button type="button" class="btn-suara" id="btn-musik-dash" aria-pressed="true">&#127925; Musik: Hidup</button>
+    </div>
+  </header>
+
+  <h2 class="section-title">Ringkasan</h2>
+  <div class="summary-grid">
+    <div class="card stat-pai">
+      <span class="badge-mapel">PAI</span>
+      <div class="label">Siswa sudah mengerjakan</div>
+      <div class="big" id="countPai">0 siswa</div>
+      <div class="detail" id="avgPai">Rata-rata nilai: —</div>
+    </div>
+    <div class="card stat-total">
+      <div class="label">Total pengerjaan</div>
+      <div class="big" id="totalAttempts">0</div>
+      <div class="detail" id="totalUnique">0 siswa unik sudah mengerjakan (dari 282 siswa)</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Progres per Kelas</h2>
+  <div class="card">
+    <div class="progress-list" id="progressList"></div>
+    <div class="total-line" id="progressTotal"></div>
+  </div>
+
+  <h2 class="section-title">Notifikasi Live — Baru Selesai Mengerjakan</h2>
+  <p class="ket-ding">🔔 Ding berbunyi tiap ada kiriman baru sesudah dashboard dibuka. Bila belum ada yang mengerjakan, dashboard diam — itu normal. Ketuk “Tes bunyi” untuk memeriksa suara perangkat.</p>
+  <div class="notif-list" id="notifList">
+    <div class="empty-note">Belum ada siswa yang mengerjakan.</div>
+  </div>
+
+  <h2 class="section-title">Hasil Pengerjaan</h2>
+  <div class="card">
+    <div id="resultBody">
+      <div class="empty-note">Belum ada siswa yang mengerjakan.</div>
+    </div>
+    <div class="count-line" id="resultCount"></div>
+  </div>
+
+  <footer>Dashboard Pemantauan — Pra Ujian PAS Kelas XII · SMAN 4 Banjarmasin</footer>
+</div>
+
+<audio id="musik-latar-dash" src="https://assets.mixkit.co/music/973/973.mp3" loop preload="auto" autoplay></audio>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Konstanta ---------- */
+  var SHEET_ID = "10zwKEuR7g6jnS5dsd-imr1F5obQS7rIvUScYdEI_a7g";
+  var SHEET_NAME = "Rekap";
+  var POLL_MS = 8000;
+  var MAX_NOTIF = 20;
+  var TOTAL_SISWA = 293;
+
+  /* Total siswa per kelas (data resmi). */
+  var KELAS_TOTAL = {
+    "XII-1": 30, "XII-2": 29, "XII-3": 32, "XII-4": 34, "XII-5": 34,
+    "XII-6": 34, "XII-7": 34, "XII-8": 32, "XII-9": 34
+  };
+
+  /* Daftar nama per kelas (roster resmi, sama dengan LKPD) — untuk detail
+     siapa sudah/belum per mapel. Kunci "XII 1" pakai spasi (format Sheet). */
+  var SISWA = {"XII 1":[{"nama":"Abdad Hamka","jk":"L","pdpd":false},{"nama":"Ahmad Januardi","jk":"L","pdpd":false},{"nama":"Albano Putra Susanto","jk":"L","pdpd":false},{"nama":"Assyfa Hadratunnufus","jk":"P","pdpd":false},{"nama":"Cahaya Mulia","jk":"P","pdpd":false},{"nama":"Desi Junaedi","jk":"P","pdpd":false},{"nama":"Dwi Risty Pratitis","jk":"P","pdpd":false},{"nama":"Fatmawati","jk":"P","pdpd":false},{"nama":"Fazle Zia Sumangkut","jk":"L","pdpd":false},{"nama":"Hairunnisa","jk":"P","pdpd":false},{"nama":"Jesika","jk":"P","pdpd":false},{"nama":"Khairunnisa","jk":"P","pdpd":false},{"nama":"Liana Rahmadhani","jk":"P","pdpd":false},{"nama":"Maulida","jk":"P","pdpd":false},{"nama":"Mona Apriliani","jk":"P","pdpd":false},{"nama":"Muhammad Akbar","jk":"L","pdpd":false},{"nama":"Muhammad Firli Apriliadi","jk":"L","pdpd":false},{"nama":"Muhammad Maaliki Putra Delmi","jk":"L","pdpd":false},{"nama":"Muhammad Raka Maulana","jk":"L","pdpd":false},{"nama":"Muhammad Reyno Abizar","jk":"L","pdpd":false},{"nama":"Muhammad Ridho Pratama","jk":"L","pdpd":false},{"nama":"Nafis Fakhrian Hadi","jk":"L","pdpd":false},{"nama":"Noor Askia","jk":"P","pdpd":false},{"nama":"Nor Sariyah","jk":"P","pdpd":false},{"nama":"Nurdiah","jk":"P","pdpd":false},{"nama":"Rahmi Azizah","jk":"P","pdpd":false},{"nama":"Rina Yanti","jk":"P","pdpd":false},{"nama":"Said M. Rizki","jk":"L","pdpd":false},{"nama":"Salwaa Syafaqoh","jk":"P","pdpd":false},{"nama":"Syaila Putri Aprilia","jk":"P","pdpd":false}],"XII 2":[{"nama":"Abdul Khair","jk":"L","pdpd":false},{"nama":"Abelia","jk":"P","pdpd":false},{"nama":"Ahmad Ridho Akhyari","jk":"L","pdpd":false},{"nama":"Aldi Firmansyah","jk":"L","pdpd":false},{"nama":"Audya Eisya Raya","jk":"P","pdpd":false},{"nama":"Camalia Munada","jk":"P","pdpd":false},{"nama":"Dhea","jk":"P","pdpd":false},{"nama":"Dyah Ayu Maharani","jk":"P","pdpd":false},{"nama":"Firdha Audy Lestari","jk":"P","pdpd":false},{"nama":"Imam Nabil Al-Bukhori","jk":"L","pdpd":false},{"nama":"Julpa","jk":"P","pdpd":false},{"nama":"Khanza Nadia Putri","jk":"P","pdpd":false},{"nama":"Luna Farisya Adinda","jk":"P","pdpd":false},{"nama":"Maulidya Maharani Putri","jk":"P","pdpd":false},{"nama":"Muhammad Amin","jk":"L","pdpd":false},{"nama":"Muhammad Halim Pratama","jk":"L","pdpd":false},{"nama":"Muhammad Nabil Ramadhan","jk":"L","pdpd":false},{"nama":"Muhammad Rasyid Siddiq","jk":"L","pdpd":false},{"nama":"Muhammad Rio Fadhilah","jk":"L","pdpd":false},{"nama":"Mutia Aufa Az-Zahra","jk":"P","pdpd":false},{"nama":"Noor Ibrahim","jk":"L","pdpd":false},{"nama":"Noor Rizka Bilghina","jk":"P","pdpd":false},{"nama":"Novi Aulia","jk":"P","pdpd":false},{"nama":"Nurul Adzkia","jk":"P","pdpd":false},{"nama":"Rau Mutya Delbe","jk":"P","pdpd":false},{"nama":"Risna Yuliyana","jk":"P","pdpd":false},{"nama":"Sila","jk":"P","pdpd":false},{"nama":"Syaima Salwatul Aisy","jk":"P","pdpd":false},{"nama":"Yasmin Salsabila","jk":"P","pdpd":false}],"XII 3":[{"nama":"A. Alwan Putra","jk":"L","pdpd":false},{"nama":"Ahmad Daffa","jk":"L","pdpd":false},{"nama":"Akhmad Faisal","jk":"L","pdpd":false},{"nama":"Andy Surya Yosan Atmaja","jk":"L","pdpd":false},{"nama":"Anggraini","jk":"P","pdpd":false},{"nama":"Azizah","jk":"P","pdpd":false},{"nama":"Delvina Ramadhani","jk":"P","pdpd":false},{"nama":"Dinda Noormawati","jk":"P","pdpd":false},{"nama":"Fatimatu Zahra","jk":"P","pdpd":false},{"nama":"Gusti Ghina Nur'alya","jk":"P","pdpd":false},{"nama":"Irvina Nayla Utari","jk":"P","pdpd":false},{"nama":"Kaylla Almaira","jk":"P","pdpd":false},{"nama":"Kiswah Humairah","jk":"P","pdpd":false},{"nama":"Mariyah Al - Qibthiyyah","jk":"P","pdpd":false},{"nama":"Maura Bilqis Lukman","jk":"P","pdpd":false},{"nama":"Muhammad Ainur Ridho","jk":"L","pdpd":false},{"nama":"Muhammad Firdaus Adha","jk":"L","pdpd":true},{"nama":"Muhammad Lutfi Alfarisi","jk":"L","pdpd":false},{"nama":"Muhammad Raffa","jk":"L","pdpd":false},{"nama":"Muhammad Reyza Nomar","jk":"L","pdpd":false},{"nama":"Muhammad Rizky Effendi","jk":"L","pdpd":false},{"nama":"Muhammad Zidan Kholilian","jk":"L","pdpd":false},{"nama":"Nazwa Atqia","jk":"P","pdpd":false},{"nama":"Nor Pina","jk":"P","pdpd":false},{"nama":"Nur Azkiya","jk":"P","pdpd":false},{"nama":"Putri Salsabila","jk":"P","pdpd":false},{"nama":"Rafizal Nur Rahman","jk":"L","pdpd":false},{"nama":"Riana","jk":"P","pdpd":false},{"nama":"Salsabila Anggraini","jk":"P","pdpd":false},{"nama":"Siva Adelia","jk":"P","pdpd":false},{"nama":"Syarifah Rahmah","jk":"P","pdpd":false},{"nama":"Wardatul Zahra","jk":"P","pdpd":false}],"XII 4":[{"nama":"Ahmad Alpiannoor","jk":"L","pdpd":false},{"nama":"Ahmad Shofwani","jk":"L","pdpd":false},{"nama":"Aira Azzahra","jk":"P","pdpd":false},{"nama":"Aldy Ramadhan","jk":"L","pdpd":false},{"nama":"Aulia Azemi","jk":"P","pdpd":false},{"nama":"Clarissa Muetia Rayyanti","jk":"P","pdpd":false},{"nama":"Dhea Asyifa Salsabila","jk":"P","pdpd":false},{"nama":"Farisha Salsabila","jk":"P","pdpd":false},{"nama":"Fitri Ramadani","jk":"P","pdpd":false},{"nama":"Halimah Azzahra","jk":"P","pdpd":false},{"nama":"Hemada","jk":"P","pdpd":false},{"nama":"Kandi Aji Saputri","jk":"P","pdpd":false},{"nama":"Kirani","jk":"P","pdpd":false},{"nama":"Lutfia Bilbina","jk":"P","pdpd":false},{"nama":"M. Hafidz","jk":"L","pdpd":false},{"nama":"M. Rafiq Baidawi","jk":"L","pdpd":false},{"nama":"Maulina Putri","jk":"P","pdpd":false},{"nama":"Muhammad Fahri","jk":"L","pdpd":false},{"nama":"Muhammad Hidayat Rifa'i","jk":"L","pdpd":false},{"nama":"Muhammad Noor","jk":"L","pdpd":false},{"nama":"Muhammad Rizki","jk":"L","pdpd":false},{"nama":"Muhammad Sugianor","jk":"L","pdpd":false},{"nama":"Muhammad Yusuf Afgan","jk":"L","pdpd":false},{"nama":"Muhammad Zakky","jk":"L","pdpd":false},{"nama":"Naysella Aulia Sabrina","jk":"P","pdpd":false},{"nama":"Noor Shofia","jk":"P","pdpd":false},{"nama":"Novia Mayang Sari","jk":"P","pdpd":false},{"nama":"Nur Raihan Gifari","jk":"L","pdpd":false},{"nama":"Olivia Nina Agustina","jk":"P","pdpd":false},{"nama":"Restu Almira Ramadhani","jk":"P","pdpd":false},{"nama":"Sa'dina Ramadhaniah","jk":"P","pdpd":false},{"nama":"Siti Zahra","jk":"P","pdpd":false},{"nama":"Syarifah Farah Anisa","jk":"P","pdpd":false},{"nama":"Zaima Adila","jk":"P","pdpd":false}],"XII 5":[{"nama":"Achmad Saifullah","jk":"L","pdpd":false},{"nama":"Ahmad Hafidzi","jk":"L","pdpd":false},{"nama":"Ahmad Riskyan","jk":"L","pdpd":false},{"nama":"Andri Pratama","jk":"L","pdpd":false},{"nama":"Bahrullah","jk":"L","pdpd":false},{"nama":"Dalaila Fadilla","jk":"P","pdpd":false},{"nama":"Elvira Nur Ramadhan","jk":"P","pdpd":false},{"nama":"Gina Rizkiya","jk":"P","pdpd":false},{"nama":"Hasbie Ridwan Prasetyo","jk":"L","pdpd":false},{"nama":"Keyla Noviarda Pajariah","jk":"P","pdpd":false},{"nama":"Malinda","jk":"P","pdpd":false},{"nama":"Mario","jk":"L","pdpd":false},{"nama":"Muhammad Alvin","jk":"L","pdpd":false},{"nama":"Muhammad Irfansyah","jk":"L","pdpd":false},{"nama":"Muhammad Naufal Ghani","jk":"L","pdpd":false},{"nama":"Muhammad Radit","jk":"L","pdpd":false},{"nama":"Muhammad Rasyied","jk":"L","pdpd":false},{"nama":"Muhammad Zakaria","jk":"L","pdpd":false},{"nama":"Nabila Arifah","jk":"P","pdpd":false},{"nama":"Nia Zulfia","jk":"P","pdpd":false},{"nama":"Nor Annisa Safitri","jk":"P","pdpd":false},{"nama":"Nur Az-Zahra","jk":"P","pdpd":false},{"nama":"Nurul Aina","jk":"P","pdpd":false},{"nama":"Raden Eko Danuwarta","jk":"L","pdpd":false},{"nama":"Rafika Azzahra","jk":"P","pdpd":false},{"nama":"Rifa Syahidah","jk":"P","pdpd":false},{"nama":"Riza Ahmad Anshori","jk":"L","pdpd":false},{"nama":"Sarah Amanda","jk":"P","pdpd":false},{"nama":"Shulfa Hana","jk":"P","pdpd":false},{"nama":"Silvina","jk":"P","pdpd":false},{"nama":"Siti Humairo","jk":"P","pdpd":false},{"nama":"Sultan Burhanuddin","jk":"L","pdpd":false},{"nama":"Wulan Julianty","jk":"P","pdpd":false},{"nama":"Zarkani Hamid","jk":"L","pdpd":false}],"XII 6":[{"nama":"Adam Nur Royyan","jk":"L","pdpd":false},{"nama":"Aghna Saufa","jk":"P","pdpd":false},{"nama":"Ahmad Ibnu Husin","jk":"L","pdpd":false},{"nama":"Aldo Wardana","jk":"L","pdpd":false},{"nama":"Arifin Ilham","jk":"L","pdpd":false},{"nama":"Danu Muhammad Habibie S.","jk":"L","pdpd":false},{"nama":"Endah Tri Handayani","jk":"P","pdpd":false},{"nama":"Gina Sabrina","jk":"P","pdpd":false},{"nama":"Khairunnisa","jk":"P","pdpd":false},{"nama":"Krisna Samudra","jk":"L","pdpd":false},{"nama":"M. Irfan Baso Putra","jk":"L","pdpd":false},{"nama":"M. Maulana Shams Al-Ayubi","jk":"L","pdpd":false},{"nama":"Marsya Nurfallah","jk":"P","pdpd":false},{"nama":"Moch. Febryannor","jk":"L","pdpd":false},{"nama":"Muhammad Fadhlur Rahman","jk":"L","pdpd":false},{"nama":"Muhammad Jaini","jk":"L","pdpd":false},{"nama":"Muhammad Rendy Saputra","jk":"L","pdpd":false},{"nama":"Muhammad Rizky Ramadhan","jk":"L","pdpd":false},{"nama":"Muhammad Rosyidi","jk":"L","pdpd":false},{"nama":"Muhammad Zikri Akbar","jk":"L","pdpd":false},{"nama":"Nabila Putri","jk":"P","pdpd":false},{"nama":"Noor Ahda","jk":"P","pdpd":true},{"nama":"Nor Haliza Aprilia","jk":"P","pdpd":false},{"nama":"Nur Hidayah","jk":"P","pdpd":false},{"nama":"Olivia Damayanti","jk":"P","pdpd":false},{"nama":"Paril","jk":"L","pdpd":false},{"nama":"Rafi Audinnor","jk":"L","pdpd":false},{"nama":"Rahma Febrina","jk":"P","pdpd":false},{"nama":"Riski Amelia","jk":"P","pdpd":false},{"nama":"Saidi","jk":"L","pdpd":false},{"nama":"Saskia Ramadhani","jk":"P","pdpd":false},{"nama":"Siti Jamilah","jk":"P","pdpd":false},{"nama":"Ulfah Mahmudah","jk":"P","pdpd":false},{"nama":"Yasmin Oktaviani","jk":"P","pdpd":false}],"XII 7":[{"nama":"Adrian","jk":"L","pdpd":false},{"nama":"Ahmad Ilham","jk":"L","pdpd":false},{"nama":"Ainun Salsabila","jk":"P","pdpd":false},{"nama":"Aldy Al Ramadhan","jk":"L","pdpd":false},{"nama":"Aulia Rahim","jk":"L","pdpd":false},{"nama":"Desti Dwi Sandra","jk":"P","pdpd":false},{"nama":"Dimas Ramadhan","jk":"L","pdpd":true},{"nama":"Febrina Salsabila","jk":"P","pdpd":false},{"nama":"Husnah","jk":"P","pdpd":false},{"nama":"Khumaira Nashibah","jk":"P","pdpd":false},{"nama":"Lukman Hakim","jk":"L","pdpd":false},{"nama":"M. Nazriel Ilham","jk":"L","pdpd":false},{"nama":"Mudzalifah","jk":"P","pdpd":false},{"nama":"Muhammad Adly Ridwan","jk":"L","pdpd":false},{"nama":"Muhammad Fahriji","jk":"L","pdpd":false},{"nama":"Muhammad Mandala","jk":"L","pdpd":false},{"nama":"Muhammad Rafi'i","jk":"L","pdpd":false},{"nama":"Muhammad Ridho Ramadhan","jk":"L","pdpd":false},{"nama":"Muhammad Tio Pratama","jk":"L","pdpd":false},{"nama":"Nabil Aqmal Andeano","jk":"L","pdpd":false},{"nama":"Nadia Rusmawati","jk":"P","pdpd":false},{"nama":"Noor Anjelli Urbaningrum","jk":"P","pdpd":false},{"nama":"Nor Laila Arifah","jk":"P","pdpd":false},{"nama":"Nur Hidayah","jk":"P","pdpd":false},{"nama":"Pitria Nabila Zahwa","jk":"P","pdpd":false},{"nama":"Raida Putri","jk":"P","pdpd":false},{"nama":"Raihan","jk":"L","pdpd":false},{"nama":"Rizka Ayu Kartini","jk":"P","pdpd":false},{"nama":"Saufi Ishaq","jk":"L","pdpd":false},{"nama":"Sayyidatina Khadijah","jk":"P","pdpd":false},{"nama":"Sinta Yolanda","jk":"P","pdpd":false},{"nama":"Sri Andini","jk":"P","pdpd":false},{"nama":"Tomi Puji Wijinarko","jk":"L","pdpd":false},{"nama":"Zan Zamila","jk":"L","pdpd":false}],"XII 8":[{"nama":"Afril Nabilah","jk":"P","pdpd":false},{"nama":"Ahmad Luthfi","jk":"L","pdpd":false},{"nama":"Alif Rizqi Ramadhan","jk":"L","pdpd":false},{"nama":"Amelia","jk":"P","pdpd":false},{"nama":"Aulya Rahman","jk":"L","pdpd":false},{"nama":"Dea Amelia","jk":"P","pdpd":false},{"nama":"Devi Nabila","jk":"P","pdpd":false},{"nama":"Fathur Rahman Sidik","jk":"L","pdpd":false},{"nama":"Ghina Fitriyani","jk":"P","pdpd":false},{"nama":"Kirani Aulia Zahra","jk":"P","pdpd":false},{"nama":"M. Adli","jk":"L","pdpd":false},{"nama":"M. Sirul Akhwan","jk":"L","pdpd":false},{"nama":"Muhammad Akmal","jk":"L","pdpd":false},{"nama":"Muhammad Ihsan","jk":"L","pdpd":false},{"nama":"Muhammad Nabil","jk":"L","pdpd":false},{"nama":"Muhammad Rafli","jk":"L","pdpd":false},{"nama":"Muhammad Rifa Alfani","jk":"L","pdpd":false},{"nama":"Muhammad Yoga","jk":"L","pdpd":false},{"nama":"Muthia Az Zahra","jk":"P","pdpd":false},{"nama":"Nayla Assyfa","jk":"P","pdpd":false},{"nama":"Nur Aina","jk":"P","pdpd":false},{"nama":"Nur Salsabila","jk":"P","pdpd":false},{"nama":"Puteri","jk":"P","pdpd":false},{"nama":"Raissa Saputri","jk":"P","pdpd":false},{"nama":"Rehan","jk":"L","pdpd":false},{"nama":"Rizka Safitri","jk":"P","pdpd":false},{"nama":"Sayid M. Zein Baihaki","jk":"L","pdpd":false},{"nama":"Selvi","jk":"P","pdpd":false},{"nama":"Siti Aminah","jk":"P","pdpd":false},{"nama":"Syaidillah","jk":"L","pdpd":false},{"nama":"Syifa Aulia Safitri","jk":"P","pdpd":false},{"nama":"Yafi Rachman","jk":"L","pdpd":false}],"XII 9":[{"nama":"Ahmad Fauzi","jk":"L","pdpd":true},{"nama":"Ahmad Rayhan","jk":"L","pdpd":false},{"nama":"Ala Rahmi","jk":"P","pdpd":false},{"nama":"Alvin Rajendra","jk":"L","pdpd":false},{"nama":"Ayu Salsabila","jk":"P","pdpd":false},{"nama":"Bagaskara Adjie Prastya","jk":"L","pdpd":false},{"nama":"Dina Saskia Azzahra","jk":"P","pdpd":false},{"nama":"Ghina Nor Azkia","jk":"P","pdpd":false},{"nama":"Hafizh Maulana","jk":"L","pdpd":false},{"nama":"Irda Khairiani","jk":"P","pdpd":false},{"nama":"Juwita","jk":"P","pdpd":false},{"nama":"Laila Navila","jk":"P","pdpd":false},{"nama":"M. Azriel Al Rivansa","jk":"L","pdpd":false},{"nama":"Mapdur Rijal","jk":"L","pdpd":false},{"nama":"Muhammad Aldiansyah","jk":"L","pdpd":false},{"nama":"Muhammad Iqbal","jk":"L","pdpd":false},{"nama":"Muhammad Naqli","jk":"L","pdpd":false},{"nama":"Muhammad Ramadhan","jk":"L","pdpd":false},{"nama":"Muhammad Riyadi","jk":"L","pdpd":false},{"nama":"Muhammad Yusuf","jk":"L","pdpd":false},{"nama":"Mutiara","jk":"P","pdpd":true},{"nama":"Nazwa Maulida","jk":"P","pdpd":false},{"nama":"Noor Layla","jk":"P","pdpd":false},{"nama":"Noor Maulida","jk":"P","pdpd":false},{"nama":"Nur Azkia","jk":"P","pdpd":false},{"nama":"Nur Syifa","jk":"P","pdpd":false},{"nama":"Pasha Ramadhan","jk":"L","pdpd":false},{"nama":"Putri Yani","jk":"P","pdpd":false},{"nama":"Ratih Mila Agustin","jk":"P","pdpd":false},{"nama":"Rifandi","jk":"L","pdpd":false},{"nama":"Sabrina Junita Putri","jk":"P","pdpd":false},{"nama":"Sheza Billa Rijal","jk":"P","pdpd":false},{"nama":"Siti Fatimah","jk":"P","pdpd":false},{"nama":"Sugi Aulia Sahbana","jk":"L","pdpd":false}]};
+  var KELAS_LIST = ["XII-1", "XII-2", "XII-3", "XII-4", "XII-5", "XII-6", "XII-7", "XII-8", "XII-9"];
+
+  var JSONP_BASE = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
+    "/gviz/tq?tqx=out%3Ajson%3BresponseHandler%3A";
+  var CSV_URL = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
+    "/gviz/tq?tqx=out:csv&sheet=" + encodeURIComponent(SHEET_NAME) + "&headers=1";
+
+  /* ---------- State ---------- */
+  var allRows = [];            /* semua baris Rekap, terbaru dulu */
+  var seenKeys = {};           /* snapshot kunci unik baris yang sudah terlihat */
+  var notifHistory = [];       /* kartu notifikasi, terbaru dulu, maks MAX_NOTIF */
+  var jsonpSeq = 0;
+  var firstLoad = true;
+
+  /* ---------- Elemen ---------- */
+  var el = {
+    lastUpdated: document.getElementById("lastUpdated"),
+    connState: document.getElementById("connState"),
+    countPai: document.getElementById("countPai"),
+    avgPai: document.getElementById("avgPai"),
+    totalAttempts: document.getElementById("totalAttempts"),
+    totalUnique: document.getElementById("totalUnique"),
+    progressList: document.getElementById("progressList"),
+    progressTotal: document.getElementById("progressTotal"),
+    notifList: document.getElementById("notifList"),
+    resultBody: document.getElementById("resultBody"),
+    resultCount: document.getElementById("resultCount")
+  };
+
+  var fmtJam = new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Makassar", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+  });
+  var fmtTanggal = new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Makassar", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", hour12: false
+  });
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /* Sel gviz: bila objek tanggal (ada field f), pakai f; bila teks, tampilkan apa adanya. */
+  function strCell(cell) {
+    if (!cell || cell.v === null || cell.v === undefined) return "";
+    if (cell.f !== null && cell.f !== undefined && cell.f !== "") return String(cell.f);
+    return String(cell.v);
+  }
+  function numCell(cell) {
+    if (!cell || typeof cell.v !== "number") return null;
+    return cell.v;
+  }
+
+  /* Sel waktu: bila objek tanggal gviz (v berupa "Date(...)"), pakai v
+     (UTC mentah); bila teks biasa, pakai f/teks apa adanya. */
+  function waktuCell(cell) {
+    if (!cell || cell.v === null || cell.v === undefined) return "";
+    if (typeof cell.v === "string" && cell.v.indexOf("Date(") === 0) return cell.v;
+    return strCell(cell);
+  }
+  function toScore(txt) {
+    var n = parseFloat(String(txt == null ? "" : txt).replace(",", "."));
+    return isNaN(n) ? null : n;
+  }
+
+  /* Waktu tampil: hari/bulan + jam (WITA). Timestamp di Sheet ditulis
+     Apps Script dalam UTC, jadi SEMUA bentuk waktu di sini dibaca
+     sebagai UTC lalu diformat ke Asia/Makassar. */
+  function formatWaktu(raw) {
+    var s = String(raw == null ? "" : raw).trim();
+    if (!s) return "—";
+    /* Format gviz "Date(2026,10,16,9,5,0)" — bulan 0-based, nilai UTC. */
+    var m = s.match(/Date\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+),\s*(\d+)(?:,\s*(\d+))?)?\)/);
+    if (m) {
+      var d = new Date(Date.UTC(+m[1], +m[2], +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0)));
+      return fmtTanggal.format(d) + " WITA";
+    }
+    /* Format CSV/gviz "11/15/2026 23:00:57" — juga UTC. */
+    var m2 = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?/);
+    if (m2) {
+      var d2 = new Date(Date.UTC(+m2[3], +m2[1] - 1, +m2[2], +m2[4], +m2[5], +(m2[6] || 0)));
+      return fmtTanggal.format(d2) + " WITA";
+    }
+    var d3 = new Date(s);
+    if (!isNaN(d3.getTime())) return fmtTanggal.format(d3) + " WITA";
+    return s;
+  }
+
+  /* Kunci unik baris baru: Timestamp + Nama + Mapel. */
+  function rowKey(r) {
+    return (r.waktuRaw || "") + "|" + (r.nama || "") + "|" + (r.mapel || "");
+  }
+
+  /* Tier ucapan sesuai nilai — teks persis sesuai spesifikasi. */
+  function tierOf(skor) {
+    if (skor === null || skor === undefined) return { cls: "tier-low", msg: "Terus semangat! 💪" };
+    if (skor >= 90) return { cls: "tier-90", msg: "Luar biasa! 🎉" };
+    if (skor >= 75) return { cls: "tier-75", msg: "Bagus sekali! 👏" };
+    if (skor >= 60) return { cls: "tier-60", msg: "Terus semangat! 💪" };
+    return { cls: "tier-low", msg: "Jangan menyerah! 📖" };
+  }
+
+  /* ---------- Suara (WebAudio, tanpa berkas) ----------
+     Ding lembut tiap ada kiriman baru (bukan saat pertama dibuka).
+     Tombol speaker di header; pilihan tersimpan di localStorage. */
+  var ctxAudioDash = null;
+  var KUNCI_SUARA_DASH = "praujian-dashboard-suara";
+  function suaraDashHidup() {
+    try { return localStorage.getItem(KUNCI_SUARA_DASH) !== "mati"; } catch (e) { return true; }
+  }
+  function audioCtxDash() {
+    if (!ctxAudioDash) {
+      try { ctxAudioDash = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch (e) { return null; }
+    }
+    if (ctxAudioDash.state === "suspended") { ctxAudioDash.resume(); }
+    return ctxAudioDash;
+  }
+  function nadaDash(freq, mulai, dur, vol, paksa) {
+    if (!paksa && !suaraDashHidup()) return;
+    var ctx = audioCtxDash();
+    if (!ctx) return;
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = "triangle";
+    o.frequency.value = freq;
+    var t = ctx.currentTime + mulai;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol || 0.1, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start(t);
+    o.stop(t + dur + 0.05);
+  }
+  function bunyiDing(paksa) {
+    nadaDash(880, 0, 0.25, 0.1, paksa);
+    nadaDash(1318.5, 0.12, 0.3, 0.09, paksa);
+  }
+  function perbaruiTombolSuaraDash() {
+    var b = document.getElementById("btn-suara-dash");
+    if (!b) return;
+    var hidup = suaraDashHidup();
+    b.textContent = (hidup ? "🔊" : "🔇") + " Suara: " + (hidup ? "Hidup" : "Mati");
+    b.classList.toggle("mati", !hidup);
+    b.setAttribute("aria-pressed", hidup ? "true" : "false");
+  }
+
+  /* Buka kunci audio saat interaksi pertama (aturan autoplay browser:
+     AudioContext yang dibuat sebelum ketukan pertama tetap "suspended",
+     jadi ding polling bisa diam walau suara hidup). */
+  function bukaKunciAudio() { audioCtxDash(); }
+  ["pointerdown", "keydown"].forEach(function (ev) {
+    document.addEventListener(ev, bukaKunciAudio, { once: true });
+  });
+
+  /* ---------- Musik latar (mp3 yang sama dengan LKPD supervisi) ----------
+     Mulai pas interaksi pertama (aturan autoplay); tombol Musik di header;
+     pilihan tersimpan di localStorage; volume 0.4. */
+  var KUNCI_MUSIK_DASH = "praujian-dashboard-musik";
+  var musikDashDimulai = false; /* true sesudah play() pertama berhasil */
+  function musikDashHidup() {
+    try { return localStorage.getItem(KUNCI_MUSIK_DASH) !== "mati"; } catch (e) { return true; }
+  }
+  /* Coba nyalakan musik: dipanggil pas halaman dibuka (autoplay bila browser
+     mengizinkan) dan diulang tiap ketukan sampai benar-benar bunyi. */
+  function cobaPutarMusikDash() {
+    var a = document.getElementById("musik-latar-dash");
+    if (!a || !musikDashHidup() || !a.paused) return;
+    a.volume = 0.4;
+    var p = a.play();
+    if (p && p.then) { p.then(function () { musikDashDimulai = true; }, function () {}); }
+    else { musikDashDimulai = true; }
+  }
+  function putarMusikDash() {
+    var a = document.getElementById("musik-latar-dash");
+    if (!a) return;
+    a.volume = 0.4;
+    if (musikDashHidup()) { cobaPutarMusikDash(); } else { a.pause(); }
+  }
+  function perbaruiTombolMusikDash() {
+    var b = document.getElementById("btn-musik-dash");
+    if (!b) return;
+    var hidup = musikDashHidup();
+    b.textContent = "🎵 Musik: " + (hidup ? "Hidup" : "Mati");
+    b.classList.toggle("mati", !hidup);
+    b.setAttribute("aria-pressed", hidup ? "true" : "false");
+  }
+
+  /* ---------- Notifikasi live ---------- */
+  function pushNotif(r) {
+    var t = tierOf(r.skor);
+    var card = {
+      key: rowKey(r),
+      tierCls: t.cls,
+      msg: t.msg,
+      nama: r.nama,
+      kelas: r.kelas,
+      mapel: r.mapel,
+      skor: r.skor,
+      waktu: formatWaktu(r.waktuRaw)
+    };
+    notifHistory.unshift(card);
+    if (notifHistory.length > MAX_NOTIF) notifHistory.length = MAX_NOTIF;
+    renderNotifs();
+  }
+
+  function renderNotifs() {
+    if (!notifHistory.length) {
+      el.notifList.innerHTML = '<div class="empty-note">Belum ada siswa yang mengerjakan.</div>';
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < notifHistory.length; i++) {
+      var n = notifHistory[i];
+      html += '<article class="notif-card ' + esc(n.tierCls) + '">' +
+        '<div class="msg">' + esc(n.msg) + '</div>' +
+        '<div class="meta"><b>' + esc(n.nama) + '</b> · ' + esc(n.kelas) + ' · ' + esc(n.mapel) + '</div>' +
+        '<div class="skor">Nilai: ' + (n.skor === null ? "—" : esc(n.skor)) + '</div>' +
+        '<div class="waktu">Selesai: ' + esc(n.waktu) + '</div>' +
+        '</article>';
+    }
+    el.notifList.innerHTML = html;
+  }
+
+  /* Deteksi baris baru vs snapshot sebelumnya; baris baru -> kartu notifikasi. */
+  function detectNewRows(rows) {
+    if (firstLoad) {
+      /* Polling pertama: jadikan snapshot awal, TAPI isi juga kartu
+         notifikasi dari pengerjaan terbaru — supaya guru yang baru
+         membuka dashboard tetap melihat siapa saja yang sudah selesai,
+         bukan hanya yang selesai sesudah dashboard dibuka. */
+      for (var i = 0; i < rows.length; i++) seenKeys[rowKey(rows[i])] = true;
+      firstLoad = false;
+      var n = Math.min(rows.length, MAX_NOTIF);
+      for (var k = n - 1; k >= 0; k--) pushNotif(rows[k]);
+      return;
+    }
+    var fresh = [];
+    for (var j = 0; j < rows.length; j++) {
+      var k = rowKey(rows[j]);
+      if (!seenKeys[k]) { seenKeys[k] = true; fresh.push(rows[j]); }
+    }
+    /* Notifikasi diurutkan: yang paling baru (paling atas di Sheet) tampil paling atas. */
+    for (var m = fresh.length - 1; m >= 0; m--) pushNotif(fresh[m]);
+    if (fresh.length) bunyiDing();
+  }
+
+  /* ---------- Ringkasan + progres ---------- */
+  /* ---------- Detail per kelas: siapa sudah/belum per mapel ---------- */
+  var detailTerbuka = {}; /* kelas -> true bila panel detailnya dibuka */
+
+  /* Status tiap siswa di satu kelas: {nama, pai: skor|true|null}.
+     pai = skor (angka) bila tercatat, true bila sudah kumpul tapi skor
+     tidak kebaca, null bila belum mengerjakan PAI. */
+  function statusKelas(kelas, rows) {
+    var daftar = SISWA[kelas.replace("XII-", "XII ")] || [];
+    var ada = {};
+    rows.forEach(function (r) {
+      if (r.kelas !== kelas) return;
+      var m = (r.mapel || "").toUpperCase();
+      if (m !== "PAI") return;
+      var k = (r.nama || "").toLowerCase();
+      if (!ada[k]) ada[k] = {};
+      ada[k][m] = (typeof r.skor === "number") ? r.skor : true;
+    });
+    var out = daftar.map(function (s) {
+      var st = ada[(s.nama || "").toLowerCase()] || {};
+      return { nama: s.nama, pai: ("PAI" in st) ? st.PAI : null };
+    });
+    out.sort(function (a, b) {
+      var x = (a.nama || "").toLowerCase(), y = (b.nama || "").toLowerCase();
+      return x < y ? -1 : (x > y ? 1 : 0);
+    });
+    return out;
+  }
+
+  function selStatus(v) {
+    if (v === null) return '<span class="st-no">— belum</span>';
+    if (v === true) return '<span class="st-ok">✓</span>';
+    return '<span class="st-ok">✓ ' + esc(v) + '</span>';
+  }
+
+  function htmlDetailKelas(kelas, rows) {
+    var st = statusKelas(kelas, rows);
+    var nPai = 0, nNol = 0;
+    st.forEach(function (s) {
+      if (s.pai !== null) nPai++;
+      if (s.pai === null) nNol++;
+    });
+    var total = st.length;
+    var h = '<div class="ringkas">PAI: ' + nPai + '/' + total + ' sudah &middot; Belum: ' + nNol + '</div>' +
+      '<table><thead><tr><th>Nama</th><th>PAI</th></tr></thead><tbody>';
+    st.forEach(function (s) {
+      h += '<tr><td>' + esc(s.nama) + '</td><td>' + selStatus(s.pai) + '</td></tr>';
+    });
+    return h + '</tbody></table>';
+  }
+
+  function renderSummary(rows) {
+    var byMapel = { PAI: { names: {}, sum: 0, n: 0 } };
+    var uniqueAll = {};
+    var perKelas = {};
+    KELAS_LIST.forEach(function (k) { perKelas[k] = {}; });
+
+    rows.forEach(function (r) {
+      var m = (r.mapel || "").toUpperCase();
+      if (m !== "PAI") return;
+      var keyNama = (r.kelas || "") + "|" + (r.nama || "").toLowerCase();
+      byMapel[m].names[keyNama] = true;
+      if (r.skor !== null) { byMapel[m].sum += r.skor; byMapel[m].n++; }
+      uniqueAll[keyNama] = true;
+      if (perKelas[r.kelas]) perKelas[r.kelas][(r.nama || "").toLowerCase()] = true;
+    });
+
+    function countNames(o) { return Object.keys(o).length; }
+    el.countPai.textContent = countNames(byMapel.PAI.names) + " siswa";
+    el.avgPai.textContent = "Rata-rata nilai: " + (byMapel.PAI.n ? (byMapel.PAI.sum / byMapel.PAI.n).toFixed(1) : "—");
+    el.totalAttempts.textContent = String(rows.length);
+    el.totalUnique.textContent = countNames(uniqueAll) + " siswa unik sudah mengerjakan (dari " + TOTAL_SISWA + " siswa)";
+
+    var html = "";
+    var doneAll = 0;
+    KELAS_LIST.forEach(function (k) {
+      var done = countNames(perKelas[k]);
+      var total = KELAS_TOTAL[k];
+      doneAll += done;
+      var pct = total ? Math.round(done / total * 100) : 0;
+      var buka = !!detailTerbuka[k];
+      html += '<div class="progress-item">' +
+        '<div class="progress-row" data-kelas="' + esc(k) + '" role="button" tabindex="0" aria-expanded="' + (buka ? "true" : "false") + '" title="Ketuk untuk lihat detail siapa sudah/belum">' +
+        '<span class="kelas">' + esc(k) + '</span>' +
+        '<div class="bar"><span style="width:' + pct + '%"></span></div>' +
+        '<span class="angka">' + done + ' / ' + total + ' siswa · ' + pct + '%' +
+        '<span class="panah">' + (buka ? "▴" : "▾") + '</span></span>' +
+        '</div>' +
+        '<div class="detail-kelas" id="detail-' + esc(k) + '"' + (buka ? "" : " hidden") + '>' +
+        (buka ? htmlDetailKelas(k, rows) : "") + '</div>' +
+        '</div>';
+    });
+    el.progressList.innerHTML = html;
+    el.progressTotal.textContent = "Total: " + doneAll + " / " + TOTAL_SISWA + " siswa sudah mengerjakan PAI (dihitung unik per nama). Total pengerjaan: " + rows.length + ".";
+  }
+
+  /* ---------- Tabel hasil + filter ---------- */
+  /* Grup hasil: kelas -> false bila ditutup; default TERTUTUP (kyk Progres). */
+  var hasilTerbuka = {};
+
+  function renderTable() {
+    var perKelas = {};
+    KELAS_LIST.forEach(function (k) { perKelas[k] = []; });
+    allRows.forEach(function (r) { if (perKelas[r.kelas]) perKelas[r.kelas].push(r); });
+    var html = "";
+    KELAS_LIST.forEach(function (k) {
+      var grup = perKelas[k];
+      var buka = hasilTerbuka[k] === undefined ? false : !!hasilTerbuka[k];
+      var sum = 0, n = 0, unik = {};
+      grup.forEach(function (r) {
+        if (r.skor !== null) { sum += r.skor; n++; }
+        if (r.nama) unik[r.nama] = true;
+      });
+      var rata = n ? (sum / n).toFixed(1) : "—";
+      var totalKelas = (SISWA[k] || []).length;
+      var mUnik = Object.keys(unik).length;
+      var pct = totalKelas ? Math.round(mUnik / totalKelas * 100) : 0;
+      html += '<div class="hasil-kelas">' +
+        '<div class="progress-row hasil-bar" data-kelas="' + esc(k) + '" role="button" tabindex="0" aria-expanded="' + (buka ? "true" : "false") + '" title="Ketuk untuk buka/tutup hasil kelas ini">' +
+        '<span class="kelas">' + esc(k) + '</span>' +
+        '<span class="bar"><i style="width:' + pct + '%"></i></span>' +
+        '<span class="angka">' + grup.length + ' pengerjaan &middot; rata-rata ' + rata + ' <span class="panah">' + (buka ? "▴" : "▾") + '</span></span>' +
+        '<button type="button" class="btn-pdf-kelas" data-pdf-kelas="' + esc(k) + '" title="Unduh hasil kelas ' + esc(k) + ' sebagai PDF">📄 PDF</button>' +
+        '</div>';
+      if (buka) {
+        if (!grup.length) {
+          html += '<div class="empty-note">Belum ada siswa kelas ini yang mengerjakan.</div>';
+        } else {
+          var perSiswa = {};
+          grup.forEach(function (r) {
+            if (!perSiswa[r.nama]) perSiswa[r.nama] = { pai: null, paiPindah: 0 };
+            perSiswa[r.nama].pai = r.skor; perSiswa[r.nama].paiPindah = r.pindah || 0;
+          });
+          function selSkor(nilai, pindah) {
+            if (nilai === null) return "—";
+            var t = esc(nilai);
+            if (pindah > 0) t += ' <span class="tanda-pindah" title="Pindah layar ' + pindah + 'x">⚠️' + pindah + '</span>';
+            return t;
+          }
+          var nama2 = Object.keys(perSiswa).sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase(), "id"); });
+          html += '<div class="table-wrap"><table><thead><tr><th>Nama</th><th>PAI</th></tr></thead><tbody>';
+          nama2.forEach(function (nm) {
+            var s = perSiswa[nm];
+            html += "<tr><td>" + esc(nm) + "</td>" +
+              '<td class="skor-cell">' + selSkor(s.pai, s.paiPindah) + "</td></tr>";
+          });
+          html += '</tbody></table></div>';
+        }
+      }
+      html += '</div>';
+    });
+    el.resultBody.innerHTML = html;
+    var adaPindah = allRows.some(function (r) { return (r.pindah || 0) > 0; });
+    el.resultCount.textContent = "Total " + allRows.length + " pengerjaan." +
+      (adaPindah ? " ⚠️ = pindah layar (angka = berapa kali)." : "");
+  }
+
+  /* ---------- Unduh PDF hasil per kelas (permintaan Pak Rufiat, 17 Nov) ---------- */
+  /* Data laporan: SEMUA siswa roster kelas itu (urut roster), skor PAI
+     dari allRows; nama kiriman yang tidak ada di roster ditambah di akhir. */
+  function dataLaporanKelas(kelas) {
+    var kunciRoster = kelas.replace("XII-", "XII ");
+    var roster = SISWA[kunciRoster] || [];
+    var perNama = {};
+    allRows.forEach(function (r) {
+      if (r.kelas !== kelas) return;
+      var s = perNama[r.nama];
+      if (!s) s = perNama[r.nama] = { pai: null, pindah: 0 };
+      s.pai = r.skor; s.pindah += (r.pindah || 0);
+    });
+    var baris = [];
+    var diRoster = {};
+    roster.forEach(function (sw) {
+      diRoster[sw.nama] = true;
+      var s = perNama[sw.nama] || { pai: null, pindah: 0 };
+      baris.push({ nama: sw.nama, pai: s.pai, pindah: s.pindah });
+    });
+    Object.keys(perNama).sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase(), "id"); }).forEach(function (nm) {
+      if (!diRoster[nm]) { var s = perNama[nm]; baris.push({ nama: nm, pai: s.pai, pindah: s.pindah }); }
+    });
+    var sudah = 0, jPai = 0, tPai = 0;
+    baris.forEach(function (b) {
+      if (b.pai !== null) sudah++;
+      if (b.pai !== null) { jPai++; tPai += b.pai; }
+    });
+    return {
+      kelas: kelas,
+      tanggal: new Date(),
+      total: roster.length,
+      sudah: sudah,
+      rataPai: jPai ? (tPai / jPai).toFixed(1) : "—",
+      baris: baris
+    };
+  }
+  function tanggalId(d) {
+    try { return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "long", year: "numeric" }).format(d); }
+    catch (e) { return d.toLocaleDateString("id-ID"); }
+  }
+  /* Jalur utama: jsPDF (CDN). Bila pustaka tidak termuat, jatuh ke jendela cetak. */
+  function unduhPdfKelas(kelas) {
+    var lap = dataLaporanKelas(kelas);
+    if (window.jspdf && window.jspdf.jsPDF) {
+      try { tulisPdfKelas(lap); return; } catch (e) {}
+    }
+    cetakLaporanKelas(lap);
+  }
+  function tulisPdfKelas(lap) {
+    var doc = new window.jspdf.jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
+    var M = 14, LEBAR = 182, y = 16;
+    var xNo = M, xNama = M + 10, xPai = M + 132, xPindah = M + 162;
+    function kepalaHalaman() {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(14);
+      doc.text("SMAN 4 BANJARMASIN", M, y); y += 7;
+      doc.setFontSize(12);
+      doc.text("Hasil Pra Ujian PAS \u2014 Kelas " + lap.kelas, M, y); y += 6;
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+      doc.text("Penilaian Akhir Semester \u2022 " + tanggalId(lap.tanggal), M, y); y += 3;
+      doc.setLineWidth(0.5); doc.line(M, y, M + LEBAR, y); y += 6;
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+      doc.text("Sudah mengerjakan: " + lap.sudah + " dari " + lap.total + " siswa  \u2022  Rata-rata PAI: " + lap.rataPai, M, y); y += 8;
+      doc.setFillColor(20, 83, 45); doc.rect(M, y - 5, LEBAR, 7, "F");
+      doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
+      doc.text("No", xNo + 2, y); doc.text("Nama", xNama + 2, y);
+      doc.text("PAI", xPai + 2, y); doc.text("Pindah", xPindah + 2, y);
+      doc.setTextColor(0, 0, 0); doc.setFont("helvetica", "normal"); y += 2;
+    }
+    kepalaHalaman();
+    lap.baris.forEach(function (b, i) {
+      if (y > 272) { doc.addPage(); y = 16; kepalaHalaman(); }
+      if (i % 2 === 1) { doc.setFillColor(243, 244, 246); doc.rect(M, y - 5, LEBAR, 7, "F"); }
+      doc.setFontSize(10);
+      doc.text(String(i + 1), xNo + 2, y);
+      doc.text(b.nama, xNama + 2, y);
+      doc.text(b.pai === null ? "\u2014" : String(b.pai), xPai + 2, y);
+      doc.text(b.pindah > 0 ? (b.pindah + "x") : "\u2014", xPindah + 2, y);
+      y += 7;
+    });
+    y += 4;
+    doc.setFontSize(9); doc.setTextColor(107, 114, 128);
+    doc.text("Dicetak dari Dashboard Pra Ujian PAS XII", M, y);
+    doc.save("Hasil-Pra-Ujian-PAS-" + lap.kelas + ".pdf");
+  }
+  /* Fallback: jendela cetak (pengguna pilih "Save as PDF" di dialog cetak). */
+  function cetakLaporanKelas(lap) {
+    var html = "<!doctype html><html lang=\"id\"><head><meta charset=\"utf-8\"><title>Hasil Pra Ujian PAS \u2014 Kelas " + esc(lap.kelas) + "</title><style>" +
+      "body{font-family:Arial,sans-serif;margin:24px;color:#111}h1{font-size:18px;margin:0}h2{font-size:15px;margin:4px 0 2px}p{font-size:13px;margin:2px 0 12px}" +
+      "table{width:100%;border-collapse:collapse;font-size:13px}th{background:#14532D;color:#fff;text-align:left;padding:6px 8px}td{padding:6px 8px;border-bottom:1px solid #ddd}tr:nth-child(even) td{background:#F3F4F6}" +
+      "</style></head><body>" +
+      "<h1>SMAN 4 BANJARMASIN</h1><h2>Hasil Pra Ujian PAS \u2014 Kelas " + esc(lap.kelas) + "</h2>" +
+      "<p>Penilaian Akhir Semester \u2022 " + esc(tanggalId(lap.tanggal)) + "<br>Sudah mengerjakan: " + lap.sudah + " dari " + lap.total + " siswa \u2022 Rata-rata PAI: " + lap.rataPai + "</p>" +
+      "<table><thead><tr><th>No</th><th>Nama</th><th>PAI</th><th>Pindah</th></tr></thead><tbody>";
+    lap.baris.forEach(function (b, i) {
+      html += "<tr><td>" + (i + 1) + "</td><td>" + esc(b.nama) + "</td><td>" + (b.pai === null ? "\u2014" : b.pai) + "</td><td>" + (b.pindah > 0 ? (b.pindah + "x") : "\u2014") + "</td></tr>";
+    });
+    html += "</tbody></table><p>Dicetak dari Dashboard Pra Ujian PAS XII</p></body></html>";
+    var w = null;
+    try { w = window.open("", "_blank"); } catch (e) { w = null; }
+    if (!w) { alert("Pop-up diblokir \u2014 izinkan pop-up untuk halaman ini, lalu coba lagi."); return; }
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+    w.print();
+  }
+
+  function renderAll() {
+    renderSummary(allRows);
+    renderTable();
+  }
+
+  function onData(rows) {
+    allRows = rows;
+    detectNewRows(rows);
+    renderAll();
+    el.lastUpdated.textContent = "Terakhir diperbarui: " + fmtJam.format(new Date()).replace(/\./g, ":") + " WITA";
+    el.connState.textContent = rows.length ? ("Terhubung · " + rows.length + " pengerjaan") : "Terhubung · sheet masih kosong";
+    if (!rows.length && !notifHistory.length) renderNotifs();
+  }
+
+  function onError() {
+    el.connState.textContent = "Gagal memuat — mencoba lagi…";
+  }
+
+  /* ---------- Ambil data: JSONP utama, CSV fallback ---------- */
+  function loadViaJsonp(done) {
+    var name = "__rekapCb" + (++jsonpSeq) + "_" + Date.now();
+    var script = document.createElement("script");
+    var finished = false;
+    var timer = setTimeout(function () { finish(false); }, 15000);
+    function finish(ok, rows) {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      try { delete window[name]; } catch (e) { window[name] = undefined; }
+      if (script.parentNode) script.parentNode.removeChild(script);
+      done(ok, rows);
+    }
+    window[name] = function (resp) {
+      try {
+        var table = resp && resp.table;
+        if (!table || !table.rows) { finish(false); return; }
+        var rows = [];
+        for (var i = 0; i < table.rows.length; i++) {
+          var cells = table.rows[i].c || [];
+          var nama = strCell(cells[2]).trim();
+          if (!nama) continue;
+          rows.push({
+            waktuRaw: waktuCell(cells[0]).trim(),
+            kelas: strCell(cells[1]).trim().replace(/^XII\s+/, "XII-"),
+            nama: nama,
+            mapel: strCell(cells[3]).trim(),
+            versi: strCell(cells[4]).trim(),
+            benar: numCell(cells[5]),
+            jumlahSoal: numCell(cells[6]),
+            skor: numCell(cells[7]),
+            jawaban: strCell(cells[8]).trim(),
+            pindah: numCell(cells[9]) || 0
+          });
+        }
+        rows.reverse(); /* terbaru dulu */
+        finish(true, rows);
+      } catch (e) { finish(false); }
+    };
+    script.onerror = function () { finish(false); };
+    script.src = JSONP_BASE + name + "&sheet=" + encodeURIComponent(SHEET_NAME) + "&headers=1&_cb=" + Date.now();
+    document.head.appendChild(script);
+  }
+
+  function parseCSV(text) {
+    var out = [], row = [], cur = "", inQ = false;
+    for (var i = 0; i < text.length; i++) {
+      var ch = text[i];
+      if (inQ) {
+        if (ch === '"') {
+          if (text[i + 1] === '"') { cur += '"'; i++; } else { inQ = false; }
+        } else { cur += ch; }
+      } else if (ch === '"') { inQ = true; }
+      else if (ch === ",") { row.push(cur); cur = ""; }
+      else if (ch === "\n" || ch === "\r") {
+        if (ch === "\r" && text[i + 1] === "\n") i++;
+        row.push(cur); cur = ""; out.push(row); row = [];
+      } else { cur += ch; }
+    }
+    if (cur !== "" || row.length) { row.push(cur); out.push(row); }
+    return out;
+  }
+
+  function loadViaCsv(done) {
+    fetch(CSV_URL + "&_cb=" + Date.now(), { cache: "no-store" })
+      .then(function (res) { if (!res.ok) throw new Error("HTTP " + res.status); return res.text(); })
+      .then(function (text) {
+        var parsed = parseCSV(text);
+        var rows = [];
+        for (var i = 1; i < parsed.length; i++) { /* baris 0 = header */
+          var r = parsed[i];
+          var nama = (r[2] || "").trim();
+          if (!nama) continue;
+          rows.push({
+            waktuRaw: (r[0] || "").trim(),
+            kelas: (r[1] || "").trim().replace(/^XII\s+/, "XII-"),
+            nama: nama,
+            mapel: (r[3] || "").trim(),
+            versi: (r[4] || "").trim(),
+            benar: toScore(r[5]),
+            jumlahSoal: toScore(r[6]),
+            skor: toScore(r[7]),
+            jawaban: (r[8] || "").trim(),
+            pindah: toScore(r[9]) || 0
+          });
+        }
+        rows.reverse(); /* terbaru dulu */
+        done(true, rows);
+      })
+      .catch(function () { done(false); });
+  }
+
+  function load() {
+    loadViaJsonp(function (ok, rows) {
+      if (ok) { onData(rows); return; }
+      loadViaCsv(function (ok2, rows2) {
+        if (ok2) onData(rows2); else onError();
+      });
+    });
+  }
+
+  /* ---------- Tes bunyi: selalu berbunyi (untuk memeriksa suara perangkat) ---------- */
+  var btnTesBunyi = document.getElementById("btn-tes-bunyi");
+  if (btnTesBunyi) {
+    btnTesBunyi.addEventListener("click", function () {
+      audioCtxDash();
+      bunyiDing(true);
+    });
+  }
+
+  /* ---------- Tombol Musik ---------- */
+  perbaruiTombolMusikDash();
+  var btnMusikDash = document.getElementById("btn-musik-dash");
+  if (btnMusikDash) {
+    btnMusikDash.addEventListener("click", function () {
+      var a = document.getElementById("musik-latar-dash");
+      if (musikDashHidup() && !musikDashDimulai && a && a.paused) {
+        /* Ketukan pertama di tombol Musik: musiknya belum pernah bunyi
+           (autoplay) — ketukan ini untuk menyalakan, bukan mematikan. */
+        putarMusikDash();
+        return;
+      }
+      try {
+        localStorage.setItem(KUNCI_MUSIK_DASH, musikDashHidup() ? "mati" : "hidup");
+      } catch (e) {}
+      perbaruiTombolMusikDash();
+      putarMusikDash();
+    });
+  }
+  function awalMusikDash(e) {
+    if (e.target && e.target.closest && e.target.closest("#btn-musik-dash")) return;
+    cobaPutarMusikDash();
+  }
+  document.addEventListener("pointerdown", awalMusikDash);
+  var _audioMusikDash = document.getElementById("musik-latar-dash");
+  if (_audioMusikDash) {
+    _audioMusikDash.addEventListener("playing", function () { document.removeEventListener("pointerdown", awalMusikDash); });
+    _audioMusikDash.addEventListener("canplay", function () { cobaPutarMusikDash(); });
+  }
+  cobaPutarMusikDash(); /* coba langsung pas halaman dibuka */
+
+  /* ---------- Toggle detail per kelas (delegasi: daftar dibangun ulang tiap polling) ---------- */
+  function alihDetailKelas(kelas) {
+    detailTerbuka[kelas] = !detailTerbuka[kelas];
+    renderSummary(allRows);
+  }
+  el.progressList.addEventListener("click", function (e) {
+    var baris = e.target && e.target.closest ? e.target.closest(".progress-row") : null;
+    if (baris && baris.getAttribute("data-kelas")) alihDetailKelas(baris.getAttribute("data-kelas"));
+  });
+  el.progressList.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var baris = e.target && e.target.closest ? e.target.closest(".progress-row") : null;
+    if (baris && baris.getAttribute("data-kelas")) { e.preventDefault(); alihDetailKelas(baris.getAttribute("data-kelas")); }
+  });
+
+  /* ---------- Toggle grup hasil per kelas (delegasi: daftar dibangun ulang tiap polling) ---------- */
+  function alihHasilKelas(kelas) {
+    var sedangBuka = hasilTerbuka[kelas] === undefined ? false : !!hasilTerbuka[kelas];
+    hasilTerbuka[kelas] = !sedangBuka;
+    renderTable();
+  }
+  el.resultBody.addEventListener("click", function (e) {
+    var btnPdf = e.target && e.target.closest ? e.target.closest(".btn-pdf-kelas") : null;
+    if (btnPdf && btnPdf.getAttribute("data-pdf-kelas")) { unduhPdfKelas(btnPdf.getAttribute("data-pdf-kelas")); return; }
+    var baris = e.target && e.target.closest ? e.target.closest(".hasil-bar") : null;
+    if (baris && baris.getAttribute("data-kelas")) alihHasilKelas(baris.getAttribute("data-kelas"));
+  });
+  el.resultBody.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var btnPdf = e.target && e.target.closest ? e.target.closest(".btn-pdf-kelas") : null;
+    if (btnPdf) return;
+    var baris = e.target && e.target.closest ? e.target.closest(".hasil-bar") : null;
+    if (baris && baris.getAttribute("data-kelas")) { e.preventDefault(); alihHasilKelas(baris.getAttribute("data-kelas")); }
+  });
+
+  /* ---------- Toggle suara ---------- */
+  perbaruiTombolSuaraDash();
+  var btnSuaraDash = document.getElementById("btn-suara-dash");
+  if (btnSuaraDash) {
+    btnSuaraDash.addEventListener("click", function () {
+      try {
+        localStorage.setItem(KUNCI_SUARA_DASH, suaraDashHidup() ? "mati" : "hidup");
+      } catch (e) {}
+      perbaruiTombolSuaraDash();
+      if (suaraDashHidup()) bunyiDing();
+    });
+  }
+
+  /* ---------- Start: polling tiap 8 detik ---------- */
+  renderNotifs();
+  renderSummary([]);
+  load();
+  setInterval(load, POLL_MS);
+})();
+</script>
+</body>
+</html>

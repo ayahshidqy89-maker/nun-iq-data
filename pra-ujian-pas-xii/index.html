@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pra Ujian PAS — Kelas XII | SMAN 4 Banjarmasin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--hijau:#14532D;--hijau2:#166534;--hijau-muda:#DCFCE7;--bg:#F0FDF4;--teks:#1F2937;--abu:#6B7280;--garis:#D1D5DB;--kuning:#FEF3C7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--teks);line-height:1.6}
+.wrap{max-width:720px;margin:0 auto;padding:16px 16px 48px}
+header{background:linear-gradient(135deg,#14532D 0%,#166534 60%,#15803D 100%);color:#fff;border-radius:0 0 20px 20px;padding:18px 16px 16px;text-align:center;margin-bottom:16px}
+header h1{font-size:1.45rem;font-weight:800;line-height:1.3}
+header p{opacity:.92;font-size:.95rem;margin-top:6px}
+.tombol-header{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.btn-suara{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:999px;padding:6px 12px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer}
+.btn-suara.mati{opacity:.75}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:16px}
+.langkah{font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--hijau2);margin-bottom:6px}
+.card h2{font-size:1.15rem;margin-bottom:4px}
+.card .ket{color:var(--abu);font-size:.92rem;margin-bottom:14px}
+.mapel-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.mapel{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"ikon nama" "ikon sub";column-gap:12px;align-items:center;text-align:left;border:2px solid var(--garis);border-radius:14px;padding:12px 14px;cursor:pointer;background:#fff;font-family:inherit;transition:.15s}
+.mapel .ikon{grid-area:ikon;font-size:1.7rem;margin-bottom:0}
+.mapel .nama{grid-area:nama;font-weight:700;font-size:1rem}
+.mapel .sub{grid-area:sub;font-size:.83rem;color:var(--abu);margin-top:0}
+.mapel:hover{border-color:var(--hijau2);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.10)}
+.mapel.pilih{border-color:var(--hijau);background:var(--hijau-muda);box-shadow:0 0 0 2px var(--hijau) inset}
+@media(max-width:520px){.mapel{padding:10px;column-gap:8px;row-gap:2px;grid-template-areas:"ikon nama" "sub sub"}.mapel .ikon{font-size:1.4rem}.mapel .nama{font-size:.9rem}.mapel .sub{font-size:.78rem}}
+label.lbl{display:block;font-weight:600;font-size:.92rem;margin:12px 0 6px}
+select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.dd{position:relative}
+.dd-btn{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;border:2px solid var(--garis);border-radius:10px;padding:12px 14px;font-family:inherit;font-size:1rem;font-weight:600;color:var(--teks);cursor:pointer;text-align:left;transition:border-color .15s,box-shadow .15s}
+.dd-btn:hover{border-color:var(--hijau2)}
+.dd-btn:focus-visible{outline:none;border-color:var(--hijau);box-shadow:0 0 0 3px rgba(22,101,52,.18)}
+.dd-btn[aria-expanded="true"]{border-color:var(--hijau);box-shadow:0 0 0 3px rgba(22,101,52,.18)}
+.dd-btn .dd-panah{color:var(--hijau);font-weight:800;transition:transform .15s}
+.dd-btn[aria-expanded="true"] .dd-panah{transform:rotate(180deg)}
+.dd-btn.dd-kosong .dd-label{color:#9CA3AF;font-weight:500}
+.dd-list{position:absolute;left:0;right:0;top:calc(100% + 6px);background:#fff;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.14);max-height:240px;overflow-y:auto;z-index:30;padding:6px}
+.dd-opt{display:block;width:100%;text-align:left;background:none;border:none;border-radius:8px;padding:10px 12px;font-family:inherit;font-size:.95rem;font-weight:600;color:var(--teks);cursor:pointer}
+.dd-opt:hover{background:var(--hijau-muda)}
+.dd-opt[aria-selected="true"]{background:var(--hijau);color:#fff}
+.dd-opt:focus-visible{outline:none;background:var(--hijau-muda)}
+.btn{display:block;width:100%;padding:14px;font-size:1.05rem;font-weight:700;font-family:inherit;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#166534,#14532D);color:#fff;margin-top:18px;box-shadow:0 4px 14px rgba(20,83,45,.30);transition:transform .12s,box-shadow .12s}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 20px rgba(20,83,45,.35)}
+.btn:disabled{background:#9CA3AF;cursor:not-allowed}
+.btn.sekunder{background:#fff;color:var(--hijau);border:2px solid var(--hijau);margin-top:10px}
+.btn.kecil{width:auto;display:inline-block;padding:10px 18px;font-size:.95rem;margin-top:0}
+.progres{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;font-weight:600;font-size:.92rem}
+.bar{height:12px;background:#E5E7EB;border-radius:99px;overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#22C55E,#166534);width:0%;transition:width .4s ease}
+.timer{font-weight:800;color:var(--hijau);background:var(--hijau-muda);border-radius:999px;padding:2px 10px;font-size:.9rem;white-space:nowrap}
+.timer.mepet{color:#fff;background:#B91C1C}
+.timer.jeda{color:#92400E;background:#FEF3C7}
+.peringatan{background:#FEF3C7;border:1px solid #F59E0B;color:#92400E;border-radius:12px;padding:10px 12px;margin:0 0 14px;font-size:.92rem}
+.pindah{text-align:center;color:#92400E;font-weight:700}
+.narasi{background:#F0FDF4;border-right:4px solid var(--hijau2);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:1rem}
+.stem{font-size:1.08rem;font-weight:600;margin-bottom:14px}
+.ar{font-family:'Noto Naskh Arabic',serif;font-size:1.25em;line-height:1.9}
+.gambar-soal{width:100%;max-width:520px;display:block;margin:0 auto 16px;border-radius:12px;border:1px solid #E5E7EB}
+.opsi{display:flex;flex-direction:column;gap:10px}
+.opsi label{display:flex;gap:10px;align-items:flex-start;border:2px solid var(--warna,#D1D5DB);border-radius:14px;padding:12px 14px;cursor:pointer;background:#fff;position:relative;transition:transform .12s,box-shadow .12s,background .12s}
+.opsi label:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.opsi label.pilih{border-color:var(--warna);background:var(--warna);color:#fff;transform:scale(1.02);box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.opsi label.pilih .isi{color:#fff}
+.opsi input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.opsi .huruf{font-weight:800;color:#fff;background:var(--warna,#166534);border-radius:8px;padding:2px 9px;flex:none;line-height:1.5}
+.opsi label.pilih .huruf{background:#fff;color:var(--warna)}
+.opsi .isi{flex:1}
+.nav-soal{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:16px 0}
+@media(max-width:520px){.nav-soal{grid-template-columns:repeat(8,1fr)}}
+.nav-soal button{aspect-ratio:1;border:1.5px solid var(--garis);border-radius:8px;background:#fff;font-family:inherit;font-weight:600;font-size:.85rem;cursor:pointer;color:var(--teks)}
+.nav-soal button.dijawab{background:var(--hijau);border-color:var(--hijau);color:#fff}
+.nav-soal button.aktif{outline:2px solid var(--hijau);outline-offset:1px}
+.nav-bawah{display:flex;gap:10px;justify-content:space-between}
+.nav-bawah .btn{margin-top:0}
+.hasil{text-align:center;padding:12px 4px;position:relative;overflow:hidden}
+.konfeti{position:absolute;top:0;left:0;width:8px;height:14px;border-radius:2px;pointer-events:none;animation:konfeti-jatuh 3s ease-in forwards}
+@keyframes konfeti-jatuh{from{transform:translateY(-20px) rotate(0deg);opacity:1}to{transform:translateY(320px) rotate(540deg);opacity:0}}
+.skor-besar{font-size:4rem;font-weight:800;color:var(--hijau);line-height:1;margin:10px 0 4px;animation:skor-pop .5s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes skor-pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.hasil .benar{font-size:1.05rem;font-weight:600}
+.hasil .pesan{font-size:1.25rem;font-weight:700;margin:14px 0 6px}
+.hasil .catat{color:var(--abu)}
+.konfirm{background:var(--kuning);border:1px solid #FDE68A;border-radius:12px;padding:14px;margin-top:14px}
+.konfirm p{margin-bottom:10px}
+.konfirm .row{display:flex;gap:10px}
+.konfirm .btn{margin-top:0}
+.konfirm .btn.sekunder{margin-top:0}
+.info-identitas{font-size:.9rem;color:var(--abu);margin-bottom:4px}
+.info-identitas b{color:var(--teks)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>Pra Ujian PAS &mdash; Kelas XII</h1>
+  <p>SMAN 4 Banjarmasin &bull; Penilaian Akhir Semester</p>
+  <div class="tombol-header">
+    <button type="button" class="btn-suara" id="btn-suara" aria-pressed="true">&#128266; Suara: Hidup</button>
+    <button type="button" class="btn-suara" id="btn-musik" aria-pressed="true">&#127925; Musik: Hidup</button>
+  </div>
+</header>
+<div class="wrap">
+
+  <!-- LANGKAH 1 + 2 : identitas -->
+  <section class="card" id="layar-identitas">
+    <div class="langkah">Langkah 1 &mdash; Mata Pelajaran</div>
+    <h2>PAI &amp; Budi Pekerti</h2>
+    <p class="ket">Pra ujian ini untuk mata pelajaran PAI &amp; Budi Pekerti — 40 soal pilihan ganda (15 soal bergambar untuk PDPD).</p>
+    <div class="mapel-grid">
+      <button type="button" class="mapel pilih" id="mapel-pai" data-mapel="PAI">
+        <span class="ikon">&#128218;</span>
+        <span class="nama">PAI &amp; Budi Pekerti</span>
+        <span class="sub">40 soal &bull; pilihan ganda</span>
+      </button>
+    </div>
+
+    <div class="langkah" style="margin-top:20px">Langkah 2 &mdash; Pilih Kelas &amp; Nama</div>
+    <label class="lbl" for="dd-kelas-btn">Kelas</label>
+    <div class="dd" id="dd-kelas">
+      <button type="button" class="dd-btn dd-kosong" id="dd-kelas-btn" aria-haspopup="listbox" aria-expanded="false">
+        <span class="dd-label">-- Pilih kelas --</span><span class="dd-panah">&#9662;</span>
+      </button>
+      <div class="dd-list" id="dd-kelas-list" role="listbox" hidden></div>
+    </div>
+    <select id="pilih-kelas" class="dd-asli" aria-hidden="true" tabindex="-1">
+      <option value="">-- Pilih kelas --</option>
+      <option value="XII 1">XII-1</option>
+      <option value="XII 2">XII-2</option>
+      <option value="XII 3">XII-3</option>
+      <option value="XII 4">XII-4</option>
+      <option value="XII 5">XII-5</option>
+      <option value="XII 6">XII-6</option>
+      <option value="XII 7">XII-7</option>
+      <option value="XII 8">XII-8</option>
+      <option value="XII 9">XII-9</option>
+    </select>
+
+    <div id="bungkus-nama" hidden>
+      <label class="lbl" for="dd-nama-btn">Nama</label>
+      <div class="dd" id="dd-nama">
+        <button type="button" class="dd-btn dd-kosong" id="dd-nama-btn" aria-haspopup="listbox" aria-expanded="false">
+          <span class="dd-label">-- Pilih nama --</span><span class="dd-panah">&#9662;</span>
+        </button>
+        <div class="dd-list" id="dd-nama-list" role="listbox" hidden></div>
+      </div>
+      <select id="pilih-nama" class="dd-asli" aria-hidden="true" tabindex="-1">
+        <option value="">-- Pilih nama --</option>
+      </select>
+    </div>
+
+    <button type="button" class="btn" id="btn-mulai" disabled>Mulai Mengerjakan</button>
+    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 1.0 &middot; pra ujian PAS XII</p>
+    <p class="ket" id="info-jadwal" hidden style="text-align:center;margin-top:12px"></p>
+  </section>
+
+  <!-- TERKUNCI (di luar jadwal) -->
+  <section class="card hasil" id="layar-kunci" hidden>
+    <div class="langkah" style="text-align:center">Pra Ujian Terkunci</div>
+    <h2 id="kunci-judul">Belum Waktunya</h2>
+    <p class="info-identitas"><b id="kunci-nama"></b> &bull; <span id="kunci-kelas"></span> &bull; <span id="kunci-mapel"></span></p>
+    <p class="pesan" id="kunci-pesan"></p>
+    <p class="ket" id="kunci-jadwal" style="text-align:center"></p>
+    <button type="button" class="btn sekunder" id="btn-kunci-kembali">Kembali</button>
+  </section>
+
+  <!-- SOAL -->
+  <section id="layar-soal" hidden>
+    <div class="card">
+      <p class="info-identitas"><b id="info-nama"></b> &bull; <span id="info-kelas"></span> &bull; <span id="info-mapel"></span></p>
+      <div class="progres"><span id="progres-teks">Soal 1 dari 40</span><span class="timer" id="timer">⏱ 90:00</span><span id="progres-jawab">0 dijawab</span></div>
+      <div class="bar"><i id="progres-bar"></i></div>
+      <div class="peringatan" id="peringatan-pindah" hidden>⚠️ Kamu pindah layar <b id="pindah-jumlah">0x</b> — tetap di halaman ujian. Setiap pindah tercatat dan terlihat guru.</div>
+      <div id="kotak-soal"></div>
+      <div class="nav-bawah">
+        <button type="button" class="btn sekunder kecil" id="btn-sebelum">&larr; Sebelum</button>
+        <button type="button" class="btn sekunder kecil" id="btn-berikut">Berikut &rarr;</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="langkah">Navigasi Soal</div>
+      <p class="ket">Ketuk nomor untuk lompat ke soal itu. Nomor hijau = sudah dijawab.</p>
+      <div class="nav-soal" id="nav-soal"></div>
+      <button type="button" class="btn" id="btn-kumpul">Kumpulkan Jawaban</button>
+      <div class="konfirm" id="konfirm-kosong" hidden>
+        <p id="konfirm-teks"></p>
+        <div class="row">
+          <button type="button" class="btn kecil" id="btn-lanjut-kumpul">Tetap Kumpulkan</button>
+          <button type="button" class="btn sekunder kecil" id="btn-batal-kumpul">Kembali Mengisi</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HASIL -->
+  <section class="card hasil" id="layar-hasil" hidden>
+    <div class="langkah" style="text-align:center">Hasil Pra Ujian</div>
+    <h2 id="hasil-judul">Skor Kamu</h2>
+    <p class="info-identitas"><b id="hasil-nama"></b> &bull; <span id="hasil-kelas"></span> &bull; <span id="hasil-mapel"></span></p>
+    <div class="skor-besar" id="hasil-skor">0</div>
+    <p class="benar" id="hasil-benar"></p>
+    <p class="pindah" id="hasil-pindah" hidden></p>
+    <p class="pesan" id="hasil-pesan"></p>
+    <p class="catat" id="hasil-catat">Jawabanmu sudah tercatat.</p>
+    <button type="button" class="btn" id="btn-lanjutkan" hidden>📝 Lanjutkan — Isi Soal yang Masih Kosong</button>
+    <button type="button" class="btn sekunder" id="btn-ulang">Kembali ke Beranda</button>
+  </section>
+
+</div>
+<audio id="musik-latar" src="https://assets.mixkit.co/music/973/973.mp3" loop preload="auto" autoplay></audio>
+<script>
+
+var WEBGAS_URL = "https://script.google.com/macros/s/AKfycbygdCEBc-DD5r50z8u0QaeO5HxZqvOMnB4iBf1Dxj4zvWHwtnZMbqI3st0KnSsb6ds-/exec";
+var SHEET_ID = "10zwKEuR7g6jnS5dsd-imr1F5obQS7rIvUScYdEI_a7g";
+var SOAL_PAI = [{"no":1,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Di SMA Negeri 4 Banjarmasin, pemilihan ketua OSIS diikuti tiga calon dari latar belakang agama yang berbeda: Ahmad (Islam), Maria (Katolik), dan Made (Hindu). Ketiganya menyampaikan visi-misi di depan seluruh siswa. Sebagian siswa awalnya ragu memilih calon yang berbeda agama dengan mereka. Namun setelah mendengar gagasan masing-masing, mayoritas siswa akhirnya memilih berdasarkan kemampuan memimpin, kejujuran, dan kepedulian calon terhadap sekolah, bukan berdasarkan agamanya. Maria pun terpilih menjadi ketua OSIS dan didukung oleh semua siswa.","stem":"Sikap para siswa dalam cerita tersebut mencerminkan pemahaman moderasi beragama sebagai …","opsi":["Sikap memilih pemimpin hanya berdasarkan kesamaan agama dengan pemilih","Sikap menilai seseorang dari kemampuan, kejujuran, dan akhlaknya tanpa membedakan agama","Sikap menolak pemimpin yang berbeda agama meskipun ia paling mampu memimpin","Sikap tidak ikut memilih karena calon pemimpin berbeda agama dengan pemilih","Sikap memilih pemimpin berdasarkan agama mayoritas di sekolah saja"],"kunci":1},{"no":2,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Sinta, siswi Muslim kelas XII, mendapat undangan dari teman sekelasnya yang beragama Kristen untuk menghadiri perayaan Natal di rumahnya. Sinta datang tepat waktu, memberi ucapan selamat, dan ikut membantu menyajikan makanan untuk para tamu. Namun ketika acara ibadah dimulai, Sinta dengan sopan meminta izin untuk menunggu di ruang tamu dan tidak ikut serta dalam ibadah tersebut. Temannya memahami sikap Sinta dan justru semakin menghormatinya. Hubungan keduanya tetap baik setelah acara itu.","stem":"Tindakan Sinta dalam cerita tersebut yang paling tepat menurut prinsip moderasi beragama adalah …","opsi":["Menolak undangan karena berbeda agama dengan teman sekelasnya","Mengikuti seluruh rangkaian acara termasuk ibadahnya agar tidak menyinggung teman","Tidak datang dan tidak memberi ucapan apa pun kepada temannya","Menghadiri undangan dan memberi ucapan selamat, tetapi tidak mengikuti ibadah agama lain","Datang hanya untuk makan tanpa menyapa dan tanpa memberi ucapan selamat"],"kunci":3},{"no":3,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Allah Swt. berfirman dalam QS al-Hujurat ayat 13 bahwa manusia diciptakan berbangsa-bangsa dan bersuku-suku agar saling mengenal. Di kelas XII, terdapat siswa dari berbagai suku: Banjar, Jawa, Dayak, dan Bugis. Awalnya mereka hanya bergaul dengan teman sesuku. Setelah guru menjelaskan ayat tersebut, mereka mulai membentuk kelompok belajar campuran. Mereka saling mengenal budaya masing-masing, saling membantu saat kesulitan, dan prestasi kelas pun meningkat. Perbedaan suku justru menjadi kekuatan kelas.","stem":"Berdasarkan cerita tersebut, dapat disimpulkan bahwa perbedaan suku dan bangsa akan menjadi kekuatan, bukan pemecah, apabila …","opsi":["Setiap suku hanya bergaul dengan sukunya sendiri agar tidak terjadi konflik","Perbedaan suku dihilangkan dan semua siswa dipaksa memakai satu budaya saja","Perbedaan suku dijadikan ajang untuk saling mengenal, bekerja sama, dan saling membantu","Suku mayoritas mengatur suku minoritas agar kelas menjadi tertib","Perbedaan suku dibiarkan tanpa ada upaya saling mengenal antar siswa"],"kunci":0},{"no":4,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Fajar, siswa kelas XII, sangat rajin beribadah. Ia salat tahajud setiap malam hingga larut, berpuasa sunah hampir setiap hari, dan menghabiskan seluruh waktunya di masjid. Akibatnya, ia sering mengantuk di kelas, nilai pelajarannya menurun, dan ia jarang membantu orang tuanya di rumah. Ketika dinasihati guru, Fajar menjawab bahwa semakin banyak ibadah semakin baik. Guru kemudian menjelaskan bahwa Rasulullah saw. melarang sikap berlebih-lebihan dalam beragama dan mengajarkan keseimbangan antara ibadah, belajar, dan tanggung jawab kepada keluarga.","stem":"Penilaian yang paling tepat terhadap sikap Fajar dalam cerita tersebut adalah …","opsi":["Sikap Fajar sudah benar karena ibadah harus diutamakan di atas segalanya","Sikap Fajar keliru karena ia tidak beribadah di masjid setiap waktu","Sikap Fajar sudah benar karena salat tahajud lebih utama daripada belajar","Sikap Fajar keliru karena ia mengabaikan belajar dan kewajibannya di rumah","Sikap Fajar bertentangan dengan moderasi beragama karena berlebih-lebihan (ghuluw) dan mengabaikan keseimbangan hidup"],"kunci":4},{"no":5,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Dalam satu keluarga di Banjarmasin, ayah mengikuti mazhab Syafi'i sedangkan paman mengikuti mazhab Hanafi. Saat salat berjamaah di rumah, mereka berbeda dalam bacaan qunut: ayah membaca qunut sedangkan paman tidak. Anak-anak mereka yang masih belajar agama sempat bingung dan bertanya mana yang benar. Ayah menjelaskan bahwa kedua mazhab itu sama-sama bersumber dari Al-Qur'an dan hadis, hanya berbeda dalam memahami dalil. Sejak itu, anak-anak tidak lagi memperdebatkan perbedaan tersebut dan tetap salat berjamaah bersama dengan rukun.","stem":"Sikap keluarga dalam cerita tersebut yang mencerminkan moderasi beragama adalah …","opsi":["Memaksakan satu mazhab kepada seluruh anggota keluarga agar seragam","Menganggap mazhab lain sesat dan melarang anggota keluarga mengikutinya","Menghormati perbedaan mazhab yang masih bersumber dari Al-Qur'an dan hadis tanpa saling menyalahkan","Melarang diskusi tentang mazhab agar tidak terjadi perbedaan pendapat","Memisahkan salat berjamaah berdasarkan mazhab masing-masing"],"kunci":2},{"no":6,"kategori":"Moderasi Beragama","level":"MOTS","narasi":"OSIS SMA Negeri 4 Banjarmasin melakukan survei sikap toleransi terhadap 200 siswa kelas XII. Hasil survei menunjukkan: 150 siswa selalu menghormati teman yang berbeda agama, 30 siswa kadang-kadang menghormati, dan 20 siswa tidak menghormati teman yang berbeda agama. Survei ini dilakukan untuk mengukur sejauh mana nilai moderasi beragama sudah diterapkan siswa dalam kehidupan sehari-hari di sekolah.","stem":"Berdasarkan data survei dalam cerita tersebut, persentase siswa yang selalu menghormati teman berbeda agama adalah …","opsi":["10%","75%","15%","65%","85%"],"kunci":1},{"no":7,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Di media sosial, beredar unggahan yang menghina salah satu agama. Unggahan itu dibagikan berulang kali dan memicu perdebatan panas di kolom komentar. Rani, siswi kelas XII, melihat unggahan tersebut. Ia tidak ikut membagikan atau membalas dengan hinaan. Sebaliknya, ia melaporkan unggahan itu melalui fitur laporkan dan mengajak teman-temannya untuk tidak menyebarkan konten yang memicu kebencian. Ia juga menulis status yang mengajak semua pihak menjaga kerukunan. Sikap Rani mendapat apresiasi dari guru dan teman-temannya.","stem":"Tindakan yang paling tepat dilakukan seorang Muslim yang moderat ketika melihat unggahan yang menghina agama lain dalam cerita tersebut adalah …","opsi":["Ikut membagikan unggahan itu agar semua orang tahu isinya","Membalas hinaan itu dengan hinaan yang lebih keras kepada agama lain","Diam saja dan membiarkan unggahan itu tersebar luas","Melaporkan unggahan itu, tidak menyebarkannya, dan mengajak menjaga kerukunan","Menghapus akun media sosialnya agar tidak melihat unggahan tersebut"],"kunci":3},{"no":8,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Perhatikan pernyataan-pernyataan berikut!\n(1) Moderasi beragama berarti beragama secara seimbang, tidak berlebih-lebihan dan tidak meremehkan.\n(2) Moderasi beragama berarti menjaga keseimbangan antara hak dan kewajiban dalam beragama.\n(3) Moderasi beragama berarti mencampuradukkan ajaran semua agama menjadi satu agama baru.\n(4) Moderasi beragama berarti membenarkan semua keyakinan agama lain sebagai kebenaran yang sama.","stem":"Pernyataan yang benar tentang moderasi beragama ditunjukkan oleh nomor …","opsi":["(1) dan (3)","(2) dan (4)","(1) dan (2)","(3) dan (4)","(2) dan (3)"],"kunci":2},{"no":9,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Seorang siswa berpendapat bahwa toleransi beragama berarti seorang Muslim harus mengikuti ibadah agama lain ketika diundang, karena menolak undangan ibadah berarti tidak toleran. Pendapat ini ia sampaikan di depan kelas saat diskusi tentang moderasi beragama. Sebagian teman mengangguk setuju, tetapi guru PAI kemudian menjelaskan batas-batas toleransi dalam Islam: menghormati dan berbuat baik kepada pemeluk agama lain dibolehkan, tetapi mengikuti ibadah agama lain tidak dibolehkan karena menyangkut akidah.","stem":"Jika dinilai berdasarkan prinsip moderasi beragama, pendapat siswa tersebut adalah …","opsi":["Benar, karena toleransi mengharuskan Muslim mengikuti semua kegiatan agama lain","Benar, karena menolak undangan ibadah berarti bersikap intoleran","Benar, karena semua agama mengajarkan kebaikan yang sama","Salah, karena mengikuti ibadah agama lain diperbolehkan hanya pada hari besar saja","Salah, karena toleransi berarti menghormati tanpa harus mengikuti ibadah agama lain"],"kunci":4},{"no":10,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Warga sebuah desa di Kalimantan Selatan bergotong royong membangun balai pertemuan yang dapat dipakai seluruh warga tanpa membedakan agama. Ada warga Muslim, Kristen, dan Hindu yang bekerja bersama: ada yang mengangkut pasir, ada yang mengaduk semen, dan ada yang menyediakan makanan. Ketika balai itu selesai, warga menggunakannya untuk musyawarah desa, kegiatan pemuda, dan acara kemasyarakatan. Seorang tokoh agama setempat mengatakan bahwa kerja sama ini adalah wujud nyata Islam sebagai rahmat bagi seluruh alam.","stem":"Cerita tersebut menunjukkan makna Islam sebagai “rahmatan lil ‘alamin”, yaitu …","opsi":["Islam hanya membawa kebaikan bagi pemeluknya saja","Islam memerintahkan umatnya untuk menguasai desa dan mengatur warga lain","Islam membawa kebaikan dan kemaslahatan bagi seluruh makhluk, tanpa membedakan agama","Islam mengharuskan semua warga memeluk agama Islam","Islam hanya mengatur ibadah ritual dan tidak berkaitan dengan kehidupan sosial"],"kunci":2},{"no":11,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Allah Swt. berfirman dalam QS al-Kafirun ayat 6: “Untukmu agamamu, dan untukku agamaku.” Ayat ini dibacakan guru PAI saat membahas toleransi beragama. Setelah itu, guru menceritakan kisah dua tetangga berbeda agama yang hidup rukun: mereka saling membantu saat kesulitan, saling mengucapkan selamat pada hari besar masing-masing, tetapi tidak pernah mencampuri ibadah satu sama lain. Siswa kelas XII kemudian memahami bahwa ayat tersebut mengajarkan batas yang jelas antara menghormati dan mencampuradukkan keyakinan.","stem":"Sikap yang sesuai dengan kandungan QS al-Kafirun ayat 6 dalam cerita tersebut adalah …","opsi":["Memaksakan agama sendiri kepada tetangga yang berbeda agama","Menghormati keyakinan tetangga tanpa mencampuradukkan akidah masing-masing","Melarang tetangga merayakan hari besar agamanya","Mengikuti ibadah tetangga agar hubungan tetap baik","Menjauhi tetangga yang berbeda agama agar akidah tetap terjaga"],"kunci":1},{"no":12,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Andi, siswa kelas XII, menolak bekerja dalam kelompok belajar yang anggotanya berbeda agama dengannya. Ia beralasan bahwa bekerja sama dengan orang yang berbeda agama dapat merusak akidahnya. Akibatnya, kelompoknya kekurangan anggota dan tugas tidak selesai tepat waktu. Guru kemudian memanggil Andi dan menjelaskan bahwa kerja sama dalam urusan duniawi seperti belajar, bekerja, dan bermasyarakat dengan orang yang berbeda agama dibolehkan dalam Islam, selama tidak menyangkut akidah dan ibadah. Andi pun akhirnya bergabung dan kelompoknya berhasil menyelesaikan tugas dengan baik.","stem":"Tindakan yang paling tepat untuk mengatasi perilaku Andi dalam cerita tersebut adalah …","opsi":["Membiarkan Andi bekerja sendiri agar ia tidak merasa terganggu","Mengeluarkan Andi dari kelas karena menolak bekerja sama","Memaksa Andi mengikuti ibadah agama teman-temannya","Memberi pemahaman bahwa kerja sama dalam urusan duniawi dengan pemeluk agama lain dibolehkan dalam Islam","Melarang seluruh siswa bekerja dalam kelompok campuran"],"kunci":3},{"no":13,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Setiap hari Senin, seluruh siswa SMA Negeri 4 Banjarmasin mengikuti upacara bendera dengan khidmat. Mereka menyanyikan lagu Indonesia Raya, menghormati bendera Merah Putih, dan mendengarkan amanat pembina upacara tentang pentingnya menjaga persatuan. Seorang siswa kelas XII berpendapat bahwa mengikuti upacara dan menghormati simbol negara tidak ada hubungannya dengan agama. Guru PAI menjelaskan bahwa mencintai tanah air dan menjaga persatuan adalah bagian dari ajaran Islam, dan komitmen kebangsaan justru memperkuat moderasi beragama.","stem":"Seorang siswa berpendapat bahwa komitmen kebangsaan tidak ada hubungannya dengan moderasi beragama. Jika dinilai berdasarkan penjelasan guru dalam cerita tersebut, pendapat itu adalah …","opsi":["Salah, karena mencintai tanah air dan menjaga persatuan adalah bagian dari ajaran Islam dan memperkuat moderasi beragama","Benar, karena moderasi beragama hanya mengatur hubungan antarumat beragama","Benar, karena upacara bendera adalah kegiatan seremonial belaka","Benar, karena urusan negara tidak berkaitan dengan ajaran agama","Salah, karena komitmen kebangsaan hanya berlaku bagi aparat negara saja"],"kunci":0},{"no":14,"kategori":"Moderasi Beragama","level":"HOTS","narasi":"Dewi, siswi kelas XII, berpendapat bahwa agama adalah urusan pribadi yang tidak perlu diamalkan secara nyata. Menurutnya, cukup beriman di dalam hati, tidak perlu salat, puasa, atau berbuat baik kepada sesama. Ia juga sering mengejek teman yang rajin beribadah sebagai orang yang kuno. Guru PAI menjelaskan bahwa sikap meremehkan agama (tafrith) sama menyimpangnya dengan sikap berlebih-lebihan (ghuluw). Islam mengajarkan jalan tengah (wasathiyah): beriman dengan hati, mengamalkan dengan anggota badan, dan berakhlak baik kepada sesama.","stem":"Penilaian yang paling tepat terhadap pendapat Dewi dalam cerita tersebut adalah …","opsi":["Benar, karena agama memang hanya urusan hati dan tidak perlu diamalkan","Benar, karena beribadah secara terbuka dapat menimbulkan riya","Benar, karena orang yang rajin beribadah memang patut diejek","Salah, karena iman harus dibuktikan dengan amal dan akhlak, bukan hanya di dalam hati","Salah, karena sikap meremehkan agama (tafrith) sama menyimpangnya dengan berlebih-lebihan dan bertentangan dengan wasathiyah"],"kunci":4},{"no":15,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Rizki, siswa kelas XII, sering berbohong kepada guru tentang alasan tidak mengerjakan PR. Ia juga berjanji akan mengembalikan buku pinjaman temannya minggu lalu, tetapi janji itu tidak pernah ditepati. Ketika dipercaya menyimpan rahasia teman, ia justru menyebarkannya kepada siswa lain. Guru PAI menjelaskan bahwa Rasulullah saw. menyebutkan tiga tanda orang munafik: apabila berbicara ia berdusta, apabila berjanji ia mengingkari, dan apabila dipercaya ia berkhianat.","stem":"Perilaku Rizki dalam cerita tersebut menunjukkan ciri orang …","opsi":["Munafik, karena ia berdusta, ingkar janji, dan berkhianat","Fasik, karena ia tidak pernah salat berjamaah di masjid","Mukmin, karena ia rajin datang ke sekolah setiap hari","Musyrik, karena ia menyekutukan Allah dengan yang lain","Kafir, karena ia tidak mengakui kenabian Muhammad saw."],"kunci":0},{"no":16,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Sari, siswi kelas XII, rajin bersedekah setiap hari Jumat. Namun ia selalu mengumumkan jumlah sedekahnya di depan teman-teman dan mengunggahnya ke media sosial agar dipuji sebagai orang dermawan. Ketika tidak ada yang memuji, ia merasa kecewa dan mengurangi sedekahnya. Guru PAI menjelaskan bahwa ibadah yang dilakukan untuk mencari pujian manusia disebut riya, dan ibadah seperti itu tidak bernilai di sisi Allah karena bukan dilakukan ikhlas karena-Nya.","stem":"Perilaku Sari dalam cerita tersebut menunjukkan bahwa ibadahnya dilakukan bukan karena Allah, melainkan karena …","opsi":["Takut kepada guru dan orang tuanya","Ingin dipuji dan dilihat manusia (riya)","Kewajiban sebagai siswa kelas XII","Perintah langsung dari kepala sekolah","Keinginan menyaingi teman sekelasnya dalam pelajaran"],"kunci":1},{"no":17,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Andi, bendahara kelas XII, diberi amanah menyimpan uang kas kelas sebesar lima ratus ribu rupiah untuk keperluan perpisahan. Tanpa sepengetahuan teman-temannya, Andi memakai seratus ribu rupiah dari uang itu untuk membeli makanan. Ketika ditanya, ia berbohong bahwa uang itu masih utuh. Teman-temannya akhirnya mengetahui perbuatan Andi dari laporan bendahara OSIS. Guru menjelaskan bahwa mengkhianati amanah adalah salah satu tanda orang munafik.","stem":"Perbuatan Andi dalam cerita tersebut termasuk …","opsi":["Khianat amanah, salah satu tanda orang munafik","Sikap jujur karena ia mengakui perbuatannya kepada teman","Sikap dermawan karena ia berbagi uang kas kepada dirinya sendiri","Sikap hemat karena ia hanya memakai sebagian kecil uang kas","Sikap bertanggung jawab karena ia menyimpan uang kas dengan baik"],"kunci":0},{"no":18,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Guru PAI membacakan QS an-Nisa ayat 142 yang menjelaskan sifat orang-orang munafik: mereka menipu Allah dan apabila mereka berdiri untuk salat, mereka berdiri dengan malas dan bermaksud riya di hadapan manusia, serta tidak mengingat Allah kecuali sedikit sekali. Setelah itu, guru meminta siswa mengamati: ada siswa yang salat dengan tergesa-gesa, tidak khusyuk, dan hanya rajin salat ketika ada guru yang mengawasi. Guru menegaskan bahwa salat seperti itu adalah ciri salatnya orang munafik.","stem":"Berdasarkan ayat yang dibacakan guru dalam cerita tersebut, salat orang munafik dilakukan dengan …","opsi":["Malas dan riya, hanya untuk dilihat manusia","Khusyuk dan ikhlas semata-mata karena Allah","Cepat dan tepat waktu di awal waktu","Berjamaah di masjid setiap waktu salat","Tertib dan disertai zikir yang panjang"],"kunci":0},{"no":19,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Seorang siswa berpendapat bahwa orang munafik itu hanya orang yang tidak pernah salat. Menurutnya, selama seseorang rajin salat berjamaah dan rajin bersedekah, ia pasti bukan orang munafik. Pendapat ini ia sampaikan saat diskusi kelas tentang ciri-ciri orang munafik. Guru PAI kemudian menjelaskan bahwa orang munafik justru bisa tampak rajin beribadah, tetapi ibadahnya dilakukan dengan malas, riya, dan bukan karena Allah, sebagaimana dijelaskan dalam QS an-Nisa ayat 142.","stem":"Jika dinilai berdasarkan penjelasan guru dalam cerita tersebut, pendapat siswa itu adalah …","opsi":["Benar, karena salat berjamaah adalah bukti keimanan seseorang","Salah, karena orang munafik bisa tampak rajin beribadah tetapi salatnya malas dan riya","Benar, karena sedekah menghapus sifat munafik seseorang","Salah, karena orang munafik tidak mungkin masuk masjid","Benar, karena ciri munafik hanya terlihat dari salatnya saja"],"kunci":1},{"no":20,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Dalam sejarah Islam, Abdullah bin Ubay adalah tokoh munafik di Madinah. Di hadapan Rasulullah saw. dan kaum Muslimin, ia mengaku beriman dan ikut salat berjamaah. Namun di belakang, ia bersekongkol dengan musuh Islam, menyebarkan fitnah, dan berusaha memecah belah kaum Muslimin, seperti pada peristiwa Hadisul Ifki. Ia tidak pernah benar-benar beriman di dalam hatinya, meskipun lisannya mengaku beriman.","stem":"Perilaku Abdullah bin Ubay dalam cerita tersebut menunjukkan bentuk kemunafikan …","opsi":["Amali, karena ia hanya berbohong dalam perkataan sehari-hari","I'tiqadi, karena ia mengaku beriman di lisan tetapi kafir di dalam hati","Khafi, karena ia beribadah dengan sembunyi-sembunyi","Jali, karena ia terang-terangan memusuhi Islam","Sughra, karena kemunafikannya hanya dalam hal kecil"],"kunci":4},{"no":21,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Budi, siswa kelas XII, terbiasa berbohong kepada orang tuanya tentang nilai ujian. Ketika dinasihati guru bahwa dusta adalah tanda orang munafik, Budi malah marah dan berkata bahwa berbohong kecil itu biasa dan semua orang juga melakukannya. Guru tidak menyerah: ia menjelaskan bahaya dusta, mengajak Budi membiasakan jujur mulai dari hal kecil, dan memintanya meminta maaf kepada orang tuanya. Budi akhirnya sadar dan berjanji akan berubah.","stem":"Langkah yang paling tepat bagi Budi untuk memperbaiki diri berdasarkan cerita tersebut adalah …","opsi":["Terus berbohong karena semua orang juga melakukannya","Menyembunyikan kebohongannya agar tidak diketahui guru","Membalas nasihat guru dengan kemarahan yang lebih besar","Bertobat, membiasakan berkata jujur, dan meminta maaf kepada orang yang dibohongi","Berhenti sekolah agar tidak perlu berbohong lagi"],"kunci":3},{"no":22,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Ahmad, siswa kelas XII, sering mendengar bacaan Al-Qur'an dan nasihat kebaikan dari guru, tetapi hatinya tidak pernah tersentuh. Ia tetap bolos salat, tetap berkata kasar, dan tidak merasa bersalah sedikit pun. Ketika temannya mengingatkan tentang azab Allah, Ahmad hanya tertawa dan menganggapnya lelucon. Guru PAI menjelaskan bahwa hati yang tidak lagi tersentuh oleh ayat Allah dan nasihat kebaikan adalah tanda hati yang telah mengeras (qaswatul qalb).","stem":"Sikap Ahmad dalam cerita tersebut menunjukkan bahwa ia …","opsi":["Memiliki hati yang lembut dan mudah menerima nasihat","Memiliki hati yang keras (qaswatul qalb) sehingga tidak tersentuh nasihat kebaikan","Memiliki iman yang kuat karena berani menertawakan nasihat","Memiliki sifat pemaaf karena tidak membalas teguran temannya","Memiliki hati yang bersih karena tidak pernah merasa bersalah"],"kunci":2},{"no":23,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Guru PAI membacakan QS al-Hadid ayat 16: “Belumkah tiba waktunya bagi orang-orang yang beriman untuk tunduk hati mereka mengingat Allah dan kebenaran yang telah turun, dan janganlah mereka seperti orang-orang yang sebelumnya telah diturunkan Al-Kitab kepadanya, kemudian berlalulah masa yang panjang atas mereka lalu hati mereka menjadi keras.” Guru menjelaskan bahwa hati menjadi keras karena lalai mengingat Allah, tenggelam dalam kesenangan dunia, dan membiarkan waktu berlalu tanpa tobat.","stem":"Menurut ayat dalam cerita tersebut, hati orang beriman menjadi keras karena …","opsi":["Terlalu banyak mengingat Allah dan membaca Al-Qur'an","Lalai mengingat Allah dan tenggelam dalam kesenangan dunia hingga waktu berlalu","Terlalu rajin beribadah dan berpuasa sunah setiap hari","Sering bergaul dengan orang-orang saleh dan ulama","Terlalu banyak bersedekah kepada fakir miskin"],"kunci":0},{"no":24,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Abu Jahal adalah tokoh Quraisy yang paling keras menentang dakwah Rasulullah saw. Ia menyaksikan sendiri berbagai mukjizat, seperti terbelahnya bulan, tetapi tetap menolak beriman. Ia bahkan mengancam dan menyiksa kaum Muslimin yang masuk Islam. Ketika ditanya mengapa ia tidak beriman padahal bukti sudah jelas, ia menjawab bahwa ia tidak mau tunduk kepada Muhammad saw. karena kesombongan dan kedengkian. Ia meninggal dalam keadaan kafir pada Perang Badar.","stem":"Sikap Abu Jahal dalam cerita tersebut menunjukkan bahwa ia …","opsi":["Memiliki hati yang lembut karena mau mendengar dakwah Rasulullah","Bersikap adil karena memberi kesempatan kepada Islam untuk berkembang","Beriman secara sembunyi-sembunyi tetapi takut kepada kaumnya","Menerima kebenaran setelah melihat mukjizat terbelahnya bulan","Menolak kebenaran karena kesombongan dan kedengkian, meskipun bukti sudah jelas"],"kunci":4},{"no":25,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Fatimah, siswi kelas XII, merasa hatinya semakin keras: ia sulit menangis saat membaca Al-Qur'an, malas beribadah, dan mudah marah. Ia bertanya kepada guru PAI bagaimana cara melembutkan hati. Guru menyarankan beberapa upaya: memperbanyak zikir dan mengingat Allah, membaca Al-Qur'an dengan memahami maknanya (tadabbur), mengingat kematian, bergaul dengan orang-orang saleh, dan menjauhi maksiat. Fatimah mulai mengamalkan nasihat itu sedikit demi sedikit dan merasakan hatinya menjadi lebih tenang.","stem":"Upaya yang paling tepat untuk melembutkan hati yang keras berdasarkan cerita tersebut adalah …","opsi":["Memperbanyak hiburan dan kesenangan duniawi agar hati senang","Menjauhi Al-Qur'an dan nasihat agar hati tidak terbebani","Memperbanyak zikir, membaca Al-Qur'an dengan tadabbur, dan bergaul dengan orang saleh","Menghindari semua orang agar tidak ada yang menasihati","Berhenti beribadah sementara waktu agar hati beristirahat"],"kunci":1},{"no":26,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Seorang siswa berpendapat bahwa azab orang munafik di akhirat paling ringan, karena mereka masih salat, masih berpuasa, dan masih mengaku sebagai Muslim. Menurutnya, azab yang berat hanya untuk orang kafir yang terang-terangan memusuhi Islam. Guru PAI kemudian membacakan QS an-Nisa ayat 145: “Sesungguhnya orang-orang munafik itu berada pada tingkatan yang paling bawah dari neraka, dan kamu sekali-kali tidak akan mendapat seorang penolong pun bagi mereka.”","stem":"Jika dinilai berdasarkan ayat dalam cerita tersebut, pendapat siswa itu adalah …","opsi":["Benar, karena orang munafik masih mengaku sebagai Muslim","Benar, karena salat dan puasa mereka menghapus dosa kemunafikan","Salah, karena orang munafik berada pada tingkatan neraka yang paling bawah","Salah, karena orang munafik tidak akan masuk neraka sama sekali","Benar, karena azab neraka hanya untuk orang kafir saja"],"kunci":2},{"no":27,"kategori":"Munafik, Keras Hati & Keras Kepala","level":"HOTS","narasi":"Guru PAI menjelaskan dua bentuk kemunafikan. Pertama, munafik amali: seseorang beriman tetapi memiliki perbuatan seperti orang munafik, misalnya berdusta, ingkar janji, dan khianat. Kedua, munafik i'tiqadi: seseorang mengaku beriman di lisan tetapi di dalam hati ia kafir dan membenci Islam. Guru memberi contoh: Hasan sering berbohong kepada temannya, sedangkan Karim mengaku Muslim tetapi diam-diam membenci ajaran Islam dan bersekongkol untuk merusaknya.","stem":"Berdasarkan penjelasan guru dalam cerita tersebut, perbedaan Hasan dan Karim adalah …","opsi":["Hasan munafik i'tiqadi sedangkan Karim munafik amali","Keduanya munafik i'tiqadi karena sama-sama membenci Islam","Keduanya munafik amali karena sama-sama berbohong","Hasan munafik amali (perbuatan) sedangkan Karim munafik i'tiqadi (keyakinan)","Keduanya bukan munafik karena masih mengaku sebagai Muslim"],"kunci":3},{"no":28,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"Guru sejarah menceritakan berdirinya organisasi-organisasi Islam di Indonesia sebelum kemerdekaan: Sarekat Dagang Islam berdiri tahun 1911 di Solo, Muhammadiyah berdiri tahun 1912 di Yogyakarta, Al-Irsyad berdiri tahun 1914 di Jakarta, Persatuan Islam (Persis) berdiri tahun 1923 di Bandung, dan Nahdlatul Ulama berdiri tahun 1926 di Surabaya. Setiap organisasi lahir dengan latar belakang dan tujuan yang berbeda, tetapi semuanya berjuang untuk kemajuan umat Islam dan bangsa Indonesia.","stem":"Setelah membandingkan tahun berdirinya organisasi-organisasi dalam cerita tersebut, organisasi yang paling awal berdiri adalah …","opsi":["Nahdlatul Ulama","Persatuan Islam (Persis)","Sarekat Dagang Islam","Muhammadiyah","Al-Irsyad"],"kunci":2},{"no":29,"kategori":"Organisasi Islam Indonesia","level":"MOTS","narasi":"Al-Irsyad didirikan oleh Ahmad Surkati pada tahun 1914 di Jakarta. Sembilan tahun kemudian, Persatuan Islam (Persis) didirikan oleh A. Hassan pada tahun 1923 di Bandung. Kedua organisasi ini sama-sama bergerak di bidang pendidikan dan dakwah Islam, meskipun dengan pendekatan yang berbeda. Al-Irsyad fokus pada reformasi pendidikan dan persamaan derajat, sedangkan Persis menekankan kembali kepada Al-Qur'an dan sunah.","stem":"Selisih tahun berdirinya Persatuan Islam (Persis) dan Al-Irsyad menurut cerita tersebut adalah …","opsi":["7 tahun","8 tahun","10 tahun","11 tahun","9 tahun"],"kunci":4},{"no":30,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"K.H. Ahmad Dahlan melihat umat Islam pada awal abad ke-20 masih terbelakang dalam pendidikan dan masih banyak mempraktikkan takhayul, bid'ah, dan churafat (TBC) yang tidak bersumber dari Al-Qur'an dan hadis. Ia kemudian mendirikan Muhammadiyah pada 18 November 1912 di Yogyakarta dengan tujuan memurnikan ajaran Islam dari TBC serta memajukan pendidikan umat melalui sekolah-sekolah modern yang menggabungkan ilmu agama dan ilmu umum.","stem":"Tujuan utama K.H. Ahmad Dahlan mendirikan Muhammadiyah berdasarkan cerita tersebut adalah …","opsi":["Memurnikan ajaran Islam dari takhayul, bid'ah, dan churafat serta memajukan pendidikan umat","Mendirikan kerajaan Islam di Yogyakarta dan mengganti pemerintahan kolonial","Melarang umat Islam mempelajari ilmu umum dan teknologi modern","Menghapus seluruh tradisi masyarakat Jawa yang sudah ada","Mendirikan partai politik untuk mengikuti pemilu kolonial"],"kunci":0},{"no":31,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"Nahdlatul Ulama didirikan pada 31 Januari 1926 di Surabaya oleh K.H. Hasyim Asy'ari bersama para ulama pesantren. Organisasi ini lahir untuk menjaga dan melestarikan ajaran Islam ahlussunnah wal jamaah di tengah munculnya berbagai gerakan pembaruan. NU membina pesantren-pesantren, mendirikan madrasah, dan membimbing umat agar tetap berpegang pada tradisi keilmuan ulama salaf serta menjaga kerukunan umat.","stem":"Salah satu tujuan utama didirikannya Nahdlatul Ulama berdasarkan cerita tersebut adalah …","opsi":["Menghapus pesantren dan menggantinya dengan sekolah umum","Melestarikan ajaran ahlussunnah wal jamaah dan membina pesantren","Melarang umat Islam mengikuti mazhab apa pun","Mendirikan organisasi perdagangan untuk menyaingi Sarekat Islam","Membubarkan seluruh organisasi Islam lain yang sudah ada"],"kunci":1},{"no":32,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"Al-Irsyad didirikan oleh Ahmad Surkati pada tahun 1914 di Jakarta. Surkati prihatin melihat diskriminasi di kalangan masyarakat Arab di Indonesia: orang Arab totok (pendatang) mendapat perlakuan istimewa, sedangkan orang Arab peranakan (kelahiran Indonesia) dipandang rendah. Ia juga melihat pendidikan Islam masih tertinggal. Al-Irsyad kemudian memperjuangkan persamaan derajat semua Muslim di hadapan Allah dan mereformasi pendidikan Islam dengan mendirikan sekolah-sekolah modern.","stem":"Fokus perjuangan Al-Irsyad berdasarkan cerita tersebut adalah …","opsi":["Memperjuangkan kemerdekaan Indonesia melalui jalur militer","Mendirikan kerajaan Arab di Jakarta","Menghapus bahasa Arab dari pendidikan Islam","Reformasi pendidikan Islam dan persamaan derajat semua Muslim","Melarang orang Arab peranakan menjadi pengurus organisasi"],"kunci":3},{"no":33,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"Persatuan Islam (Persis) didirikan oleh A. Hassan pada tahun 1923 di Bandung. Persis dikenal sebagai organisasi yang sangat tegas dalam berpegang pada Al-Qur'an dan sunah. Para tokohnya aktif berdakwah, menulis buku-buku agama, dan mendirikan sekolah-sekolah Islam. Persis menolak takhayul dan bid'ah serta mengajak umat Islam untuk memahami agama langsung dari sumbernya, yaitu Al-Qur'an dan hadis yang sahih.","stem":"Ciri perjuangan Persatuan Islam (Persis) berdasarkan cerita tersebut adalah …","opsi":["Berpegang teguh pada Al-Qur'an dan sunah serta aktif berdakwah","Menggabungkan ajaran Islam dengan kepercayaan animisme","Melarang umat Islam membaca Al-Qur'an dan hadis","Mendirikan organisasi perdagangan tekstil di Bandung","Menolak seluruh bentuk pendidikan modern"],"kunci":0},{"no":34,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"Sarekat Dagang Islam didirikan pada tahun 1911 di Solo oleh Haji Samanhudi. Awalnya organisasi ini bertujuan melindungi pedagang Muslim pribumi dari persaingan pedagang Tionghoa dan Belanda. Di bawah pimpinan H.O.S. Tjokroaminoto, Sarekat Islam (nama barunya) berkembang menjadi gerakan besar yang tidak hanya mengurusi ekonomi, tetapi juga memperjuangkan hak-hak politik dan kesadaran kebangsaan umat Islam Indonesia.","stem":"Peran Sarekat Islam berdasarkan cerita tersebut adalah …","opsi":["Mengatur perdagangan rempah-rempah di pelabuhan Solo","Memperjuangkan ekonomi umat, hak politik, dan kesadaran kebangsaan","Mendirikan pesantren terbesar di Jawa Tengah","Menghapus sistem perdagangan di pasar tradisional","Melarang pedagang Muslim berdagang dengan pedagang lain"],"kunci":4},{"no":35,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"Di Sumatera Barat, muncul gerakan pembaruan pendidikan Islam yang dipelopori oleh para ulama muda. Mereka mendirikan madrasah Thawalib yang menggabungkan ilmu agama dan ilmu umum: siswa belajar fikih dan tafsir, tetapi juga belajar matematika, bahasa, dan ilmu pengetahuan modern. Madrasah Thawalib di Padang Panjang berkembang pesat dan melahirkan banyak ulama serta tokoh pergerakan yang kemudian berperan dalam perjuangan kemerdekaan Indonesia.","stem":"Berdasarkan ciri-ciri lembaga dalam cerita tersebut, lembaga pendidikan Islam modern yang berkembang pesat di Sumatera Barat adalah …","opsi":["Pesantren Tebuireng","Madrasah Mu'allimin Yogyakarta","Thawalib","Sekolah Kartini","Madrasah Diniyah Takmiliyah"],"kunci":2},{"no":36,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"Menjelang kemerdekaan Indonesia, para ulama dan tokoh organisasi Islam berperan besar. Pada 22 Oktober 1945, K.H. Hasyim Asy'ari mengeluarkan Resolusi Jihad yang mewajibkan umat Islam mempertahankan kemerdekaan Indonesia dari penjajah. Seruan ini membakar semangat arek-arek Surabaya dan umat Islam di seluruh Jawa untuk berjuang pada 10 November 1945. Tanpa peran ulama dan organisasi Islam, perjuangan kemerdekaan tidak akan sekuat itu.","stem":"Peran organisasi Islam dan ulama dalam perjuangan kemerdekaan berdasarkan cerita tersebut adalah …","opsi":["Menyerahkan Indonesia kepada penjajah tanpa perlawanan","Mengeluarkan Resolusi Jihad dan membakar semangat umat mempertahankan kemerdekaan","Melarang umat Islam ikut berjuang dalam perang kemerdekaan","Mendirikan negara Islam terpisah dari Republik Indonesia","Menjual senjata kepada penjajah demi keuntungan ekonomi"],"kunci":1},{"no":37,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"Seorang siswa berpendapat bahwa organisasi Islam di Indonesia sebelum kemerdekaan hanya mengurusi ibadah ritual seperti salat dan puasa, serta tidak berperan apa pun dalam pendidikan, sosial, dan perjuangan bangsa. Pendapat ini ia sampaikan saat presentasi di depan kelas. Guru sejarah kemudian menjelaskan bahwa Muhammadiyah mendirikan sekolah dan rumah sakit, NU membina pesantren, Sarekat Islam memperjuangkan ekonomi dan politik, dan para ulama mengeluarkan Resolusi Jihad untuk mempertahankan kemerdekaan.","stem":"Jika dinilai berdasarkan penjelasan guru dalam cerita tersebut, pendapat siswa itu adalah …","opsi":["Benar, karena organisasi Islam memang hanya mengurusi ibadah","Benar, karena sekolah dan rumah sakit didirikan oleh pemerintah kolonial","Benar, karena Resolusi Jihad dikeluarkan oleh tentara, bukan ulama","Salah, karena organisasi Islam berperan dalam pendidikan, sosial, ekonomi, dan perjuangan kemerdekaan","Salah, karena organisasi Islam hanya berperan dalam bidang perdagangan"],"kunci":3},{"no":38,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"Seorang siswa berpendapat bahwa Muhammadiyah didirikan oleh K.H. Hasyim Asy'ari pada tahun 1926 di Surabaya untuk menjaga tradisi pesantren. Pendapat ini ia tulis dalam tugas sejarahnya. Guru kemudian mengoreksi: Muhammadiyah didirikan oleh K.H. Ahmad Dahlan pada 18 November 1912 di Yogyakarta dengan tujuan memurnikan Islam dan memajukan pendidikan. Adapun yang didirikan K.H. Hasyim Asy'ari pada 1926 di Surabaya adalah Nahdlatul Ulama.","stem":"Berdasarkan sejarah berdirinya Muhammadiyah, pendapat siswa tersebut dapat dinilai …","opsi":["Benar, karena Muhammadiyah memang didirikan tahun 1926 di Surabaya","Benar, karena K.H. Hasyim Asy'ari adalah pendiri Muhammadiyah","Benar, karena tujuan Muhammadiyah adalah menjaga tradisi pesantren","Salah, karena Muhammadiyah didirikan K.H. Ahmad Dahlan pada 1912 di Yogyakarta","Salah, karena Muhammadiyah didirikan pada tahun 1945 setelah kemerdekaan"],"kunci":3},{"no":39,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"Seorang siswa berpendapat bahwa Nahdlatul Ulama didirikan oleh K.H. Ahmad Dahlan pada tahun 1912 di Yogyakarta untuk memurnikan Islam dari takhayul, bid'ah, dan churafat. Pendapat ini ia sampaikan dalam diskusi kelas. Guru kemudian menjelaskan bahwa yang didirikan K.H. Ahmad Dahlan pada 1912 adalah Muhammadiyah, sedangkan Nahdlatul Ulama didirikan oleh K.H. Hasyim Asy'ari pada 31 Januari 1926 di Surabaya untuk menjaga ajaran ahlussunnah wal jamaah.","stem":"Berdasarkan sejarah berdirinya Nahdlatul Ulama, pendapat siswa tersebut dapat dinilai …","opsi":["Benar, karena NU memang didirikan oleh K.H. Ahmad Dahlan","Benar, karena NU didirikan pada tahun 1912 di Yogyakarta","Benar, karena tujuan NU adalah memurnikan Islam dari TBC","Salah, karena NU didirikan oleh K.H. Ahmad Dahlan di Yogyakarta","Salah, karena NU didirikan K.H. Hasyim Asy'ari pada 1926 di Surabaya"],"kunci":4},{"no":40,"kategori":"Organisasi Islam Indonesia","level":"HOTS","narasi":"Rudi, siswa kelas XII, ingin menerapkan nilai-nilai perjuangan organisasi Islam dalam kehidupan sehari-harinya. Ia terinspirasi oleh Muhammadiyah yang memajukan pendidikan, NU yang membina pesantren dan menjaga kerukunan, serta Sarekat Islam yang memperjuangkan nasib umat. Rudi kemudian memutuskan untuk rajin belajar, membantu teman yang kesulitan, aktif dalam kegiatan sosial sekolah, dan menjaga kerukunan dengan teman yang berbeda latar belakang.","stem":"Penerapan nilai perjuangan organisasi Islam yang paling tepat dilakukan Rudi dalam cerita tersebut adalah …","opsi":["Berhenti belajar dan hanya beribadah di masjid sepanjang hari","Rajin belajar, membantu teman, aktif berkegiatan sosial, dan menjaga kerukunan","Membentuk organisasi sendiri untuk menyaingi organisasi yang sudah ada","Menolak bergaul dengan teman yang berbeda latar belakang","Hanya fokus pada nilai ujian tanpa peduli kepada sesama"],"kunci":2}];
+var SOAL_PDPD_PAI = [{"no":1,"stem":"Beragama dengan cara moderat artinya …","opsi":["Sedang-sedang saja, tidak berlebihan dan tidak meremehkan","Berlebih-lebihan dalam segala hal"],"kunci":0,"gambar":"q01.png"},{"no":2,"stem":"Teman kita merayakan hari besar agamanya. Sikap kita yang baik adalah …","opsi":["Mengolok-olok perayaannya","Mengucapkan selamat dan menghormatinya"],"kunci":1,"gambar":"q02.png"},{"no":3,"stem":"Allah menciptakan manusia berbangsa-bangsa dan bersuku-suku supaya …","opsi":["Saling mengenal dan bekerja sama","Saling bermusuhan dan bertengkar"],"kunci":0,"gambar":"q03.png"},{"no":4,"stem":"Orang yang suka berbohong dan tidak menepati janji adalah ciri orang …","opsi":["Mukmin yang baik","Munafik"],"kunci":1,"gambar":"q04.png"},{"no":5,"stem":"Kalau kita diberi amanah (kepercayaan), kita harus …","opsi":["Menjaganya dengan baik","Mengkhianatinya"],"kunci":0,"gambar":"q05.png"},{"no":6,"stem":"Salat yang dilakukan supaya dipuji orang lain disebut …","opsi":["Ikhlas","Riya"],"kunci":1,"gambar":"q06.png"},{"no":7,"stem":"Abu Jahal menolak beriman padahal sudah melihat bukti kebenaran. Itu contoh sikap …","opsi":["Keras kepala","Rendah hati"],"kunci":0,"gambar":"q07.png"},{"no":8,"stem":"Muhammadiyah adalah organisasi Islam yang berdiri pada tahun …","opsi":["1945","1912"],"kunci":1,"gambar":"q08.png"},{"no":9,"stem":"Nahdlatul Ulama didirikan oleh …","opsi":["KH Hasyim Asy'ari","KH Ahmad Dahlan"],"kunci":0,"gambar":"q09.png"},{"no":10,"stem":"Al-Irsyad didirikan oleh …","opsi":["KH Hasyim Asy'ari","Ahmad Surkati"],"kunci":1,"gambar":"q10.png"},{"no":11,"stem":"Dalam kelompok belajar, kita harus bekerja sama dengan …","opsi":["Semua teman, apa pun agamanya","Teman yang seagama saja"],"kunci":0,"gambar":"q11.png"},{"no":12,"stem":"Salah satu tanda orang munafik adalah …","opsi":["Selalu berkata jujur","Suka ingkar janji"],"kunci":1,"gambar":"q12.png"},{"no":13,"stem":"Organisasi Islam sebelum merdeka berjuang untuk …","opsi":["Kemajuan umat dan bangsa Indonesia","Kepentingan pribadi pengurusnya"],"kunci":0,"gambar":"q13.png"},{"no":14,"stem":"Sikap moderat dalam beragama membuat kita …","opsi":["Memaksa orang lain mengikuti pendapat kita","Menghargai perbedaan dan hidup rukun"],"kunci":1,"gambar":"q14.png"},{"no":15,"stem":"Persatuan Islam (Persis) didirikan pada tahun …","opsi":["1923","1945"],"kunci":0,"gambar":"q15.png"}];
+var SISWA = {"XII 1":[{"nama":"Abdad Hamka","jk":"L","pdpd":false},{"nama":"Ahmad Januardi","jk":"L","pdpd":false},{"nama":"Albano Putra Susanto","jk":"L","pdpd":false},{"nama":"Assyfa Hadratunnufus","jk":"P","pdpd":false},{"nama":"Cahaya Mulia","jk":"P","pdpd":false},{"nama":"Desi Junaedi","jk":"P","pdpd":false},{"nama":"Dwi Risty Pratitis","jk":"P","pdpd":false},{"nama":"Fatmawati","jk":"P","pdpd":false},{"nama":"Fazle Zia Sumangkut","jk":"L","pdpd":false},{"nama":"Hairunnisa","jk":"P","pdpd":false},{"nama":"Jesika","jk":"P","pdpd":false},{"nama":"Khairunnisa","jk":"P","pdpd":false},{"nama":"Liana Rahmadhani","jk":"P","pdpd":false},{"nama":"Maulida","jk":"P","pdpd":false},{"nama":"Mona Apriliani","jk":"P","pdpd":false},{"nama":"Muhammad Akbar","jk":"L","pdpd":false},{"nama":"Muhammad Firli Apriliadi","jk":"L","pdpd":false},{"nama":"Muhammad Maaliki Putra Delmi","jk":"L","pdpd":false},{"nama":"Muhammad Raka Maulana","jk":"L","pdpd":false},{"nama":"Muhammad Reyno Abizar","jk":"L","pdpd":false},{"nama":"Muhammad Ridho Pratama","jk":"L","pdpd":false},{"nama":"Nafis Fakhrian Hadi","jk":"L","pdpd":false},{"nama":"Noor Askia","jk":"P","pdpd":false},{"nama":"Nor Sariyah","jk":"P","pdpd":false},{"nama":"Nurdiah","jk":"P","pdpd":false},{"nama":"Rahmi Azizah","jk":"P","pdpd":false},{"nama":"Rina Yanti","jk":"P","pdpd":false},{"nama":"Said M. Rizki","jk":"L","pdpd":false},{"nama":"Salwaa Syafaqoh","jk":"P","pdpd":false},{"nama":"Syaila Putri Aprilia","jk":"P","pdpd":false}],"XII 2":[{"nama":"Abdul Khair","jk":"L","pdpd":false},{"nama":"Abelia","jk":"P","pdpd":false},{"nama":"Ahmad Ridho Akhyari","jk":"L","pdpd":false},{"nama":"Aldi Firmansyah","jk":"L","pdpd":false},{"nama":"Audya Eisya Raya","jk":"P","pdpd":false},{"nama":"Camalia Munada","jk":"P","pdpd":false},{"nama":"Dhea","jk":"P","pdpd":false},{"nama":"Dyah Ayu Maharani","jk":"P","pdpd":false},{"nama":"Firdha Audy Lestari","jk":"P","pdpd":false},{"nama":"Imam Nabil Al-Bukhori","jk":"L","pdpd":false},{"nama":"Julpa","jk":"P","pdpd":false},{"nama":"Khanza Nadia Putri","jk":"P","pdpd":false},{"nama":"Luna Farisya Adinda","jk":"P","pdpd":false},{"nama":"Maulidya Maharani Putri","jk":"P","pdpd":false},{"nama":"Muhammad Amin","jk":"L","pdpd":false},{"nama":"Muhammad Halim Pratama","jk":"L","pdpd":false},{"nama":"Muhammad Nabil Ramadhan","jk":"L","pdpd":false},{"nama":"Muhammad Rasyid Siddiq","jk":"L","pdpd":false},{"nama":"Muhammad Rio Fadhilah","jk":"L","pdpd":false},{"nama":"Mutia Aufa Az-Zahra","jk":"P","pdpd":false},{"nama":"Noor Ibrahim","jk":"L","pdpd":false},{"nama":"Noor Rizka Bilghina","jk":"P","pdpd":false},{"nama":"Novi Aulia","jk":"P","pdpd":false},{"nama":"Nurul Adzkia","jk":"P","pdpd":false},{"nama":"Rau Mutya Delbe","jk":"P","pdpd":false},{"nama":"Risna Yuliyana","jk":"P","pdpd":false},{"nama":"Sila","jk":"P","pdpd":false},{"nama":"Syaima Salwatul Aisy","jk":"P","pdpd":false},{"nama":"Yasmin Salsabila","jk":"P","pdpd":false}],"XII 3":[{"nama":"A. Alwan Putra","jk":"L","pdpd":false},{"nama":"Ahmad Daffa","jk":"L","pdpd":false},{"nama":"Akhmad Faisal","jk":"L","pdpd":false},{"nama":"Andy Surya Yosan Atmaja","jk":"L","pdpd":false},{"nama":"Anggraini","jk":"P","pdpd":false},{"nama":"Azizah","jk":"P","pdpd":false},{"nama":"Delvina Ramadhani","jk":"P","pdpd":false},{"nama":"Dinda Noormawati","jk":"P","pdpd":false},{"nama":"Fatimatu Zahra","jk":"P","pdpd":false},{"nama":"Gusti Ghina Nur'alya","jk":"P","pdpd":false},{"nama":"Irvina Nayla Utari","jk":"P","pdpd":false},{"nama":"Kaylla Almaira","jk":"P","pdpd":false},{"nama":"Kiswah Humairah","jk":"P","pdpd":false},{"nama":"Mariyah Al - Qibthiyyah","jk":"P","pdpd":false},{"nama":"Maura Bilqis Lukman","jk":"P","pdpd":false},{"nama":"Muhammad Ainur Ridho","jk":"L","pdpd":false},{"nama":"Muhammad Firdaus Adha","jk":"L","pdpd":true},{"nama":"Muhammad Lutfi Alfarisi","jk":"L","pdpd":false},{"nama":"Muhammad Raffa","jk":"L","pdpd":false},{"nama":"Muhammad Reyza Nomar","jk":"L","pdpd":false},{"nama":"Muhammad Rizky Effendi","jk":"L","pdpd":false},{"nama":"Muhammad Zidan Kholilian","jk":"L","pdpd":false},{"nama":"Nazwa Atqia","jk":"P","pdpd":false},{"nama":"Nor Pina","jk":"P","pdpd":false},{"nama":"Nur Azkiya","jk":"P","pdpd":false},{"nama":"Putri Salsabila","jk":"P","pdpd":false},{"nama":"Rafizal Nur Rahman","jk":"L","pdpd":false},{"nama":"Riana","jk":"P","pdpd":false},{"nama":"Salsabila Anggraini","jk":"P","pdpd":false},{"nama":"Siva Adelia","jk":"P","pdpd":false},{"nama":"Syarifah Rahmah","jk":"P","pdpd":false},{"nama":"Wardatul Zahra","jk":"P","pdpd":false}],"XII 4":[{"nama":"Ahmad Alpiannoor","jk":"L","pdpd":false},{"nama":"Ahmad Shofwani","jk":"L","pdpd":false},{"nama":"Aira Azzahra","jk":"P","pdpd":false},{"nama":"Aldy Ramadhan","jk":"L","pdpd":false},{"nama":"Aulia Azemi","jk":"P","pdpd":false},{"nama":"Clarissa Muetia Rayyanti","jk":"P","pdpd":false},{"nama":"Dhea Asyifa Salsabila","jk":"P","pdpd":false},{"nama":"Farisha Salsabila","jk":"P","pdpd":false},{"nama":"Fitri Ramadani","jk":"P","pdpd":false},{"nama":"Halimah Azzahra","jk":"P","pdpd":false},{"nama":"Hemada","jk":"P","pdpd":false},{"nama":"Kandi Aji Saputri","jk":"P","pdpd":false},{"nama":"Kirani","jk":"P","pdpd":false},{"nama":"Lutfia Bilbina","jk":"P","pdpd":false},{"nama":"M. Hafidz","jk":"L","pdpd":false},{"nama":"M. Rafiq Baidawi","jk":"L","pdpd":false},{"nama":"Maulina Putri","jk":"P","pdpd":false},{"nama":"Muhammad Fahri","jk":"L","pdpd":false},{"nama":"Muhammad Hidayat Rifa'i","jk":"L","pdpd":false},{"nama":"Muhammad Noor","jk":"L","pdpd":false},{"nama":"Muhammad Rizki","jk":"L","pdpd":false},{"nama":"Muhammad Sugianor","jk":"L","pdpd":false},{"nama":"Muhammad Yusuf Afgan","jk":"L","pdpd":false},{"nama":"Muhammad Zakky","jk":"L","pdpd":false},{"nama":"Naysella Aulia Sabrina","jk":"P","pdpd":false},{"nama":"Noor Shofia","jk":"P","pdpd":false},{"nama":"Novia Mayang Sari","jk":"P","pdpd":false},{"nama":"Nur Raihan Gifari","jk":"L","pdpd":false},{"nama":"Olivia Nina Agustina","jk":"P","pdpd":false},{"nama":"Restu Almira Ramadhani","jk":"P","pdpd":false},{"nama":"Sa'dina Ramadhaniah","jk":"P","pdpd":false},{"nama":"Siti Zahra","jk":"P","pdpd":false},{"nama":"Syarifah Farah Anisa","jk":"P","pdpd":false},{"nama":"Zaima Adila","jk":"P","pdpd":false}],"XII 5":[{"nama":"Achmad Saifullah","jk":"L","pdpd":false},{"nama":"Ahmad Hafidzi","jk":"L","pdpd":false},{"nama":"Ahmad Riskyan","jk":"L","pdpd":false},{"nama":"Andri Pratama","jk":"L","pdpd":false},{"nama":"Bahrullah","jk":"L","pdpd":false},{"nama":"Dalaila Fadilla","jk":"P","pdpd":false},{"nama":"Elvira Nur Ramadhan","jk":"P","pdpd":false},{"nama":"Gina Rizkiya","jk":"P","pdpd":false},{"nama":"Hasbie Ridwan Prasetyo","jk":"L","pdpd":false},{"nama":"Keyla Noviarda Pajariah","jk":"P","pdpd":false},{"nama":"Malinda","jk":"P","pdpd":false},{"nama":"Mario","jk":"L","pdpd":false},{"nama":"Muhammad Alvin","jk":"L","pdpd":false},{"nama":"Muhammad Irfansyah","jk":"L","pdpd":false},{"nama":"Muhammad Naufal Ghani","jk":"L","pdpd":false},{"nama":"Muhammad Radit","jk":"L","pdpd":false},{"nama":"Muhammad Rasyied","jk":"L","pdpd":false},{"nama":"Muhammad Zakaria","jk":"L","pdpd":false},{"nama":"Nabila Arifah","jk":"P","pdpd":false},{"nama":"Nia Zulfia","jk":"P","pdpd":false},{"nama":"Nor Annisa Safitri","jk":"P","pdpd":false},{"nama":"Nur Az-Zahra","jk":"P","pdpd":false},{"nama":"Nurul Aina","jk":"P","pdpd":false},{"nama":"Raden Eko Danuwarta","jk":"L","pdpd":false},{"nama":"Rafika Azzahra","jk":"P","pdpd":false},{"nama":"Rifa Syahidah","jk":"P","pdpd":false},{"nama":"Riza Ahmad Anshori","jk":"L","pdpd":false},{"nama":"Sarah Amanda","jk":"P","pdpd":false},{"nama":"Shulfa Hana","jk":"P","pdpd":false},{"nama":"Silvina","jk":"P","pdpd":false},{"nama":"Siti Humairo","jk":"P","pdpd":false},{"nama":"Sultan Burhanuddin","jk":"L","pdpd":false},{"nama":"Wulan Julianty","jk":"P","pdpd":false},{"nama":"Zarkani Hamid","jk":"L","pdpd":false}],"XII 6":[{"nama":"Adam Nur Royyan","jk":"L","pdpd":false},{"nama":"Aghna Saufa","jk":"P","pdpd":false},{"nama":"Ahmad Ibnu Husin","jk":"L","pdpd":false},{"nama":"Aldo Wardana","jk":"L","pdpd":false},{"nama":"Arifin Ilham","jk":"L","pdpd":false},{"nama":"Danu Muhammad Habibie S.","jk":"L","pdpd":false},{"nama":"Endah Tri Handayani","jk":"P","pdpd":false},{"nama":"Gina Sabrina","jk":"P","pdpd":false},{"nama":"Khairunnisa","jk":"P","pdpd":false},{"nama":"Krisna Samudra","jk":"L","pdpd":false},{"nama":"M. Irfan Baso Putra","jk":"L","pdpd":false},{"nama":"M. Maulana Shams Al-Ayubi","jk":"L","pdpd":false},{"nama":"Marsya Nurfallah","jk":"P","pdpd":false},{"nama":"Moch. Febryannor","jk":"L","pdpd":false},{"nama":"Muhammad Fadhlur Rahman","jk":"L","pdpd":false},{"nama":"Muhammad Jaini","jk":"L","pdpd":false},{"nama":"Muhammad Rendy Saputra","jk":"L","pdpd":false},{"nama":"Muhammad Rizky Ramadhan","jk":"L","pdpd":false},{"nama":"Muhammad Rosyidi","jk":"L","pdpd":false},{"nama":"Muhammad Zikri Akbar","jk":"L","pdpd":false},{"nama":"Nabila Putri","jk":"P","pdpd":false},{"nama":"Noor Ahda","jk":"P","pdpd":true},{"nama":"Nor Haliza Aprilia","jk":"P","pdpd":false},{"nama":"Nur Hidayah","jk":"P","pdpd":false},{"nama":"Olivia Damayanti","jk":"P","pdpd":false},{"nama":"Paril","jk":"L","pdpd":false},{"nama":"Rafi Audinnor","jk":"L","pdpd":false},{"nama":"Rahma Febrina","jk":"P","pdpd":false},{"nama":"Riski Amelia","jk":"P","pdpd":false},{"nama":"Saidi","jk":"L","pdpd":false},{"nama":"Saskia Ramadhani","jk":"P","pdpd":false},{"nama":"Siti Jamilah","jk":"P","pdpd":false},{"nama":"Ulfah Mahmudah","jk":"P","pdpd":false},{"nama":"Yasmin Oktaviani","jk":"P","pdpd":false}],"XII 7":[{"nama":"Adrian","jk":"L","pdpd":false},{"nama":"Ahmad Ilham","jk":"L","pdpd":false},{"nama":"Ainun Salsabila","jk":"P","pdpd":false},{"nama":"Aldy Al Ramadhan","jk":"L","pdpd":false},{"nama":"Aulia Rahim","jk":"L","pdpd":false},{"nama":"Desti Dwi Sandra","jk":"P","pdpd":false},{"nama":"Dimas Ramadhan","jk":"L","pdpd":true},{"nama":"Febrina Salsabila","jk":"P","pdpd":false},{"nama":"Husnah","jk":"P","pdpd":false},{"nama":"Khumaira Nashibah","jk":"P","pdpd":false},{"nama":"Lukman Hakim","jk":"L","pdpd":false},{"nama":"M. Nazriel Ilham","jk":"L","pdpd":false},{"nama":"Mudzalifah","jk":"P","pdpd":false},{"nama":"Muhammad Adly Ridwan","jk":"L","pdpd":false},{"nama":"Muhammad Fahriji","jk":"L","pdpd":false},{"nama":"Muhammad Mandala","jk":"L","pdpd":false},{"nama":"Muhammad Rafi'i","jk":"L","pdpd":false},{"nama":"Muhammad Ridho Ramadhan","jk":"L","pdpd":false},{"nama":"Muhammad Tio Pratama","jk":"L","pdpd":false},{"nama":"Nabil Aqmal Andeano","jk":"L","pdpd":false},{"nama":"Nadia Rusmawati","jk":"P","pdpd":false},{"nama":"Noor Anjelli Urbaningrum","jk":"P","pdpd":false},{"nama":"Nor Laila Arifah","jk":"P","pdpd":false},{"nama":"Nur Hidayah","jk":"P","pdpd":false},{"nama":"Pitria Nabila Zahwa","jk":"P","pdpd":false},{"nama":"Raida Putri","jk":"P","pdpd":false},{"nama":"Raihan","jk":"L","pdpd":false},{"nama":"Rizka Ayu Kartini","jk":"P","pdpd":false},{"nama":"Saufi Ishaq","jk":"L","pdpd":false},{"nama":"Sayyidatina Khadijah","jk":"P","pdpd":false},{"nama":"Sinta Yolanda","jk":"P","pdpd":false},{"nama":"Sri Andini","jk":"P","pdpd":false},{"nama":"Tomi Puji Wijinarko","jk":"L","pdpd":false},{"nama":"Zan Zamila","jk":"L","pdpd":false}],"XII 8":[{"nama":"Afril Nabilah","jk":"P","pdpd":false},{"nama":"Ahmad Luthfi","jk":"L","pdpd":false},{"nama":"Alif Rizqi Ramadhan","jk":"L","pdpd":false},{"nama":"Amelia","jk":"P","pdpd":false},{"nama":"Aulya Rahman","jk":"L","pdpd":false},{"nama":"Dea Amelia","jk":"P","pdpd":false},{"nama":"Devi Nabila","jk":"P","pdpd":false},{"nama":"Fathur Rahman Sidik","jk":"L","pdpd":false},{"nama":"Ghina Fitriyani","jk":"P","pdpd":false},{"nama":"Kirani Aulia Zahra","jk":"P","pdpd":false},{"nama":"M. Adli","jk":"L","pdpd":false},{"nama":"M. Sirul Akhwan","jk":"L","pdpd":false},{"nama":"Muhammad Akmal","jk":"L","pdpd":false},{"nama":"Muhammad Ihsan","jk":"L","pdpd":false},{"nama":"Muhammad Nabil","jk":"L","pdpd":false},{"nama":"Muhammad Rafli","jk":"L","pdpd":false},{"nama":"Muhammad Rifa Alfani","jk":"L","pdpd":false},{"nama":"Muhammad Yoga","jk":"L","pdpd":false},{"nama":"Muthia Az Zahra","jk":"P","pdpd":false},{"nama":"Nayla Assyfa","jk":"P","pdpd":false},{"nama":"Nur Aina","jk":"P","pdpd":false},{"nama":"Nur Salsabila","jk":"P","pdpd":false},{"nama":"Puteri","jk":"P","pdpd":false},{"nama":"Raissa Saputri","jk":"P","pdpd":false},{"nama":"Rehan","jk":"L","pdpd":false},{"nama":"Rizka Safitri","jk":"P","pdpd":false},{"nama":"Sayid M. Zein Baihaki","jk":"L","pdpd":false},{"nama":"Selvi","jk":"P","pdpd":false},{"nama":"Siti Aminah","jk":"P","pdpd":false},{"nama":"Syaidillah","jk":"L","pdpd":false},{"nama":"Syifa Aulia Safitri","jk":"P","pdpd":false},{"nama":"Yafi Rachman","jk":"L","pdpd":false}],"XII 9":[{"nama":"Ahmad Fauzi","jk":"L","pdpd":true},{"nama":"Ahmad Rayhan","jk":"L","pdpd":false},{"nama":"Ala Rahmi","jk":"P","pdpd":false},{"nama":"Alvin Rajendra","jk":"L","pdpd":false},{"nama":"Ayu Salsabila","jk":"P","pdpd":false},{"nama":"Bagaskara Adjie Prastya","jk":"L","pdpd":false},{"nama":"Dina Saskia Azzahra","jk":"P","pdpd":false},{"nama":"Ghina Nor Azkia","jk":"P","pdpd":false},{"nama":"Hafizh Maulana","jk":"L","pdpd":false},{"nama":"Irda Khairiani","jk":"P","pdpd":false},{"nama":"Juwita","jk":"P","pdpd":false},{"nama":"Laila Navila","jk":"P","pdpd":false},{"nama":"M. Azriel Al Rivansa","jk":"L","pdpd":false},{"nama":"Mapdur Rijal","jk":"L","pdpd":false},{"nama":"Muhammad Aldiansyah","jk":"L","pdpd":false},{"nama":"Muhammad Iqbal","jk":"L","pdpd":false},{"nama":"Muhammad Naqli","jk":"L","pdpd":false},{"nama":"Muhammad Ramadhan","jk":"L","pdpd":false},{"nama":"Muhammad Riyadi","jk":"L","pdpd":false},{"nama":"Muhammad Yusuf","jk":"L","pdpd":false},{"nama":"Mutiara","jk":"P","pdpd":true},{"nama":"Nazwa Maulida","jk":"P","pdpd":false},{"nama":"Noor Layla","jk":"P","pdpd":false},{"nama":"Noor Maulida","jk":"P","pdpd":false},{"nama":"Nur Azkia","jk":"P","pdpd":false},{"nama":"Nur Syifa","jk":"P","pdpd":false},{"nama":"Pasha Ramadhan","jk":"L","pdpd":false},{"nama":"Putri Yani","jk":"P","pdpd":false},{"nama":"Ratih Mila Agustin","jk":"P","pdpd":false},{"nama":"Rifandi","jk":"L","pdpd":false},{"nama":"Sabrina Junita Putri","jk":"P","pdpd":false},{"nama":"Sheza Billa Rijal","jk":"P","pdpd":false},{"nama":"Siti Fatimah","jk":"P","pdpd":false},{"nama":"Sugi Aulia Sahbana","jk":"L","pdpd":false}]};
+
+/* ---------- Suara (WebAudio, tanpa berkas) ----------
+   Bunyi dibuat dari kode (osilator), bukan mp3 — ringan, jalan offline.
+   Klik lembut tiap ketukan tombol/pilihan; melodi pendek pas skor muncul,
+   beda per tier (90+ meriah, 75+ hangat, 60+ menyemangati, <60 lembut).
+   Tombol speaker di header; pilihan tersimpan di localStorage
+   ("praujian-suara" = "mati" bila dimatikan; default hidup).
+   AudioContext dibuat pas gestur pertama (aturan autoplay browser). */
+var ctxAudio = null;
+var KUNCI_SUARA = "praujian-suara";
+function suaraHidup(){
+  try{ return localStorage.getItem(KUNCI_SUARA) !== "mati"; }catch(e){ return true; }
+}
+function audioCtx(){
+  if(!ctxAudio){
+    try{ ctxAudio = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e){ return null; }
+  }
+  if(ctxAudio.state === "suspended"){ ctxAudio.resume(); }
+  return ctxAudio;
+}
+function nada(freq, mulai, dur, tipe, vol){
+  if(!suaraHidup()) return;
+  var ctx = audioCtx();
+  if(!ctx) return;
+  var o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = tipe || "sine";
+  o.frequency.value = freq;
+  var t = ctx.currentTime + mulai;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol || 0.1, t + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g);
+  g.connect(ctx.destination);
+  o.start(t);
+  o.stop(t + dur + 0.05);
+}
+function bunyiKlik(){ nada(660, 0, 0.07, "sine", 0.08); }
+function melodiSkor(skor){
+  var m, tipe = "triangle", vol = 0.12, jeda = 0.13;
+  if(skor >= 90){ m = [523.25, 659.25, 783.99, 1046.5]; }
+  else if(skor >= 75){ m = [523.25, 659.25, 783.99]; }
+  else if(skor >= 60){ m = [659.25, 783.99]; }
+  else { m = [523.25, 659.25]; tipe = "sine"; vol = 0.1; jeda = 0.18; }
+  m.forEach(function(f, i){ nada(f, i * jeda, 0.22, tipe, vol); });
+}
+function perbaruiTombolSuara(){
+  var b = $("btn-suara");
+  if(!b) return;
+  var hidup = suaraHidup();
+  b.textContent = (hidup ? String.fromCodePoint(0x1F50A) : String.fromCodePoint(0x1F507)) + " Suara: " + (hidup ? "Hidup" : "Mati");
+  b.classList.toggle("mati", !hidup);
+  b.setAttribute("aria-pressed", hidup ? "true" : "false");
+}
+var btnSuara = $("btn-suara");
+if(btnSuara){
+  btnSuara.addEventListener("click", function(){
+    try{ localStorage.setItem(KUNCI_SUARA, suaraHidup() ? "mati" : "hidup"); }catch(e){}
+    perbaruiTombolSuara();
+    if(suaraHidup()) bunyiKlik();
+  });
+}
+perbaruiTombolSuara();
+/* Klik lembut untuk semua ketukan tombol/pilihan (didelegasikan). */
+document.addEventListener("click", function(e){
+  if(!suaraHidup()) return;
+  var t = e.target && e.target.closest ? e.target.closest("button, label") : null;
+  if(t && t.id !== "btn-suara") bunyiKlik();
+});
+
+/* ---------- Musik latar (mp3 yang sama dengan LKPD supervisi) ----------
+   Mulai pas ketukan pertama (aturan autoplay browser); tombol Musik di
+   header; pilihan tersimpan di localStorage ("praujian-musik" = "mati"
+   bila dimatikan; default hidup). Volume 0.4 supaya lembut — ini ujian. */
+var KUNCI_MUSIK = "praujian-musik";
+var musikDimulai = false; /* true sesudah play() pertama berhasil */
+function musikHidup(){
+  try{ return localStorage.getItem(KUNCI_MUSIK) !== "mati"; }catch(e){ return true; }
+}
+/* Coba nyalakan musik: dipanggil pas halaman dibuka (autoplay bila browser
+   mengizinkan) dan diulang tiap ketukan sampai benar-benar bunyi —
+   kyk LKPD supervisi: listener dilepas hanya sesudah musik berbunyi. */
+function cobaPutarMusik(){
+  var a = $("musik-latar");
+  if(!a || !musikHidup() || !a.paused) return;
+  a.volume = 0.4;
+  var p = a.play();
+  if(p && p.then){ p.then(function(){ musikDimulai = true; }, function(){}); }
+  else { musikDimulai = true; }
+}
+function putarMusik(){
+  var a = $("musik-latar");
+  if(!a) return;
+  a.volume = 0.4;
+  if(musikHidup()){ cobaPutarMusik(); } else { a.pause(); }
+}
+function perbaruiTombolMusik(){
+  var b = $("btn-musik");
+  if(!b) return;
+  var hidup = musikHidup();
+  b.textContent = String.fromCodePoint(0x1F3B5) + " Musik: " + (hidup ? "Hidup" : "Mati");
+  b.classList.toggle("mati", !hidup);
+  b.setAttribute("aria-pressed", hidup ? "true" : "false");
+}
+var btnMusik = $("btn-musik");
+if(btnMusik){
+  btnMusik.addEventListener("click", function(){
+    var a = $("musik-latar");
+    if(musikHidup() && !musikDimulai && a && a.paused){
+      /* Ketukan pertama di tombol Musik: musiknya belum pernah bunyi
+         (autoplay) — ketukan ini untuk menyalakan, bukan mematikan. */
+      putarMusik();
+      return;
+    }
+    try{ localStorage.setItem(KUNCI_MUSIK, musikHidup() ? "mati" : "hidup"); }catch(e){}
+    perbaruiTombolMusik();
+    putarMusik();
+  });
+}
+perbaruiTombolMusik();
+function awalMusik(e){
+  if(e.target && e.target.closest && e.target.closest("#btn-musik")) return;
+  cobaPutarMusik();
+}
+document.addEventListener("pointerdown", awalMusik);
+var _audioMusik = $("musik-latar");
+if(_audioMusik){
+  _audioMusik.addEventListener("playing", function(){ document.removeEventListener("pointerdown", awalMusik); });
+  _audioMusik.addEventListener("canplay", function(){ cobaPutarMusik(); });
+}
+cobaPutarMusik(); /* coba langsung pas halaman dibuka */
+
+/* ---------- Dropdown custom bertema (ganti select native yang jadul) ----------
+   Select asli tetap ada (tersembunyi) supaya semua logika lama jalan:
+   dropdown custom cuma menulis value-nya + memicu "change". */
+function buatDropdown(idBtn, idList, idSelect){
+  var btn = $(idBtn), list = $(idList), sel = $(idSelect);
+  function tutupSemua(){
+    document.querySelectorAll(".dd-list").forEach(function(l){ l.hidden = true; });
+    document.querySelectorAll(".dd-btn").forEach(function(b){ b.setAttribute("aria-expanded", "false"); });
+  }
+  function bangunList(){
+    list.innerHTML = "";
+    var opts = sel.options;
+    for(var i = 0; i < opts.length; i++){
+      (function(o){
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "dd-opt";
+        b.setAttribute("role", "option");
+        b.setAttribute("data-value", o.value);
+        b.setAttribute("aria-selected", o.value === sel.value ? "true" : "false");
+        b.textContent = o.textContent;
+        b.addEventListener("click", function(){
+          sel.value = o.value;
+          sel.dispatchEvent(new Event("change"));
+          perbaruiLabel();
+          tutupSemua();
+        });
+        list.appendChild(b);
+      })(opts[i]);
+    }
+  }
+  function perbaruiLabel(){
+    var lbl = btn.querySelector(".dd-label");
+    var teks = "";
+    if(sel.value){
+      for(var i = 0; i < sel.options.length; i++){
+        if(sel.options[i].value === sel.value){ teks = sel.options[i].textContent; break; }
+      }
+    } else if(sel.options.length && sel.options[0]){
+      teks = sel.options[0].textContent;
+    }
+    lbl.textContent = teks;
+    btn.classList.toggle("dd-kosong", !sel.value);
+    list.querySelectorAll(".dd-opt").forEach(function(o){
+      o.setAttribute("aria-selected", o.getAttribute("data-value") === sel.value ? "true" : "false");
+    });
+  }
+  btn.addEventListener("click", function(e){
+    e.stopPropagation();
+    var akanBuka = list.hidden;
+    tutupSemua();
+    if(akanBuka){
+      bangunList();
+      list.hidden = false;
+      btn.setAttribute("aria-expanded", "true");
+      try{ list.scrollIntoView({block:"nearest"}); }catch(e){}
+    }
+  });
+  document.addEventListener("click", function(e){
+    if(!list.hidden && e.target && e.target.closest && !e.target.closest("#" + idList) && !e.target.closest("#" + idBtn)) tutupSemua();
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") tutupSemua();
+  });
+  perbaruiLabel();
+  return { bangun: bangunList, label: perbaruiLabel, tutup: tutupSemua };
+}
+var ddKelas = buatDropdown("dd-kelas-btn", "dd-kelas-list", "pilih-kelas");
+var ddNama = buatDropdown("dd-nama-btn", "dd-nama-list", "pilih-nama");
+
+/* ---------- Util ---------- */
+function $(id){ return document.getElementById(id); }
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+/* Bungkus runtun huruf Arab dalam span rtl; sisa teks tetap LTR.
+   Paragraf & daftar opsi TIDAK PERNAH jadi RTL penuh. */
+var AR_RE = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]+/g;
+function arHtml(teks){
+  var aman = esc(teks);
+  return aman.replace(AR_RE, function(m){
+    return '<span dir="rtl" lang="ar" class="ar">' + m + "</span>";
+  });
+}
+function fmtSkor(n){
+  return (Math.round(n * 10) / 10) % 1 === 0 ? String(Math.round(n)) : (Math.round(n * 10) / 10).toFixed(1);
+}
+function pesanTier(skor){
+  if(skor >= 90) return "Luar biasa! \u{1F389}";
+  if(skor >= 75) return "Bagus sekali! \u{1F44F}";
+  if(skor >= 60) return "Terus semangat! \u{1F4AA}";
+  return "Jangan menyerah! \u{1F4D6}";
+}
+
+/* ---------- State ---------- */
+var state = { mapel:"PAI", kelas:"", nama:"", pdpd:false, soal:[], jawaban:[], idx:0, sudahKumpul:false, pindah:0, mulai:0, timerId:null, waktuHabis:false, lanjutan:false, jawabanPulih:null, pindahLama:0, tercatat:null };
+var DURASI_UJIAN_MS = 90 * 60 * 1000; /* timer 90 menit */
+var HURUF = ["A","B","C","D","E"];
+/* Warna ubin jawaban ala Wayground — per POSISI tampil (A selalu
+   merah, B biru, C kuning, D hijau, E ungu), BUKAN per benar/salah.
+   Karena opsi diacak per siswa, warna tidak pernah menandai jawaban
+   benar. */
+var WARNA_OPSI = ["#E21B3C", "#1368CE", "#D89E00", "#26890C", "#7C3AED"];
+
+/* ---------- Anti-curang v4: acak unik per siswa ----------
+   Benih = nama + kelas + mapel (FNV-1a 32-bit), PRNG mulberry32,
+   Fisher-Yates — jadi acakan tiap siswa beda, TAPI tetap sama bila
+   ia masuk lagi (progres tersimpan tidak kacau), dan beda lawan
+   siswa lain (XII: 293 siswa, satu mapel PAI). Yang diacak: urutan soal
+   DAN urutan opsi tiap soal — jadi "nomor 5 = B" tidak berlaku
+   untuk siapa pun. Build script memeriksa di Python: bila ada dua
+   siswa yang acakannya sama persis, build GAGAL (jaminan diperiksa,
+   bukan cuma diharap). */
+function hashFNV(str){
+  var h = 2166136261;
+  for(var i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+function prngMulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function acakArray(arr, rand){
+  var a = arr.slice();
+  for(var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(rand() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function siapkanAcak(){
+  var benih = hashFNV(state.mapel + "|" + state.kelas + "|" + state.nama);
+  var rand = prngMulberry32(benih);
+  /* Salin dalam-dalam supaya array global SOAL_* tidak ikut teracak. */
+  var salinan = state.soal.map(function(s){
+    return Object.assign({}, s, { opsi: s.opsi.slice() });
+  });
+  state.soal = acakArray(salinan, rand);
+  state.soal.forEach(function(s){
+    var randQ = prngMulberry32((benih ^ hashFNV("Q" + s.no)) >>> 0);
+    var idx = acakArray(s.opsi.map(function(o, k){ return k; }), randQ);
+    s.opsiTampil = idx.map(function(k){ return { teks: s.opsi[k], asli: k }; });
+  });
+}
+
+/* ---------- Jadwal akses (kunci waktu) ----------
+   Pra ujian XII hanya dibuka pada jam pelajaran PAI 2 JP (ke atas)
+   (Revisi III) — aturan sama seperti XI. Jam 1 JP bukan jendela.
+   XII 1: PAI Kamis 09:00-10:45 (Pak Azmi); XII 2: PAI Kamis 10:45-12:15
+   (Pak Azmi); XII 3: PAI Senin 10:00-11:30 (Pak Azmi); XII 4: PAI Rabu
+   14:30-16:00 (Pak Azmi); XII 5: PAI Kamis 12:45-14:15 (Pak Azmi);
+   XII 6: PAI Senin 14:30-16:00 (Pak Fakhruzzaini); XII 7: PAI Rabu
+   14:30-16:00 (Pak Fakhruzzaini); XII 8: PAI Kamis 14:30-16:00
+   (Pak Fakhruzzaini); XII 9: PAI Selasa 07:30-09:00 (Pak Fakhruzzaini).
+   Tidak ada jendela PAI XII pada hari Jumat.
+   JADWAL_KHUSUS = jendela tanggal tertentu, SEKALI SAJA (bukan mingguan),
+   diperiksa dulu sebelum JADWAL mingguan — untuk pengganti sesi yang
+   terpotong (mis. razia) tanpa mengubah aturan 1 JP.
+   Hari: 1=Senin, 2=Selasa, 3=Rabu, 4=Kamis, 5=Jumat (getDay).
+   Pengecekan memakai jam perangkat siswa (WITA): penertib supaya jawaban
+   tidak bocor antar kelas, BUKAN pengaman anti-curang mutlak. */
+var JADWAL = {
+  "XII 1": { "PAI": [ {hari:4, mulai:"09:00", selesai:"10:45"} ] },
+  "XII 2": { "PAI": [ {hari:4, mulai:"10:45", selesai:"12:15"} ] },
+  "XII 3": { "PAI": [ {hari:1, mulai:"10:00", selesai:"11:30"} ] },
+  "XII 4": { "PAI": [ {hari:3, mulai:"14:30", selesai:"16:00"} ] },
+  "XII 5": { "PAI": [ {hari:4, mulai:"12:45", selesai:"14:15"} ] },
+  "XII 6": { "PAI": [ {hari:1, mulai:"14:30", selesai:"16:00"} ] },
+  "XII 7": { "PAI": [ {hari:3, mulai:"14:30", selesai:"16:00"} ] },
+  "XII 8": { "PAI": [ {hari:4, mulai:"14:30", selesai:"16:00"} ] },
+  "XII 9": { "PAI": [ {hari:2, mulai:"07:30", selesai:"09:00"} ] }
+};
+/* JADWAL_KHUSUS saat ini KOSONG — belum ada jendela khusus XII.
+   Bila nanti ada sesi XII yang terpotong (mis. razia), tambahkan entri
+   di sini; mekanisme lanjutan kiriman v4.7 (tombol Lanjutkan + pemulihan
+   jawaban dari Sheet) tetap ada dan aktif di jendela khusus itu. */
+var JADWAL_KHUSUS = [];
+var NAMA_HARI = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+function menitDariJam(j){ var p = j.split(":"); return parseInt(p[0],10)*60 + parseInt(p[1],10); }
+function teksJadwal(daftar){
+  return daftar.map(function(w){ return NAMA_HARI[w.hari] + " " + w.mulai + "–" + w.selesai; }).join(", ");
+}
+function teksJadwalLengkap(kelas, mapel){
+  var teks = "";
+  var daftar = JADWAL[kelas] && JADWAL[kelas][mapel];
+  if(daftar) teks = teksJadwal(daftar);
+  var khusus = [];
+  for(var k = 0; k < JADWAL_KHUSUS.length; k++){
+    var s = JADWAL_KHUSUS[k];
+    if(s.kelas === kelas && s.mapel === mapel) khusus.push(s.label + " " + s.mulai + "–" + s.selesai + " (jendela khusus)");
+  }
+  if(khusus.length) teks = teks ? teks + ", " + khusus.join(", ") : khusus.join(", ");
+  return teks;
+}
+function namaMapel(m){ return "PAI & Budi Pekerti"; }
+function cekJadwal(kelas, mapel){
+  var kini = new Date();
+  var hari = kini.getDay();
+  var menit = kini.getHours()*60 + kini.getMinutes();
+  /* Jendela khusus tanggal tertentu — diperiksa dulu. */
+  for(var k = 0; k < JADWAL_KHUSUS.length; k++){
+    var s = JADWAL_KHUSUS[k];
+    if(s.kelas !== kelas || s.mapel !== mapel) continue;
+    var t = s.tanggal.split("-");
+    if(parseInt(t[0],10) === kini.getFullYear() && parseInt(t[1],10) === kini.getMonth()+1 && parseInt(t[2],10) === kini.getDate()){
+      if(menit < menitDariJam(s.mulai)) return { buka:false, alasan:"belum", mulai:s.mulai, selesai:s.selesai };
+      if(menit < menitDariJam(s.selesai)) return { buka:true };
+      return { buka:false, alasan:"tutup", mulai:s.mulai, selesai:s.selesai };
+    }
+  }
+  var daftar = JADWAL[kelas] && JADWAL[kelas][mapel];
+  if(!daftar) return { buka:true }; /* kelas tanpa jadwal: tidak dibatasi */
+  for(var i = 0; i < daftar.length; i++){
+    var w = daftar[i];
+    if(w.hari === hari){
+      if(menit < menitDariJam(w.mulai)) return { buka:false, alasan:"belum", mulai:w.mulai, selesai:w.selesai };
+      if(menit < menitDariJam(w.selesai)) return { buka:true };
+      return { buka:false, alasan:"tutup", mulai:w.mulai, selesai:w.selesai };
+    }
+  }
+  return { buka:false, alasan:"bukan-hari", jadwal:teksJadwal(daftar) };
+}
+/* Masa tenggang 60 menit sesudah jendela hari ini habis: progres yang
+   tersimpan masih boleh dilanjutkan. Tujuannya supaya siswa yang sedang
+   mengerjakan tidak terkunci di tengah jalan gara-gara reload/HP mati
+   persis sesudah jam habis. Sesudah 60 menit, kunci waktu berlaku penuh
+   — jadi yang sudah sempat mulai tidak bisa lanjut berjam-jam di luar
+   jadwal sementara yang belum mulai tetap terkunci. Batas bawahnya
+   menit >= akhir: sebelum jendela mulai, tenggang TIDAK berlaku
+   (tidak bisa masuk lebih awal). */
+function dalamTenggang(kelas, mapel){
+  var kini = new Date();
+  var menit = kini.getHours()*60 + kini.getMinutes();
+  var akhir = null;
+  function pertimbangkan(a){ if(akhir === null || a > akhir) akhir = a; }
+  for(var k = 0; k < JADWAL_KHUSUS.length; k++){
+    var s = JADWAL_KHUSUS[k];
+    if(s.kelas !== kelas || s.mapel !== mapel) continue;
+    var t = s.tanggal.split("-");
+    if(parseInt(t[0],10) === kini.getFullYear() && parseInt(t[1],10) === kini.getMonth()+1 && parseInt(t[2],10) === kini.getDate()){
+      pertimbangkan(menitDariJam(s.selesai));
+    }
+  }
+  var daftar = JADWAL[kelas] && JADWAL[kelas][mapel];
+  if(daftar){
+    for(var i = 0; i < daftar.length; i++){
+      if(daftar[i].hari === kini.getDay()) pertimbangkan(menitDariJam(daftar[i].selesai));
+    }
+  }
+  return akhir !== null && menit >= akhir && menit < akhir + 60;
+}
+function tampilKunci(cek){
+  $("kunci-nama").textContent = state.nama;
+  $("kunci-kelas").textContent = state.kelas.replace("XII ", "XII-");
+  $("kunci-mapel").textContent = namaMapel(state.mapel);
+  if(cek.alasan === "belum"){
+    $("kunci-judul").textContent = "Belum Waktunya";
+    $("kunci-pesan").textContent = "Pra ujian ini baru dibuka pukul " + cek.mulai + " hari ini. Silakan kembali pada waktunya.";
+  } else if(cek.alasan === "tutup"){
+    $("kunci-judul").textContent = "Waktu Sudah Habis";
+    $("kunci-pesan").textContent = "Pra ujian ini sudah ditutup pukul " + cek.selesai + ".";
+  } else {
+    $("kunci-judul").textContent = "Bukan Jadwal Hari Ini";
+    $("kunci-pesan").textContent = "Pra ujian untuk kelas dan mapel ini tidak dibuka hari ini.";
+  }
+  $("kunci-jadwal").textContent = "Jadwal " + state.kelas.replace("XII ", "XII-") + " — " + namaMapel(state.mapel) + ": " + teksJadwalLengkap(state.kelas, state.mapel) + " WITA.";
+  $("layar-identitas").hidden = true;
+  $("layar-soal").hidden = true;
+  $("layar-hasil").hidden = true;
+  $("layar-kunci").hidden = false;
+  window.scrollTo(0, 0);
+}
+
+function perbaruiTombolMulai(){
+  $("btn-mulai").disabled = !(state.mapel && state.kelas && state.nama);
+  var info = $("info-jadwal");
+  if(state.mapel && state.kelas && JADWAL[state.kelas] && JADWAL[state.kelas][state.mapel]){
+    info.textContent = "Jadwal pra ujian kelas ini: " + teksJadwalLengkap(state.kelas, state.mapel) + " WITA. Di luar jadwal itu aplikasi terkunci.";
+    info.hidden = false;
+  } else {
+    info.hidden = true;
+  }
+}
+
+/* ---------- Simpan progres di perangkat (localStorage) ----------
+   Jawaban + posisi soal tersimpan otomatis di browser siswa setiap
+   kali menjawab / pindah soal. Kalau browser ketutup, HP mati, atau
+   kepencet keluar di tengah jalan, begitu masuk lagi dengan identitas
+   + mapel yang sama, progresnya pulih dari soal terakhir — jawaban
+   40 soal tidak hilang. Kunci per (mapel, kelas, nama) supaya tidak
+   tertukar antar siswa yang memakai perangkat yang sama. Progres
+   dihapus begitu jawaban berhasil dikumpulkan. */
+function kunciSimpan(){
+  return "praujian-v1-" + state.mapel + "-" + state.kelas + "-" + state.nama;
+}
+function simpanProgres(){
+  try{
+    localStorage.setItem(kunciSimpan(), JSON.stringify({ jawaban: state.jawaban, idx: state.idx, pindah: state.pindah, mulai: state.mulai }));
+  }catch(e){}
+}
+function muatProgres(){
+  try{
+    var mentah = localStorage.getItem(kunciSimpan());
+    if(!mentah) return null;
+    var d = JSON.parse(mentah);
+    if(!d || !Array.isArray(d.jawaban) || d.jawaban.length !== state.soal.length) return null;
+    return d;
+  }catch(e){ return null; }
+}
+function hapusProgres(){
+  try{ localStorage.removeItem(kunciSimpan()); }catch(e){}
+}
+
+/* ---------- Timer 90 menit (dijeda pas istirahat) ----------
+   Mulai saat siswa masuk ujian (baru atau lanjut). Deadline dihitung
+   dari jam dinding (Date.now) supaya tahan reload / tutup tab —
+   menutup halaman TIDAK menjeda timer. Pas habis, jawaban langsung
+   dikumpulkan otomatis.
+   JEDA ISTIRAHAT (v4.1: 09:45-10:00; v4.2: SEMUA istirahat; v4.3:
+   koreksi Imron: ishoma 12:00-13:00): menit istirahat TIDAK dihitung
+   — Senin-Kamis 09:45-10:00, 12:00-13:00 (ISHOMA; jam 6 tulisan
+   sampai 12:15 tapi real habis 12:00, jam 7 masuk 13:00),
+   14:15-14:30; Jumat 09:30-09:45.
+   Jendela XII yang terpotong istirahat: XII 1 PAI Kamis 09:00-10:45
+   (105 menit, terpotong 09:45-10:00; 105 - 15 = 90, jadi timer pas
+   sama dengan waktu kerja); XII 2 PAI Kamis 10:45-12:15 (ekornya
+   12:00-12:15 masuk ishoma); XII 5 PAI Kamis 12:45-14:15 (mulai
+   masih dalam ishoma 12:00-13:00). Timer siswa yang masuk telat bisa
+   jalan melewati istirahat lain (mis. masuk 13:00, timer sampai 15:00
+   melewati 14:15-14:30). Aturan seragam: timer hanya menghitung menit
+   belajar. Selama istirahat, sisa waktu BEKU dan chip menampilkan
+   "Istirahat". Asumsi: satu sesi ujian dalam satu hari yang sama
+   (jendela siang, tenggang 60 menit). */
+function fmtWaktu(ms){
+  var total = Math.max(0, Math.ceil(ms / 1000));
+  var m = Math.floor(total / 60), s = total % 60;
+  return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+}
+/* Daftar istirahat sekolah (menit dari tengah malam, per hari):
+   Senin-Kamis: 09:45-10:00, 12:00-13:00 (ISHOMA; jam 6 real habis
+   12:00, jam 7 masuk 13:00), 14:15-14:30. Jumat: 09:30-09:45 saja. */
+function daftarIstirahat(kini){
+  var hari = new Date(kini).getDay();
+  if(hari === 5) return [[570, 585]];
+  if(hari >= 1 && hari <= 4) return [[585, 600], [720, 780], [855, 870]];
+  return [];
+}
+function menitIstirahat(a, b){
+  var jeda = daftarIstirahat(a);
+  var total = 0;
+  for(var i = 0; i < jeda.length; i++){
+    var d = new Date(a);
+    d.setHours(0, 0, 0, 0);
+    var m1 = d.getTime() + jeda[i][0] * 60000;
+    var m2 = d.getTime() + jeda[i][1] * 60000;
+    total += Math.max(0, Math.min(b, m2) - Math.max(a, m1));
+  }
+  return total;
+}
+function sedangIstirahat(kini){
+  var jeda = daftarIstirahat(kini);
+  var d = new Date(kini);
+  var menit = d.getHours() * 60 + d.getMinutes();
+  for(var i = 0; i < jeda.length; i++){
+    if(menit >= jeda[i][0] && menit < jeda[i][1]) return true;
+  }
+  return false;
+}
+function sisaMs(){
+  var kini = Date.now();
+  return DURASI_UJIAN_MS + menitIstirahat(state.mulai, kini) - (kini - state.mulai);
+}
+function perbaruiTimer(){
+  var el = $("timer");
+  if(!el) return;
+  var sisa = sisaMs();
+  var istirahat = sedangIstirahat(Date.now());
+  el.textContent = istirahat ? "⏸ Istirahat - " + fmtWaktu(sisa) : "⏱ " + fmtWaktu(sisa);
+  el.classList.toggle("mepet", !istirahat && sisa <= 10 * 60 * 1000);
+  el.classList.toggle("jeda", istirahat);
+  if(sisa <= 0){ hentikanTimer(); state.waktuHabis = true; kirimJawaban(); }
+}
+function mulaiTimer(){
+  hentikanTimer();
+  perbaruiTimer();
+  state.timerId = setInterval(perbaruiTimer, 1000);
+}
+function hentikanTimer(){
+  if(state.timerId){ clearInterval(state.timerId); state.timerId = null; }
+}
+
+/* ---------- Deteksi pindah layar ----------
+   visibilitychange = pindah tab / aplikasi lain (HP + laptop);
+   blur = jendela kehilangan fokus (Alt+Tab di laptop, layar belah).
+   Keduanya dihitung SATU kejadian bila rapat (< 2 detik).
+   Hanya dihitung saat layar soal terbuka. Kebijakan (sesuai arahan):
+   peringatan + hitungan tercatat, TIDAK langsung digagalkan — bisa
+   saja tidak sengaja (telepon masuk, layar terkunci). Hitungan
+   tersimpan di progres dan dikirim bersama jawaban ke Sheet. */
+var pindahTerakhir = 0;
+function perbaruiPeringatanPindah(){
+  var el = $("peringatan-pindah");
+  if(!el) return;
+  if(state.pindah > 0){
+    el.hidden = false;
+    $("pindah-jumlah").textContent = state.pindah + "x";
+  } else {
+    el.hidden = true;
+  }
+}
+function catatPindah(){
+  if($("layar-soal").hidden) return;
+  var kini = Date.now();
+  if(kini - pindahTerakhir < 2000) return;
+  pindahTerakhir = kini;
+  state.pindah++;
+  simpanProgres();
+  perbaruiPeringatanPindah();
+  if(suaraHidup()) nada(220, 0, 0.15, "sine", 0.12);
+}
+document.addEventListener("visibilitychange", function(){ if(document.hidden) catatPindah(); });
+window.addEventListener("blur", function(){ catatPindah(); });
+
+/* ---------- Penanda sudah selesai (localStorage) ----------
+   Begitu jawaban berhasil dikumpulkan — atau ketahuan sudah tercatat
+   di Sheet — identitas ini ditandai selesai untuk mapel itu, supaya
+   kalau masuk lagi langsung tampil skor tercatat, bukan ujian baru.
+   Dicek DULU sebelum cek Sheet, jadi langsung walau Sheet lambat
+   memperbarui datanya. Kunci per (mapel, kelas, nama), sama seperti
+   kunci simpan progres. */
+function kunciSelesai(){
+  return "praujian-v1-done-" + state.mapel + "-" + state.kelas + "-" + state.nama;
+}
+function tandaiSelesai(hasil){
+  try{ localStorage.setItem(kunciSelesai(), JSON.stringify({ benar:hasil.benar, jumlah:hasil.jumlah, skor:hasil.skor })); }catch(e){}
+}
+function bacaSelesai(){
+  try{
+    var mentah = localStorage.getItem(kunciSelesai());
+    if(!mentah) return null;
+    var d = JSON.parse(mentah);
+    if(!d || typeof d.benar !== "number" || typeof d.jumlah !== "number" || typeof d.skor !== "number") return null;
+    return d;
+  }catch(e){ return null; }
+}
+function tampilSudahSelesai(hasil){
+  $("layar-identitas").hidden = true;
+  $("layar-soal").hidden = true;
+  $("layar-kunci").hidden = true;
+  tampilHasil(hasil, true, false);
+  var btnLanjut = $("btn-lanjutkan");
+  if(btnLanjut){
+    if(bolehLanjutKiriman(state.kelas, state.mapel) && hasil && hasil.jawaban){
+      state.tercatat = hasil;
+      btnLanjut.hidden = false;
+      $("hasil-catat").textContent = "Skor di atas adalah skor yang sudah tercatat. Hari ini jendela khusus dibuka — kamu bisa melanjutkan: jawaban yang sudah diisi tetap, isi soal yang masih kosong.";
+    } else {
+      btnLanjut.hidden = true;
+    }
+  }
+}
+
+document.querySelectorAll(".mapel").forEach(function(el){
+  el.addEventListener("click", function(){
+    document.querySelectorAll(".mapel").forEach(function(m){ m.classList.remove("pilih"); });
+    el.classList.add("pilih");
+    state.mapel = el.getAttribute("data-mapel");
+    perbaruiTombolMulai();
+  });
+});
+
+$("pilih-kelas").addEventListener("change", function(){
+  state.kelas = this.value;
+  state.nama = "";
+  var selNama = $("pilih-nama");
+  selNama.innerHTML = '<option value="">-- Pilih nama --</option>';
+  if(state.kelas && SISWA[state.kelas]){
+    var daftar = SISWA[state.kelas].slice().sort(function(a,b){
+      return a.nama.toLowerCase().localeCompare(b.nama.toLowerCase(), "id");
+    });
+    daftar.forEach(function(s){
+      var o = document.createElement("option");
+      o.value = s.nama;
+      o.textContent = s.nama;
+      selNama.appendChild(o);
+    });
+    $("bungkus-nama").hidden = false;
+  } else {
+    $("bungkus-nama").hidden = true;
+  }
+  ddNama.label();
+  perbaruiTombolMulai();
+});
+
+$("pilih-nama").addEventListener("change", function(){
+  state.nama = this.value;
+  perbaruiTombolMulai();
+});
+
+$("btn-mulai").addEventListener("click", function(){
+  if(!state.mapel || !state.kelas || !state.nama) return;
+  var daftar = SISWA[state.kelas] || [];
+  var dataSiswa = null;
+  for(var i = 0; i < daftar.length; i++){ if(daftar[i].nama === state.nama){ dataSiswa = daftar[i]; break; } }
+  state.pdpd = !!(dataSiswa && dataSiswa.pdpd);
+  state.soal = state.pdpd ? SOAL_PDPD_PAI : SOAL_PAI;
+  state.sudahKumpul = false;
+  state.lanjutan = false; state.jawabanPulih = null; state.pindahLama = 0; state.tercatat = null;
+  /* Sudah pernah kumpul? Penanda lokal dulu (instan), lalu cek Sheet
+     (lintas perangkat). Bila ketahuan sudah tercatat, langsung tampil
+     skor tercatat — jangan buka ujian baru. KECUALI hari ini jendela
+     khusus (lanjutan kiriman v4.7): penanda lokal tidak mengunci,
+     baris Sheet diambil untuk memulihkan jawaban. */
+  var selesai = bacaSelesai();
+  if(selesai && !bolehLanjutKiriman(state.kelas, state.mapel)){ tampilSudahSelesai(selesai); return; }
+  var btnMulai = $("btn-mulai");
+  btnMulai.disabled = true;
+  btnMulai.textContent = "Memeriksa...";
+  cekSudahMengerjakan(function(tercatat){
+    btnMulai.disabled = false;
+    btnMulai.textContent = "Mulai Mengerjakan";
+    if(tercatat){
+      tandaiSelesai(tercatat);
+      tampilSudahSelesai(tercatat);
+      return;
+    }
+    if(selesai){ tampilSudahSelesai(selesai); return; }
+    masukUjian();
+  });
+});
+
+/* Lanjutan lintas hari (v4.6): progres dari hari lain yang dilanjut di
+   jendela khusus (mis. sesi yang terpotong, dilanjut di jendela khusus)
+   mendapat timer BARU 90 menit dari jam masuk hari ini — jawaban yang
+   sudah diisi TETAP. Tanpa ini, deadline hari asal sudah lewat dan
+   jawaban langsung terkumpul otomatis begitu masuk. Lanjutan di hari
+   yang sama TIDAK direset (timer terus berjalan). */
+/* Lanjutan kiriman (v4.7): siswa yang SUDAH kumpul boleh masuk lagi HANYA
+   di jendela khusus hari ini untuk mengisi soal
+   yang masih kosong — jawaban yang sudah diisi dipulihkan dari Sheet dan
+   WAJIB tetap terisi. Di luar jendela khusus, aturan anti-ulang berlaku
+   penuh (sudah kumpul = terkunci). */
+function jendelaKhususHariIni(kelas, mapel){
+  var kini = new Date();
+  for(var k = 0; k < JADWAL_KHUSUS.length; k++){
+    var s = JADWAL_KHUSUS[k];
+    if(s.kelas !== kelas || s.mapel !== mapel) continue;
+    var t = s.tanggal.split("-");
+    if(parseInt(t[0],10) === kini.getFullYear() && parseInt(t[1],10) === kini.getMonth()+1 && parseInt(t[2],10) === kini.getDate()) return s;
+  }
+  return null;
+}
+function bolehLanjutKiriman(kelas, mapel){
+  if(!jendelaKhususHariIni(kelas, mapel)) return false;
+  var cek = cekJadwal(kelas, mapel);
+  return cek.buka || dalamTenggang(kelas, mapel);
+}
+/* Pulihkan jawaban dari string Sheet (urutan tampil, digit = indeks asli,
+   "-" = kosong). Bila string lebih pendek dari jumlah soal, berarti nol
+   depan hilang karena Sheet mengubahnya jadi angka — tambal dengan "0"
+   di depan (hanya nol depan yang bisa hilang); sisanya (bila ada) "-". */
+function pulihkanJawaban(str, jumlah){
+  str = String(str || "");
+  if(str.length < jumlah){
+    var kurang = jumlah - str.length;
+    var tambal = "";
+    for(var p = 0; p < kurang; p++) tambal += (p === 0 ? "0" : "-");
+    str = tambal + str;
+  }
+  if(str.length > jumlah) str = str.slice(0, jumlah);
+  var out = [];
+  for(var i = 0; i < jumlah; i++){
+    var c = str.charAt(i);
+    if(c === "-" || c === ""){ out.push(null); continue; }
+    var v = parseInt(c, 10);
+    out.push(isNaN(v) ? null : v);
+  }
+  return out;
+}
+function mulaiBaruUntukHariIni(mulaiLama){
+  if(!mulaiLama) return Date.now();
+  var d = new Date(mulaiLama), k = new Date();
+  if(d.getFullYear() === k.getFullYear() && d.getMonth() === k.getMonth() && d.getDate() === k.getDate()) return mulaiLama;
+  return Date.now();
+}
+function masukUjian(){
+  siapkanAcak();
+  var pulih = muatProgres();
+  if(pulih){
+    /* Lanjutkan dari progres tersimpan — TAPI kunci waktu tetap dicek.
+       Boleh lanjut bila jendela sedang buka, atau masih dalam masa
+       tenggang 60 menit sesudah jendela hari ini habis. Di luar itu,
+       tampilkan layar kunci: supaya yang sudah sempat mulai tidak bisa
+       lanjut berjam-jam di luar jadwal sementara yang belum mulai
+       tetap terkunci. */
+    var cek = cekJadwal(state.kelas, state.mapel);
+    if(!cek.buka && !dalamTenggang(state.kelas, state.mapel)){ tampilKunci(cek); return; }
+    state.jawaban = pulih.jawaban;
+    state.idx = pulih.idx || 0;
+    state.pindah = pulih.pindah || 0;
+    state.mulai = mulaiBaruUntukHariIni(pulih.mulai);
+  } else {
+    if(state.jawabanPulih){
+      /* Lanjutan kiriman: jawaban lama dipulihkan, langsung ke soal
+         kosong pertama. Timer BARU 90 menit dari jam masuk hari ini. */
+      state.jawaban = state.jawabanPulih;
+      state.idx = 0;
+      for(var j = 0; j < state.jawaban.length; j++){ if(state.jawaban[j] === null){ state.idx = j; break; } }
+    } else {
+      state.jawaban = [];
+      for(var j = 0; j < state.soal.length; j++) state.jawaban.push(null);
+      state.idx = 0;
+    }
+    state.pindah = 0;
+    state.mulai = Date.now();
+    var cek = cekJadwal(state.kelas, state.mapel);
+    if(!cek.buka && !(state.lanjutan && dalamTenggang(state.kelas, state.mapel))){ tampilKunci(cek); return; }
+  }
+  if(sisaMs() <= 0){ state.waktuHabis = true; kirimJawaban(); return; }
+  $("info-nama").textContent = state.nama;
+  $("info-kelas").textContent = state.kelas.replace("XII ", "XII-");
+  $("info-mapel").textContent = "PAI & Budi Pekerti";
+  $("layar-identitas").hidden = true;
+  $("layar-hasil").hidden = true;
+  $("layar-soal").hidden = false;
+  $("konfirm-kosong").hidden = true;
+  perbaruiPeringatanPindah();
+  mulaiTimer();
+  bangunNav();
+  tampilSoal(state.idx);
+  window.scrollTo(0, 0);
+}
+
+function bangunNav(){
+  var nav = $("nav-soal");
+  nav.innerHTML = "";
+  state.soal.forEach(function(s, i){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = String(i + 1);
+    b.setAttribute("data-i", String(i));
+    b.addEventListener("click", function(){ tampilSoal(i); });
+    nav.appendChild(b);
+  });
+}
+
+function tampilSoal(i){
+  state.idx = i;
+  var s = state.soal[i];
+  var n = state.soal.length;
+  var dijawab = state.jawaban.filter(function(a){ return a !== null; }).length;
+  $("progres-teks").textContent = "Soal " + (i + 1) + " dari " + n;
+  $("progres-jawab").textContent = dijawab + " dijawab";
+  $("progres-bar").style.width = Math.round(dijawab / n * 100) + "%";
+  $("btn-sebelum").disabled = (i === 0);
+  $("btn-berikut").disabled = (i === n - 1);
+
+  var html = "";
+  if(s.narasi){
+    html += '<div class="narasi">' + arHtml(s.narasi) + "</div>";
+  }
+  if(state.pdpd && s.gambar){
+    var folder = "img-pdpd-pai";
+    var berkas = String(s.gambar).replace(/\.png$/i, ".webp");
+    html += '<img class="gambar-soal" src="' + folder + "/" + berkas + '" alt="Gambar soal ' + (i + 1) + '">';
+  }
+  html += '<p class="stem">' + (i + 1) + ". " + arHtml(s.stem) + "</p>";
+  html += '<div class="opsi">';
+  var tampil = s.opsiTampil || s.opsi.map(function(op, k){ return { teks: op, asli: k }; });
+  tampil.forEach(function(item, k){
+    var cek = state.jawaban[i] === item.asli ? " checked" : "";
+    var pil = state.jawaban[i] === item.asli ? " pilih" : "";
+    html += '<label class="' + pil + '" style="--warna:' + WARNA_OPSI[k] + '"><input type="radio" name="opsi-soal" value="' + k + '"' + cek
+      + '><span class="huruf">' + HURUF[k] + '.</span><span class="isi">' + arHtml(item.teks) + "</span></label>";
+  });
+  html += "</div>";
+  $("kotak-soal").innerHTML = html;
+
+  document.querySelectorAll("#kotak-soal input[type=radio]").forEach(function(r){
+    r.addEventListener("change", function(){
+      var s2 = state.soal[state.idx];
+      var tampil2 = s2.opsiTampil || s2.opsi.map(function(op, k){ return { teks: op, asli: k }; });
+      state.jawaban[state.idx] = tampil2[parseInt(r.value, 10)].asli;
+      tampilSoal(state.idx);
+    });
+  });
+  document.querySelectorAll("#nav-soal button").forEach(function(b, k){
+    b.classList.toggle("dijawab", state.jawaban[k] !== null);
+    b.classList.toggle("aktif", k === state.idx);
+  });
+  simpanProgres();
+}
+
+$("btn-sebelum").addEventListener("click", function(){
+  if(state.idx > 0) tampilSoal(state.idx - 1);
+});
+$("btn-berikut").addEventListener("click", function(){
+  if(state.idx < state.soal.length - 1) tampilSoal(state.idx + 1);
+});
+
+/* ---------- Penilaian ---------- */
+function hitungHasil(){
+  var benar = 0;
+  state.soal.forEach(function(s, i){
+    if(state.jawaban[i] !== null && state.jawaban[i] === s.kunci) benar++;
+  });
+  var n = state.soal.length;
+  var skor = state.pdpd ? (benar / n * 100) : (benar * 2.5);
+  skor = Math.round(skor * 10) / 10;
+  var jawabanStr = state.jawaban.map(function(a){ return a === null ? "-" : String(a); }).join("");
+  return { benar:benar, jumlah:n, skor:skor, jawabanStr:jawabanStr };
+}
+
+/* ---------- Konfeti layar hasil (ala Wayground) ----------
+   Potongan warna-warni jatuh di dalam kartu hasil. Jumlah
+   menyesuaikan tier skor. Hanya hiasan — tidak mengubah skor. */
+function konfeti(skor){
+  var kartu = $("layar-hasil");
+  if(!kartu) return;
+  var warna = ["#E21B3C", "#1368CE", "#D89E00", "#26890C", "#7C3AED", "#F59E0B"];
+  var jumlah = skor >= 90 ? 60 : skor >= 75 ? 45 : skor >= 60 ? 30 : 15;
+  for(var i = 0; i < jumlah; i++){
+    var p = document.createElement("span");
+    p.className = "konfeti";
+    p.style.left = Math.floor(Math.random() * 100) + "%";
+    p.style.background = warna[i % warna.length];
+    p.style.animationDelay = (Math.random() * 0.9).toFixed(2) + "s";
+    if(Math.random() < 0.5) p.style.width = "6px";
+    kartu.appendChild(p);
+  }
+  setTimeout(function(){
+    var potongan = kartu.querySelectorAll(".konfeti");
+    for(var j = 0; j < potongan.length; j++) potongan[j].remove();
+  }, 4200);
+}
+function tampilHasil(hasil, sudahAda, backendBelum){
+  hentikanTimer();
+  $("hasil-nama").textContent = state.nama;
+  $("hasil-kelas").textContent = state.kelas.replace("XII ", "XII-");
+  $("hasil-mapel").textContent = "PAI & Budi Pekerti";
+  $("hasil-skor").textContent = fmtSkor(hasil.skor);
+  $("hasil-skor").style.color = hasil.skor >= 90 ? "#B45309" : hasil.skor >= 75 ? "#15803D" : hasil.skor >= 60 ? "#1E40AF" : "#6B7280";
+  $("hasil-benar").textContent = hasil.benar + " dari " + hasil.jumlah + " benar";
+  $("hasil-pesan").textContent = pesanTier(hasil.skor);
+  if(sudahAda){
+    $("hasil-catat").textContent = "Kamu sudah mengerjakan mapel ini. Skor di atas adalah skor yang sudah tercatat sebelumnya.";
+    $("hasil-judul").textContent = "Kamu Sudah Mengerjakan";
+  } else if(backendBelum){
+    $("hasil-catat").textContent = "Skor sudah dihitung, tetapi backend penilaian belum dipasang guru — jawaban belum tercatat. Beritahu guru.";
+    $("hasil-judul").textContent = "Skor Kamu";
+  } else {
+    $("hasil-catat").textContent = "Jawabanmu sudah tercatat.";
+    $("hasil-judul").textContent = "Skor Kamu";
+  }
+  var elPindah = $("hasil-pindah");
+  if(elPindah){
+    if(!sudahAda && state.pindah > 0){
+      elPindah.hidden = false;
+      elPindah.textContent = "Pindah layar: " + state.pindah + "x (tercatat).";
+    } else {
+      elPindah.hidden = true;
+    }
+  }
+  if(state.waktuHabis && !sudahAda && !backendBelum){
+    $("hasil-catat").textContent = "Waktu 90 menit habis — jawaban dikumpulkan otomatis.";
+  }
+  $("layar-soal").hidden = true;
+  $("layar-hasil").hidden = false;
+  if(!sudahAda) konfeti(hasil.skor);
+  melodiSkor(hasil.skor);
+  window.scrollTo(0, 0);
+}
+
+$("btn-ulang").addEventListener("click", function(){
+  $("layar-hasil").hidden = true;
+  $("layar-soal").hidden = true;
+  $("layar-identitas").hidden = false;
+  state.mapel = "PAI"; state.kelas = ""; state.nama = "";
+  state.lanjutan = false; state.jawabanPulih = null; state.pindahLama = 0; state.tercatat = null;
+  $("pilih-kelas").value = "";
+  $("pilih-nama").innerHTML = '<option value="">-- Pilih nama --</option>';
+  $("bungkus-nama").hidden = true;
+  ddKelas.label();
+  ddNama.label();
+  perbaruiTombolMulai();
+});
+
+$("btn-lanjutkan").addEventListener("click", function(){
+  var t = state.tercatat;
+  if(!t) return;
+  state.lanjutan = true;
+  state.pindahLama = t.pindah || 0;
+  state.jawabanPulih = pulihkanJawaban(t.jawaban || "", state.soal.length);
+  state.sudahKumpul = false;
+  $("layar-hasil").hidden = true;
+  masukUjian();
+});
+
+$("btn-kunci-kembali").addEventListener("click", function(){
+  $("layar-kunci").hidden = true;
+  $("layar-identitas").hidden = false;
+  window.scrollTo(0, 0);
+});
+
+/* ---------- Cek duplikat (tab "Rekap") ----------
+   Kolom: Timestamp | Kelas | Nama | Mapel | Versi | Benar | Jumlah Soal | Skor | Jawaban.
+   Percobaan 1: fetch CSV (cara yang dipakai dashboard — terbukti jalan
+   di browser). Percobaan 2 (bila fetch gagal): gviz JSONP seperti dulu.
+   Keduanya memanggil cb(hasil) dengan hasil {benar, jumlah, skor} bila
+   ketemu, atau null bila belum ada / cek gagal (fail-open: lanjut). */
+function parseCsvBaris(s){
+  var out = [], cur = "", dalam = false;
+  for(var i = 0; i < s.length; i++){
+    var c = s[i];
+    if(dalam){
+      if(c === '"'){ if(s[i+1] === '"'){ cur += '"'; i++; } else { dalam = false; } }
+      else { cur += c; }
+    } else if(c === '"'){ dalam = true; }
+    else if(c === ','){ out.push(cur); cur = ""; }
+    else { cur += c; }
+  }
+  out.push(cur);
+  return out;
+}
+function cariDiBaris(nm, mp, benarS, jumlahS, skorS, jawabanS, pindahS){
+  if(!nm || !mp) return null;
+  if(nm.trim().toLowerCase() !== state.nama.trim().toLowerCase()) return null;
+  if(mp.trim().toUpperCase() !== state.mapel) return null;
+  var benar = parseInt(benarS, 10);
+  var jumlah = parseInt(jumlahS, 10);
+  var skor = parseFloat(String(skorS).replace(",", "."));
+  if(isNaN(benar) || isNaN(jumlah) || isNaN(skor)) return null;
+  return { benar:benar, jumlah:jumlah, skor:skor, jawaban:jawabanS || "", pindah:parseInt(pindahS, 10) || 0 };
+}
+function cekSudahMengerjakan(cb){
+  if(SHEET_ID.indexOf("__") !== -1 || SHEET_ID === "SHEET_ID_BELUM_DIISI"){
+    cb(null); /* backend belum dipasang: lewati cek, lanjut submit lokal */
+    return;
+  }
+  var selesai = false;
+  function done(hasil){ if(selesai) return; selesai = true; cb(hasil); }
+  if(typeof fetch === "undefined"){ cekViaJsonp(done); return; }
+  var urlCsv = "https://docs.google.com/spreadsheets/d/" + SHEET_ID
+    + "/gviz/tq?tqx=out:csv&sheet=" + encodeURIComponent("Rekap") + "&headers=1&_cb=" + Date.now();
+  var t1 = setTimeout(function(){ cekViaJsonp(done); }, 8000);
+  fetch(urlCsv, { cache: "no-store" }).then(function(res){
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    return res.text();
+  }).then(function(teks){
+    clearTimeout(t1);
+    var ketemu = null;
+    var baris = teks.split(/\r?\n/);
+    for(var i = 1; i < baris.length; i++){
+      var f = parseCsvBaris(baris[i]);
+      if(f.length < 8) continue;
+      var r = cariDiBaris(f[2], f[3], f[5], f[6], f[7], f[8], f[9]);
+      if(r) ketemu = r; /* baris terakhir menang */
+    }
+    done(ketemu);
+  }).catch(function(){
+    clearTimeout(t1);
+    cekViaJsonp(done);
+  });
+}
+function selGviz(c){
+  if(!c) return "";
+  if(typeof c.v !== "undefined" && c.v !== null) return String(c.v);
+  return "";
+}
+function cekViaJsonp(cb){
+  if(SHEET_ID.indexOf("__") !== -1 || SHEET_ID === "SHEET_ID_BELUM_DIISI"){
+    cb(null); /* backend belum dipasang: lewati cek, lanjut submit lokal */
+    return;
+  }
+  var url = "https://docs.google.com/spreadsheets/d/" + SHEET_ID
+    + "/gviz/tq?tqx=out:json&sheet=" + encodeURIComponent("Rekap");
+  var idSkrip = "gviz-rekap-" + Date.now();
+  var selesai = false;
+  var timer = null;
+  var googleLama = window.google;
+  function done(hasil){
+    if(selesai) return;
+    selesai = true;
+    if(timer) clearTimeout(timer);
+    var s = document.getElementById(idSkrip);
+    if(s && s.parentNode) s.parentNode.removeChild(s);
+    if(googleLama === undefined){ try{ delete window.google; }catch(e){} }
+    else { window.google = googleLama; }
+    cb(hasil);
+  }
+  window.google = window.google || {};
+  window.google.visualization = window.google.visualization || {};
+  window.google.visualization.Query = window.google.visualization.Query || {};
+  window.google.visualization.Query.setResponse = function(resp){
+    try{
+      var rows = (resp && resp.table && resp.table.rows) || [];
+      var ketemu = null;
+      for(var i = 0; i < rows.length; i++){
+        var c = rows[i].c || [];
+        var nm = selGviz(c[2]);
+        var mp = selGviz(c[3]);
+        if(!nm || !mp) continue;
+        if(nm.trim().toLowerCase() !== state.nama.trim().toLowerCase()) continue;
+        if(mp.trim().toUpperCase() !== state.mapel) continue;
+        var benar = parseInt(selGviz(c[5]), 10);
+        var jumlah = parseInt(selGviz(c[6]), 10);
+        var skor = parseFloat(selGviz(c[7]));
+        if(isNaN(benar) || isNaN(jumlah) || isNaN(skor)) continue;
+        ketemu = { benar:benar, jumlah:jumlah, skor:skor, jawaban:selGviz(c[8]), pindah:parseInt(selGviz(c[9]), 10) || 0 }; /* baris terakhir menang */
+      }
+      done(ketemu);
+    }catch(err){ done(null); }
+  };
+  var s = document.createElement("script");
+  s.id = idSkrip;
+  s.src = url;
+  s.onerror = function(){ done(null); };
+  document.head.appendChild(s);
+  timer = setTimeout(function(){ done(null); }, 12000);
+}
+
+/* ---------- Submit ---------- */
+function kirimJawaban(){
+  if(state.sudahKumpul) return;
+  var hasil = hitungHasil();
+  var btn = $("btn-kumpul");
+  btn.disabled = true;
+  btn.textContent = "Memeriksa...";
+  cekSudahMengerjakan(function(tercatat){
+    if(tercatat && !state.lanjutan){
+      state.sudahKumpul = true;
+      hapusProgres();
+      tandaiSelesai(tercatat);
+      btn.disabled = false;
+      btn.textContent = "Kumpulkan Jawaban";
+      tampilHasil(tercatat, true, false);
+      return;
+    }
+    var backendBelum = WEBGAS_URL.indexOf("__") !== -1;
+    if(backendBelum){
+      state.sudahKumpul = true;
+      hapusProgres();
+      btn.disabled = false;
+      btn.textContent = "Kumpulkan Jawaban";
+      tampilHasil(hasil, false, true);
+      return;
+    }
+    btn.textContent = "Mengirim...";
+    var payload = {
+      kelas: state.kelas,
+      nama: state.nama,
+      mapel: state.mapel,
+      versi: state.pdpd ? "PDPD" : "Reguler",
+      benar: hasil.benar,
+      jumlahSoal: hasil.jumlah,
+      skor: hasil.skor,
+      jawaban: hasil.jawabanStr,
+      pindah: state.pindah + (state.pindahLama || 0),
+      lanjutan: state.lanjutan ? true : false
+    };
+    fetch(WEBGAS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(function(){
+      state.sudahKumpul = true;
+      hapusProgres();
+      tandaiSelesai(hasil);
+      btn.disabled = false;
+      btn.textContent = "Kumpulkan Jawaban";
+      tampilHasil(hasil, false, false);
+    }).catch(function(){
+      btn.disabled = false;
+      btn.textContent = "Kumpulkan Jawaban";
+      tampilHasil(hasil, false, true);
+    });
+  });
+}
+
+$("btn-kumpul").addEventListener("click", function(){
+  if(state.sudahKumpul) return;
+  var kosong = [];
+  state.jawaban.forEach(function(a, i){ if(a === null) kosong.push(i + 1); });
+  if(kosong.length > 0){
+    $("konfirm-teks").textContent = "Masih ada " + kosong.length + " soal belum dijawab (no. "
+      + kosong.slice(0, 10).join(", ") + (kosong.length > 10 ? ", ..." : "") + "). Tetap kumpulkan?";
+    $("konfirm-kosong").hidden = false;
+    $("konfirm-kosong").scrollIntoView({ behavior:"smooth", block:"nearest" });
+    return;
+  }
+  kirimJawaban();
+});
+$("btn-lanjut-kumpul").addEventListener("click", function(){
+  $("konfirm-kosong").hidden = true;
+  kirimJawaban();
+});
+$("btn-batal-kumpul").addEventListener("click", function(){
+  $("konfirm-kosong").hidden = true;
+  var kosong = [];
+  state.jawaban.forEach(function(a, i){ if(a === null) kosong.push(i); });
+  if(kosong.length) tampilSoal(kosong[0]);
+});
+</script>
+</body>
+</html>
