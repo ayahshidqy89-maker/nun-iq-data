@@ -161,7 +161,7 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
     </div>
 
     <button type="button" class="btn" id="btn-mulai" disabled>Mulai Mengerjakan</button>
-    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 4.5 &middot; kartu berdampingan + PDF per kelas</p>
+    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 4.6 &middot; lanjutan XI-4 Jumat</p>
     <p class="ket" id="info-jadwal" hidden style="text-align:center;margin-top:12px"></p>
   </section>
 
@@ -547,9 +547,15 @@ var JADWAL = {
 /* Jendela khusus XI-7 PAI Kamis 19 Nov 2026 15:15–16:00 (1 JP) — pengganti
    sesi Senin 16 Nov yang terpotong razia atribut rambut & kelengkapan
    (siswa baru masuk, sisa ~15 menit, tidak cukup untuk 40 soal).
-   Hanya berlaku tanggal itu; Kamis berikutnya TIDAK terbuka. */
+   Hanya berlaku tanggal itu; Kamis berikutnya TIDAK terbuka.
+   Jendela khusus XI-4 PAI Jumat 20 Nov 2026 10:15–11:45 (90 menit) —
+   lanjutan sesi Selasa 17 Nov yang tidak cukup waktunya (Imron lupa
+   jadwal, fokus ngoreksi tugas): yang sudah mulai Selasa lanjut tanpa
+   mengulang jawaban; yang tidak hadir Selasa (Annisa, Teguh, Rahma)
+   mulai baru di jendela yang sama. Hanya berlaku tanggal itu. */
 var JADWAL_KHUSUS = [
-  { kelas:"XI 7", mapel:"PAI", tanggal:"2026-11-19", label:"Kamis, 19 November 2026", mulai:"15:15", selesai:"16:00" }
+  { kelas:"XI 7", mapel:"PAI", tanggal:"2026-11-19", label:"Kamis, 19 November 2026", mulai:"15:15", selesai:"16:00" },
+  { kelas:"XI 4", mapel:"PAI", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"10:15", selesai:"11:45" }
 ];
 var NAMA_HARI = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 function menitDariJam(j){ var p = j.split(":"); return parseInt(p[0],10)*60 + parseInt(p[1],10); }
@@ -895,6 +901,18 @@ $("btn-mulai").addEventListener("click", function(){
   });
 });
 
+/* Lanjutan lintas hari (v4.6): progres dari hari lain yang dilanjut di
+   jendela khusus (mis. sesi Selasa XI-4 yang terpotong, dilanjut Jumat)
+   mendapat timer BARU 90 menit dari jam masuk hari ini — jawaban yang
+   sudah diisi TETAP. Tanpa ini, deadline hari asal sudah lewat dan
+   jawaban langsung terkumpul otomatis begitu masuk. Lanjutan di hari
+   yang sama TIDAK direset (timer terus berjalan). */
+function mulaiBaruUntukHariIni(mulaiLama){
+  if(!mulaiLama) return Date.now();
+  var d = new Date(mulaiLama), k = new Date();
+  if(d.getFullYear() === k.getFullYear() && d.getMonth() === k.getMonth() && d.getDate() === k.getDate()) return mulaiLama;
+  return Date.now();
+}
 function masukUjian(){
   siapkanAcak();
   var pulih = muatProgres();
@@ -910,7 +928,7 @@ function masukUjian(){
     state.jawaban = pulih.jawaban;
     state.idx = pulih.idx || 0;
     state.pindah = pulih.pindah || 0;
-    state.mulai = pulih.mulai || Date.now();
+    state.mulai = mulaiBaruUntukHariIni(pulih.mulai);
   } else {
     state.jawaban = [];
     for(var j = 0; j < state.soal.length; j++) state.jawaban.push(null);
