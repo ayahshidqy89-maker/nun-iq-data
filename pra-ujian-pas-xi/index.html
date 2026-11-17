@@ -548,14 +548,16 @@ var JADWAL = {
    sesi Senin 16 Nov yang terpotong razia atribut rambut & kelengkapan
    (siswa baru masuk, sisa ~15 menit, tidak cukup untuk 40 soal).
    Hanya berlaku tanggal itu; Kamis berikutnya TIDAK terbuka.
-   Jendela khusus XI-4 PAI Jumat 20 Nov 2026 10:15–11:45 (90 menit) —
-   lanjutan sesi Selasa 17 Nov yang tidak cukup waktunya (Imron lupa
-   jadwal, fokus ngoreksi tugas): yang sudah mulai Selasa lanjut tanpa
-   mengulang jawaban; yang tidak hadir Selasa (Annisa, Teguh, Rahma)
-   mulai baru di jendela yang sama. Hanya berlaku tanggal itu. */
+   Jendela khusus XI-4 PAI Jumat 20 Nov 2026 10:15–10:45 (jam XI-4 Jumat saja —
+   koreksi Imron 17 Nov 11:18: BUKAN 90 menit sampai bulikan) — lanjutan sesi
+   Selasa 17 Nov yang tidak cukup waktunya (Imron lupa jadwal, fokus
+   ngoreksi tugas): yang sudah mulai Selasa lanjut tanpa mengulang jawaban;
+   yang tidak hadir Selasa (Annisa, Teguh, Rahma) mulai baru di jendela yang
+   sama. Timer tetap 90 menit dari jam masuk (masuk 10:15 → sampai 11:45) +
+   tenggang 60 menit sesudah jendela. Hanya berlaku tanggal itu. */
 var JADWAL_KHUSUS = [
   { kelas:"XI 7", mapel:"PAI", tanggal:"2026-11-19", label:"Kamis, 19 November 2026", mulai:"15:15", selesai:"16:00" },
-  { kelas:"XI 4", mapel:"PAI", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"10:15", selesai:"11:45" }
+  { kelas:"XI 4", mapel:"PAI", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"10:15", selesai:"10:45" }
 ];
 var NAMA_HARI = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 function menitDariJam(j){ var p = j.split(":"); return parseInt(p[0],10)*60 + parseInt(p[1],10); }
