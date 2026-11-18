@@ -436,8 +436,9 @@ function esc(s){
   return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 /* Bungkus runtun huruf Arab dalam span rtl; sisa teks tetap LTR.
-   Paragraf & daftar opsi TIDAK PERNAH jadi RTL penuh. */
-var AR_RE = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]+/g;
+   Paragraf & daftar opsi TIDAK PERNAH jadi RTL penuh.
+   PENTING: satu frasa Arab (kata disambung spasi) WAJIB satu span — tiap kata span sendiri membalik urutan kata jadi LTR (bug 18 Nov 2026). */
+var AR_RE = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]+(?:\s+[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]+)*/g;
 function arHtml(teks){
   var aman = esc(teks);
   return aman.replace(AR_RE, function(m){
