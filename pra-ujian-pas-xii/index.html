@@ -60,7 +60,12 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
 .pindah{text-align:center;color:#92400E;font-weight:700}
 .narasi{background:#F0FDF4;border-right:4px solid var(--hijau2);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:1rem}
 .stem{font-size:1.08rem;font-weight:600;margin-bottom:14px}
-.ar{font-family:'Noto Naskh Arabic',serif;font-size:1.25em;line-height:1.9}
+.ar{font-family:'Noto Naskh Arabic',serif;font-size:1.25em;line-height:1.9;unicode-bidi:isolate}
+.frag-intro{margin-bottom:2px}
+.frag{display:flex;align-items:center;gap:10px;padding:9px 2px}
+.frag + .frag{border-top:1px dashed #BBF7D0}
+.frag-no{flex:none;width:26px;height:26px;border-radius:50%;background:#166534;color:#fff;font-weight:700;font-size:.9rem;display:inline-flex;align-items:center;justify-content:center}
+.frag .ar{flex:1;text-align:right}
 .gambar-soal{width:100%;max-width:520px;display:block;margin:0 auto 16px;border-radius:12px;border:1px solid #E5E7EB}
 .opsi{display:flex;flex-direction:column;gap:10px}
 .opsi label{display:flex;gap:10px;align-items:flex-start;border:2px solid var(--warna,#D1D5DB);border-radius:14px;padding:12px 14px;cursor:pointer;background:#fff;position:relative;transition:transform .12s,box-shadow .12s,background .12s}
@@ -436,6 +441,22 @@ function arHtml(teks){
   return aman.replace(AR_RE, function(m){
     return '<span dir="rtl" lang="ar" class="ar">' + m + "</span>";
   });
+}
+/* Potongan bernomor (1)(2)(3) di narasi WAJIB tampil tiap potongan di baris sendiri.
+   Bug 19 Nov 2026: label (2)/(3) di antara dua span RTL ikut jadi RTL, berataan
+   potongan bergabung jadi satu jaluran RTL dan tampil TERBALIK — (1) diikuti
+   potongan 3, (2) diikuti potongan 1 — kanakan bingung urutannya. Baris sendiri
+   (blok) memutus jaluran bidi, nomor + potongan selalu berpasangan bujur. */
+var FRAG_RE = /^([^:]*):\s*\(1\)\s*(.+?)\s*\(2\)\s*(.+?)\s*\(3\)\s*(.+?)\s*$/;
+function adaArab(t){ AR_RE.lastIndex = 0; return AR_RE.test(t); }
+function narasiHtml(teks){
+  var m = FRAG_RE.exec(teks);
+  if(!m || !adaArab(m[2]) || !adaArab(m[3]) || !adaArab(m[4])) return arHtml(teks);
+  var out = '<div class="frag-intro">' + esc(m[1]) + ':</div>';
+  for(var k = 1; k <= 3; k++){
+    out += '<div class="frag"><span class="frag-no">' + k + '</span><span dir="rtl" lang="ar" class="ar">' + esc(m[1+k]) + '</span></div>';
+  }
+  return out;
 }
 function fmtSkor(n){
   return (Math.round(n * 10) / 10) % 1 === 0 ? String(Math.round(n)) : (Math.round(n * 10) / 10).toFixed(1);
@@ -1105,7 +1126,7 @@ function tampilSoal(i){
 
   var html = "";
   if(s.narasi){
-    html += '<div class="narasi">' + arHtml(s.narasi) + "</div>";
+    html += '<div class="narasi">' + narasiHtml(s.narasi) + "</div>";
   }
   if(state.pdpd && s.gambar){
     var folder = "img-pdpd-pai";
