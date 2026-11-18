@@ -442,8 +442,9 @@ function esc(s){
 }
 /* Bungkus runtun huruf Arab dalam span rtl; sisa teks tetap LTR.
    Paragraf & daftar opsi TIDAK PERNAH jadi RTL penuh.
-   PENTING: satu frasa Arab (kata disambung spasi) WAJIB satu span — tiap kata span sendiri membalik urutan kata jadi LTR (bug 18 Nov 2026). */
-var AR_RE = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]+(?:\s+[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]+)*/g;
+   PENTING: satu frasa Arab (kata disambung spasi) WAJIB satu span — tiap kata span sendiri membalik urutan kata jadi LTR (bug 18 Nov 2026).
+   "..." yang menempel pada frasa Arab (sambungan ayat, mis. "... رَبَّنَا ...") WAJIB ikut masuk span — di luar span, "..." jadi LTR dan jatuh di sisi yang salah (bug 19 Nov 2026). */
+var AR_RE = /(?:\.\.\.\s*)?[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]+(?:\s+[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]+)*(?:\s*\.\.\.)?/g;
 function arHtml(teks){
   var aman = esc(teks);
   return aman.replace(AR_RE, function(m){
