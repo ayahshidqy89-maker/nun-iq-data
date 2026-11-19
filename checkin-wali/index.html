@@ -113,6 +113,8 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 .gelembung.mus{background:var(--gelembung);color:var(--teks);border-bottom-left-radius:6px;align-self:flex-start}
 .gelembung.aku{background:var(--aksi);color:#fff;border-bottom-right-radius:6px;align-self:flex-end}
 .gelembung .kecil{font-size:12px;opacity:.75;margin-top:4px}
+.gelembung.balasan{background:#E6F9EE;border:2px solid var(--sukses);border-bottom-left-radius:6px}
+.gelembung.balasan .lbl-balasan{display:block;font-size:12px;font-weight:800;color:var(--sukses-gelap);margin-bottom:4px}
 .pilihan{display:flex;flex-direction:column;gap:9px}
 .pilihan.baris{flex-direction:row;flex-wrap:wrap}
 .skala{display:flex;gap:8px}
@@ -925,6 +927,7 @@ function tampilView(nama){
   if(nama==='g7') renderG7();
   if(nama==='sholat') renderJadwalSholat();
   if(nama==='pengingatku') renderPengingatku();
+  if(nama==='curhat') muatBalasanCurhat();
   if(nama==='beranda') perbaruiPratinjau();
 }
 function hariIni(){ return new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Makassar'}); }
@@ -1011,7 +1014,9 @@ function bukaKamar(){
   if(sudah){ tampilSudah(sudah); }
   else { mulaiPercakapan(); }
   renderProfil();
+  pulihkanBalasanCurhat();
   renderCurhat();
+  muatBalasanCurhat();
   renderG7();
   perbaruiStatistik();
   muatJadwalSholat();
@@ -1295,6 +1300,46 @@ $('tombolLengkapiProfil').addEventListener('click', ()=>{ bukaFormProfil(); });
 
 /* ===== CURHAT ===== */
 function bacaCurhat(){ try{ return JSON.parse(localStorage.getItem('curhat-'+nisnAktif)||'[]'); }catch(e){ return []; } }
+/* ===== BALASAN CURHAT (v9.1: balasan Musaa'id dibaca dari Sheet Curhat) ===== */
+const SHEET_CURHAT_ID='1dmP3vK0KFpGNeFqUYZkEpt3WAhtIphmhZM9mITtq5tk';
+const URL_GVIZ_CURHAT='https://docs.google.com/spreadsheets/d/'+SHEET_CURHAT_ID+'/gviz/tq?tqx=out:csv&sheet=Form%20Responses%201';
+let balasanCurhat={}; // teks curhat ternormalisasi -> teks balasan Musaa'id
+function normalisasiTeksCurhat(t){ return String(t||'').replace(/\s+/g,' ').trim().toLowerCase(); }
+function parseCSVCurhat(teks){
+  const baris=[]; let cur='', dalam=false, bar=[];
+  for(let i=0;i<teks.length;i++){
+    const c=teks[i];
+    if(dalam){
+      if(c==='"'){ if(teks[i+1]==='"'){cur+='"';i++;} else dalam=false; }
+      else cur+=c;
+    } else if(c==='"'){ dalam=true; }
+    else if(c===','){ bar.push(cur); cur=''; }
+    else if(c==='\n'||c==='\r'){ if(c==='\r'&&teks[i+1]==='\n') i++; bar.push(cur); cur=''; if(bar.length>1||bar[0]!=='') baris.push(bar); bar=[]; }
+    else cur+=c;
+  }
+  if(cur!==''||bar.length){ bar.push(cur); baris.push(bar); }
+  return baris;
+}
+async function muatBalasanCurhat(){
+  try{
+    const r=await fetch(URL_GVIZ_CURHAT);
+    if(!r.ok) return;
+    const baris=parseCSVCurhat(await r.text());
+    const peta={};
+    baris.slice(1).forEach(row=>{
+      const nisn=String(row[3]||'').trim();
+      const teks=String(row[4]||'');
+      const balasan=String(row[5]||'').trim();
+      if(nisn===nisnAktif && teks && balasan) peta[normalisasiTeksCurhat(teks)]=balasan;
+    });
+    balasanCurhat=peta;
+    try{ localStorage.setItem('balasan-curhat-'+nisnAktif, JSON.stringify(peta)); }catch(e){}
+    renderCurhat();
+  }catch(e){ /* gviz gagal (offline): riwayat localStorage tetap tampil apa adanya */ }
+}
+function pulihkanBalasanCurhat(){
+  try{ const v=JSON.parse(localStorage.getItem('balasan-curhat-'+nisnAktif)||'null'); if(v && typeof v==='object') balasanCurhat=v; }catch(e){}
+}
 function renderCurhat(){
   const riw=$('riwayatCurhat'); riw.innerHTML='';
   const list=bacaCurhat();
@@ -1306,6 +1351,18 @@ function renderCurhat(){
     const d=document.createElement('div');
     d.className='gelembung '+(m.dari==='musaaid'?'mus':'aku');
     d.textContent=m.teks; riw.appendChild(d);
+    if(m.dari!=='musaaid'){
+      const b=balasanCurhat[normalisasiTeksCurhat(m.teks)];
+      if(b){
+        const rb=document.createElement('div');
+        rb.className='gelembung mus balasan';
+        const lbl=document.createElement('span');
+        lbl.className='lbl-balasan'; lbl.textContent='Musaa\u2019id membalas:';
+        const isi=document.createElement('div');
+        isi.textContent=b;
+        rb.appendChild(lbl); rb.appendChild(isi); riw.appendChild(rb);
+      }
+    }
   });
 }
 $('kirimCurhat').addEventListener('click', ()=>{
