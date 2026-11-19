@@ -109,6 +109,8 @@ label.lbl{display:block;font-weight:800;font-size:13.5px;margin:18px 0 8px}
     <div class="kotak kuning"><div class="angka" id="jmlBelum">–</div><div class="lbl2">anak belum check-in hari ini</div></div>
     <div class="kotak merah"><div class="angka" id="jmlBantuan">–</div><div class="lbl2">anak minta bantuan</div></div>
     <div class="kotak biru"><div class="angka" id="jmlCurhat">–</div><div class="lbl2">curhat masuk (semua)</div></div>
+    <div class="kotak hijau"><div class="angka" id="jmlG7">–</div><div class="lbl2">anak sudah isi G7KAIH hari ini (dari 15)</div></div>
+    <div class="kotak kuning"><div class="angka" id="jmlG7Belum">–</div><div class="lbl2">anak belum isi G7KAIH hari ini</div></div>
   </div>
 
   <div id="peringatan"></div>
@@ -141,6 +143,7 @@ const SISWA = [
 ];
 const SHEET_CHECKIN = '1MBFa5YxeyAgGSJbcjcGMVfBOQl_-OW9rBiB19FhZy0Y';
 const SHEET_CURHAT = '1dmP3vK0KFpGNeFqUYZkEpt3WAhtIphmhZM9mITtq5tk';
+const SHEET_G7KAIH = '12lly3_1Vfpt3LCe6zjoOhb6LDyIWhKkAsnL5He_Gh70';
 const PIN = '2026';
 const KABAR = {1:['😞','Sangat berat'],2:['😕','Berat'],3:['😐','Biasa saja'],4:['🙂','Baik'],5:['😄','Sangat baik']};
 const $ = id => document.getElementById(id);
@@ -203,17 +206,28 @@ async function muat(){
   const hari=hariIniWITA();
   $('tanggalHari').textContent = tglTampil(hari)+' • Kelompok XII C';
   try{
-    const [ck, ch] = await Promise.all([ambilSheet(SHEET_CHECKIN), ambilSheet(SHEET_CURHAT)]);
+    const [ck, ch, g7] = await Promise.all([ambilSheet(SHEET_CHECKIN), ambilSheet(SHEET_CURHAT), ambilSheet(SHEET_G7KAIH)]);
     const ckBaris = ck.slice(1).filter(r=>r[1] && !/^TES-/i.test(String(r[1]).trim()));
     const chBaris = ch.slice(1).filter(r=>r[1] && !/^TES-/i.test(String(r[1]).trim()));
-    render(ckBaris, chBaris, hari);
+    const g7Baris = g7.slice(1).filter(r=>r[1] && !/^TES-/i.test(String(r[1]).trim()));
+    render(ckBaris, chBaris, g7Baris, hari);
     $('statusMuat').textContent='Terakhir dimuat: '+new Date().toLocaleTimeString('id-ID',{timeZone:'Asia/Makassar',hour:'2-digit',minute:'2-digit'})+' WITA';
   }catch(e){
     $('statusMuat').textContent='Gagal memuat data ('+e.message+'). Coba segarkan lagi.';
     $('daftarAnak').innerHTML='<p class="muted">Data tidak dapat dimuat. Periksa koneksi, lalu ketuk "Segarkan data".</p>';
   }
 }
-function render(ckBaris, chBaris, hari){
+function render(ckBaris, chBaris, g7Baris, hari){
+  // G7KAIH per NISN (kolom: Timestamp, Nama, Kelas, NISN, Kebaikan) — hitung jumlah kebiasaan dari daftar koma
+  const g7PerNisn={};
+  (g7Baris||[]).forEach(r=>{
+    const nisn=String(r[3]||'').replace(/\.0$/,'').padStart(10,'0');
+    const t=tglDariSheet(r[0]); if(!t||!nisn) return;
+    const daftar=String(r[4]||'').split(',').map(x=>x.trim()).filter(Boolean);
+    const ent={tgl:t, nama:r[1], kelas:r[2], nisn:nisn, daftar:daftar, jumlah:daftar.length, waktu:r[0]};
+    if(!g7PerNisn[nisn] || t>=g7PerNisn[nisn].tgl) g7PerNisn[nisn]=ent;
+    if(t===hari) g7PerNisn[nisn+'|hariini']=ent;
+  });
   // peta nama -> entri check-in terbaru (per hari ini & terakhir)
   const perNama={};
   ckBaris.forEach(r=>{
@@ -244,6 +258,10 @@ function render(ckBaris, chBaris, hari){
   $('jmlBelum').textContent=belum.length;
   $('jmlBantuan').textContent=jBantuan;
   $('jmlCurhat').textContent=curhatSemua.length;
+  let jG7=0; const belumG7=[];
+  SISWA.forEach(s=>{ if(g7PerNisn[s.nisn+'|hariini']) jG7++; else belumG7.push(s.nama); });
+  $('jmlG7').textContent=jG7+' / 15';
+  $('jmlG7Belum').textContent=belumG7.length;
   // peringatan
   let pw='';
   if(jBantuan>0){
@@ -252,6 +270,7 @@ function render(ckBaris, chBaris, hari){
   }
   if(jBerat.length) pw+='<div class="peringat kuning">💛 <b>Kabar berat hari ini (1–2):</b> '+jBerat.join(', ')+'.</div>';
   if(belum.length) pw+='<div class="peringat kuning">⏰ <b>Belum check-in hari ini ('+belum.length+'):</b> '+belum.join(', ')+'.</div>';
+  if(belumG7.length) pw+='<div class="peringat kuning">🌱 <b>Belum isi G7KAIH hari ini ('+belumG7.length+'):</b> '+belumG7.join(', ')+' — ingatkan di japri.</div>';
   $('peringatan').innerHTML=pw;
   // daftar anak
   let html='';
@@ -261,16 +280,22 @@ function render(ckBaris, chBaris, hari){
     const sudah=!!perNama[norm(s.nama)+'|hariini'];
     html+='<div class="anak"><div class="baris-atas"><div><div class="nm">'+s.nama+'</div><div class="kls">Kelas '+s.kelas+' • '+(s.panggilan||'—')+' • Biodata '+(s.biodata?'✓ lengkap':'✗ belum')+'</div></div>'
       +'<span class="lencana '+(sudah?'ok':'belum')+'">'+(sudah?'✓ Hari ini':'Belum hari ini')+'</span></div>';
+    const g7e=g7PerNisn[s.nisn+'|hariini'] || g7PerNisn[s.nisn];
+    const g7Sudah=!!g7PerNisn[s.nisn+'|hariini'];
     if(e){
-      const g7 = e.kebaikan ? e.kebaikan.split(',').map(x=>x.trim()).filter(Boolean) : [];
       html+='<div class="detail">'
         +(sudah?'<b>Kabar hari ini:</b> '+(KABAR[e.kabar]?KABAR[e.kabar][0]+' '+KABAR[e.kabar][1]:'-'):'<b>Terakhir check-in:</b> '+tglTampil(e.tgl)+' — kabar '+(KABAR[e.kabar]?KABAR[e.kabar][0]+' '+KABAR[e.kabar][1]:'-'))
         +'<br><b>Kendala:</b> '+(e.kendala||'—')
         +'<br><b>Bantuan:</b> '+(e.bantuan||'—')
-        +'<br><b>G7KAIH:</b> '+g7.length+' dari 7'+(g7.length?' — '+g7.join(', '):'')
+        +'<br><b>G7KAIH:</b> '+(g7e ? (g7Sudah?'':'(terakhir '+tglTampil(g7e.tgl)+') ')+g7e.jumlah+' dari 7'+(g7e.jumlah?' — '+g7e.daftar.join(', '):'') : 'belum pernah isi')
         +(e.halLain?'<br><b>Hal lain:</b> '+e.halLain:'')
         +'</div>';
     } else {
+      html+='<div class="detail">Belum pernah check-in.'
+        +'<br><b>G7KAIH:</b> '+(g7e ? (g7Sudah?'':'(terakhir '+tglTampil(g7e.tgl)+') ')+g7e.jumlah+' dari 7'+(g7e.jumlah?' — '+g7e.daftar.join(', '):'') : 'belum pernah isi')
+        +'</div>';
+    }
+    if(false){
       html+='<div class="detail">Belum pernah check-in.</div>';
     }
     if(cur.length){
