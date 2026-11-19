@@ -36,9 +36,27 @@
   .hadits .arab { font-size: 20px; line-height: 2; direction: rtl; font-family: "Noto Naskh Arabic", "Traditional Arabic", serif; }
   .hadits .arti { font-size: 13.5px; line-height: 1.7; color: #57534e; font-style: italic; margin-top: 10px; }
   .hadits .sumber { font-size: 11px; color: var(--emas); font-weight: 800; margin-top: 8px; letter-spacing: 1px; }
-  /* ===== Pintu (pilih nama) ===== */
-  .pintu .judul-pintu { font-size: 19px; font-weight: 800; margin-bottom: 4px; }
-  .pintu .sub-pintu { font-size: 13.5px; color: var(--abu); line-height: 1.6; margin-bottom: 14px; }
+  /* ===== Login (pintu) ===== */
+  .login { text-align: center; padding: 26px 18px 22px; border: 2px solid var(--emas-terang);
+    background: linear-gradient(180deg, #fffdf5, #fff); }
+  .login .kunci-lingkar { width: 84px; height: 84px; margin: 0 auto 14px; border-radius: 50%;
+    background: linear-gradient(135deg, #fef3c7, #fde68a); border: 2px solid var(--emas-terang);
+    display: flex; align-items: center; justify-content: center; font-size: 40px; }
+  .login h2 { font-size: 21px; margin-bottom: 6px; }
+  .login .sub-login { font-size: 13.5px; color: var(--abu); line-height: 1.7; margin-bottom: 18px; }
+  .login .nisn-wrap { max-width: 340px; margin: 0 auto; }
+  .login input.nisn { width: 100%; padding: 16px 14px; font-size: 22px; font-weight: 800; letter-spacing: 3px;
+    text-align: center; border: 2px solid var(--garis); border-radius: 14px; outline: none; background: #fff;
+    font-family: inherit; color: var(--teks); }
+  .login input.nisn:focus { border-color: var(--hijau); box-shadow: 0 0 0 3px rgba(20,83,45,.15); }
+  .login input.nisn::placeholder { color: #b8b2a4; font-weight: 600; letter-spacing: 2px; }
+  .login .galat-login { display: none; font-size: 13.5px; color: var(--merah); font-weight: 700; margin-top: 10px; line-height: 1.5; }
+  .login .galat-login.tampil { display: block; }
+  .login .masuk { width: 100%; max-width: 340px; margin: 16px auto 0; padding: 16px; font-size: 17px; font-weight: 800;
+    color: #fff; background: linear-gradient(135deg, #14532d, #15803d); border: none; border-radius: 14px;
+    cursor: pointer; font-family: inherit; box-shadow: 0 4px 14px rgba(20,83,45,.35); display: block; }
+  .login .masuk:disabled { opacity: .6; cursor: default; }
+  .login .petunjuk { font-size: 12.5px; color: var(--abu); line-height: 1.6; margin-top: 14px; }
   /* ===== Kamar ===== */
   #kamar { display: none; }
   #kamar.tampil { display: block; }
@@ -47,7 +65,7 @@
   .papan-nama h2 { font-size: 22px; color: var(--hijau); margin-bottom: 8px; }
   .papan-nama .panggilan-pill { display: inline-block; background: var(--emas-terang); color: #fff; font-weight: 800; font-size: 13px; padding: 5px 14px; border-radius: 999px; margin-bottom: 8px; }
   .papan-nama .kelas-teks { font-size: 13px; color: var(--abu); font-weight: 600; }
-  .papan-nama .ganti { margin-top: 10px; background: none; border: none; color: var(--hijau); font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: underline; font-family: inherit; }
+  .papan-nama .keluar { margin-top: 10px; background: none; border: none; color: var(--hijau); font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: underline; font-family: inherit; }
   /* Bilah kemajuan */
   .kemajuan { background: #fff; border: 1px solid var(--krem-garis); border-radius: 14px; padding: 14px; margin-bottom: 14px; }
   .kemajuan .teks-kemajuan { font-size: 13px; font-weight: 700; color: var(--hijau); margin-bottom: 8px; }
@@ -59,31 +77,16 @@
   .seksi h2 { font-size: 17px; }
   .seksi-sub { font-size: 13px; color: var(--abu); line-height: 1.6; margin: 6px 0 4px 40px; }
   .pengantar { font-size: 14px; line-height: 1.7; color: var(--abu); margin-bottom: 6px; }
-  .pengantar b { color: var(--teks); }
   .field { margin-top: 18px; }
   .field label.judul { display: block; font-size: 15px; font-weight: 700; margin-bottom: 8px; }
   .field label.judul .wajib { color: var(--merah); }
   .field .bantu { font-size: 13px; color: var(--abu); margin-top: 4px; }
   .field .galat { display: none; font-size: 13px; color: var(--merah); margin-top: 6px; font-weight: 600; }
   .field.salah .galat { display: block; }
-  .field.salah input.teks, .field.salah textarea, .field.salah .dd-btn { border-color: var(--merah); }
+  .field.salah input.teks, .field.salah textarea { border-color: var(--merah); }
   input.teks, textarea { width: 100%; padding: 13px 14px; font-size: 16px; border: 2px solid var(--garis); border-radius: 12px; outline: none; background: #fff; font-family: inherit; color: var(--teks); }
   input.teks:focus, textarea:focus { border-color: var(--hijau); }
   textarea { min-height: 84px; resize: vertical; line-height: 1.5; }
-  /* Dropdown custom */
-  .dd { position: relative; }
-  .dd-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 14px; font-size: 16px; border: 2px solid var(--garis); border-radius: 14px; background: #fff; cursor: pointer; text-align: left; color: var(--teks); font-family: inherit; }
-  .dd-btn:focus { border-color: var(--hijau); outline: none; }
-  .dd-btn .panah { transition: transform .2s; color: var(--hijau); font-weight: 700; }
-  .dd.buka .dd-btn .panah { transform: rotate(180deg); }
-  .dd-btn .panah::before { content: "\25B2"; font-size: 12px; }
-  .dd-btn .pilih-kosong { color: #9ca3af; }
-  .dd-list { display: none; position: absolute; left: 0; right: 0; top: calc(100% + 6px); background: #fff; border: 2px solid var(--hijau); border-radius: 14px; box-shadow: 0 10px 28px rgba(0,0,0,.16); max-height: 320px; overflow-y: auto; z-index: 20; }
-  .dd.buka .dd-list { display: block; }
-  .dd-opt { padding: 12px 14px; font-size: 16px; cursor: pointer; }
-  .dd-opt:hover { background: var(--hijau-soft); }
-  .dd-opt.pilih { background: var(--hijau); color: #fff; font-weight: 700; }
-  .dd-opt.grup { font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--hijau); background: var(--hijau-soft); cursor: default; padding: 8px 14px; }
   /* Kartu konfirmasi biodata */
   .kartu-data { display: none; margin-top: 14px; background: var(--hijau-soft); border: 1.5px solid var(--hijau); border-radius: 14px; padding: 14px; }
   .kartu-data.tampil { display: block; }
@@ -118,7 +121,7 @@
   .cip.pilih { background: var(--hijau); border-color: var(--hijau); color: #fff; }
   .lainnya-wrap { display: none; margin-top: 10px; }
   .lainnya-wrap.tampil { display: block; }
-  /* Daftar ceklis kebaikan (pilih banyak) */
+  /* Daftar ceklis G7KAIH (pilih banyak) */
   .ceklist { display: flex; flex-direction: column; gap: 8px; }
   .cek-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 13px 14px; font-size: 15px; text-align: left; border: 2px solid var(--garis); border-radius: 14px; background: #fff; color: var(--teks); cursor: pointer; font-family: inherit; transition: background .15s, border-color .15s, transform .1s; }
   .cek-item:hover { border-color: var(--hijau); }
@@ -128,6 +131,7 @@
   .cek-item.pilih { background: var(--hijau-soft); border-color: var(--hijau); }
   .cek-item.pilih .kotak { background: var(--hijau); border-color: var(--hijau); }
   .cek-item.pilih .kotak .centang { opacity: 1; }
+  .cek-item .ket { color: var(--abu); font-size: 13px; }
   .kirim { width: 100%; margin-top: 22px; padding: 16px; font-size: 17px; font-weight: 800; color: #fff; background: linear-gradient(135deg, #14532d, #15803d); border: none; border-radius: 14px; cursor: pointer; font-family: inherit; box-shadow: 0 4px 14px rgba(20,83,45,.35); }
   .kirim:disabled { opacity: .6; cursor: default; }
   .privasi { font-size: 12px; color: var(--abu); text-align: center; line-height: 1.6; margin-top: 12px; }
@@ -143,6 +147,7 @@
     .panel { padding: 18px 14px; }
     .hadits .arab { font-size: 17px; }
     .papan-nama h2 { font-size: 20px; }
+    .login input.nisn { font-size: 20px; }
   }
 </style>
 </head>
@@ -164,22 +169,17 @@
     <div class="sumber">HR. Bukhari dan Muslim</div>
   </div>
 
-  <!-- PINTU: pilih nama untuk masuk ke kamar -->
-  <div class="panel pintu" id="pintu">
-    <div class="judul-pintu">&#128682; Masuk ke Kamarmu</div>
-    <p class="sub-pintu">Setiap anak punya kamarnya sendiri. Pilih namamu — kamarmu akan terbuka, dan kamu tinggal <b>ceklis</b> saja.</p>
-    <div class="field" id="fNama" style="margin-top:6px">
-      <label class="judul">Nama lengkap <span class="wajib">*</span></label>
-      <div class="dd" id="ddNama">
-        <button class="dd-btn" id="ddNamaBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
-          <span id="ddNamaLabel" class="pilih-kosong">Pilih namamu</span><span class="panah"></span>
-        </button>
-        <div class="dd-list" id="ddNamaList" role="listbox"></div>
-        <select id="namaAsli" hidden aria-hidden="true" tabindex="-1"></select>
-      </div>
-      <p class="galat">Pilih namamu dulu.</p>
+  <!-- LOGIN: masuk kamar pakai NISN -->
+  <div class="panel login" id="pintu">
+    <div class="kunci-lingkar">&#128272;</div>
+    <h2>Masuk ke Kamarmu</h2>
+    <p class="sub-login">Setiap anak punya kamarnya sendiri. Masukkan NISN kamu, kamarmu akan terbuka, dan kamu tinggal ceklis saja.</p>
+    <div class="nisn-wrap">
+      <input class="nisn" id="nisn" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="off" placeholder="NISN (10 angka)">
+      <p class="galat-login" id="galatLogin"></p>
+      <button class="masuk" id="masuk" type="button">Masuk ke Kamarku</button>
     </div>
-    <p class="bantu" style="font-size:13px;color:var(--abu);margin-top:10px">Kelasmu otomatis terisi dari namamu — kada perlu dipilih lagi.</p>
+    <p class="petunjuk">NISN ada 10 angka. Lihat di kartu pelajar, atau tanya Pak Imron bila lupa.<br>Di HP ini, NISN kamu akan diingat supaya bulan depan tinggal ketuk saja.</p>
   </div>
 
   <!-- KAMAR: dashboard pribadi siswa -->
@@ -189,7 +189,7 @@
       <h2 id="papanNama"></h2>
       <div><span class="panggilan-pill" id="papanPanggilan"></span></div>
       <div class="kelas-teks" id="papanKelas"></div>
-      <button class="ganti" id="gantiNama" type="button">Ganti nama</button>
+      <button class="keluar" id="keluar" type="button">Keluar dari kamar</button>
     </div>
 
     <div class="kemajuan">
@@ -225,7 +225,7 @@
         </div>
       </div>
 
-      <div id="catatanBulanLalu">&#128221; <b>Ceklis bulan lalumu sudah terisi di bawah ini</b> — periksa dan perbarui bila ada yang berubah, nak.</div>
+      <div id="catatanBulanLalu">&#128221; Ceklis bulan lalumu sudah terisi di bawah ini — periksa dan perbarui bila ada yang berubah, nak.</div>
 
       <!-- 1: Kabar -->
       <div class="seksi" style="margin-top:22px"><span class="nomor">1</span><h2>Bagaimana Kabarmu?</h2></div>
@@ -245,7 +245,7 @@
 
       <!-- 2: Kendala (cip, pilih satu) -->
       <div class="seksi" style="margin-top:22px"><span class="nomor">2</span><h2>Apa Kendalamu?</h2></div>
-      <p class="seksi-sub">Ketuk yang paling sesuai — kalau tidak ada, ketuk &ldquo;Tidak ada kendala&rdquo;.</p>
+      <p class="seksi-sub">Ketuk yang paling sesuai — kalau tidak ada, ketuk Tidak ada kendala.</p>
       <div class="field" id="fKendala">
         <label class="judul">Kendala atau kesulitanmu saat ini <span class="wajib">*</span></label>
         <div class="cip-wrap" id="kendalaCip">
@@ -275,26 +275,25 @@
         <p class="galat">Pilih salah satu.</p>
       </div>
 
-      <!-- 4: Kebaikan (ceklis, pilih banyak) -->
-      <div class="seksi" style="margin-top:22px"><span class="nomor">4</span><h2>Kebaikanmu Minggu Ini</h2></div>
-      <p class="seksi-sub">Akhlak yang baik dibangun dari kebaikan kecil setiap hari. <b>Centang</b> yang sudah kamu lakukan — boleh lebih dari satu.</p>
+      <!-- 4: G7KAIH — 7 Kebiasaan Anak Indonesia Hebat -->
+      <div class="seksi" style="margin-top:22px"><span class="nomor">4</span><h2>7 Kebiasaan Anak Indonesia Hebat</h2></div>
+      <p class="seksi-sub">Gerakan 7 Kebiasaan Anak Indonesia Hebat (G7KAIH) — program Kemendikdasmen. Centang kebiasaan yang sudah kamu lakukan minggu ini. Boleh lebih dari satu.</p>
       <div class="field" id="fKebaikan">
-        <label class="judul">Yang sudah kamu lakukan minggu ini <span class="wajib">*</span></label>
+        <label class="judul">Kebiasaanmu minggu ini <span class="wajib">*</span></label>
         <div class="ceklist" id="kebaikanList">
-          <button type="button" class="cek-item" data-nilai="Membantu orang tua di rumah"><span class="kotak"><span class="centang">&#10003;</span></span>Membantu orang tua di rumah</button>
-          <button type="button" class="cek-item" data-nilai="Menolong teman yang kesulitan"><span class="kotak"><span class="centang">&#10003;</span></span>Menolong teman yang kesulitan</button>
-          <button type="button" class="cek-item" data-nilai="Sholat tepat waktu / berjamaah"><span class="kotak"><span class="centang">&#10003;</span></span>Sholat tepat waktu / berjamaah</button>
-          <button type="button" class="cek-item" data-nilai="Belajar dengan giat"><span class="kotak"><span class="centang">&#10003;</span></span>Belajar dengan giat</button>
-          <button type="button" class="cek-item" data-nilai="Jujur dalam ujian dan tugas"><span class="kotak"><span class="centang">&#10003;</span></span>Jujur dalam ujian dan tugas</button>
-          <button type="button" class="cek-item" data-nilai="Membersihkan kelas / rumah"><span class="kotak"><span class="centang">&#10003;</span></span>Membersihkan kelas / rumah</button>
-          <button type="button" class="cek-item" data-nilai="Bersedekah / berbagi"><span class="kotak"><span class="centang">&#10003;</span></span>Bersedekah / berbagi</button>
-          <button type="button" class="cek-item" data-nilai="Meminta maaf atau memaafkan"><span class="kotak"><span class="centang">&#10003;</span></span>Meminta maaf atau memaafkan</button>
-          <button type="button" class="cek-item" data-nilai="Lainnya"><span class="kotak"><span class="centang">&#10003;</span></span>Lainnya (tulis sendiri)</button>
+          <button type="button" class="cek-item" data-nilai="Bangun pagi"><span class="kotak"><span class="centang">&#10003;</span></span><span>&#127748; Bangun pagi</span></button>
+          <button type="button" class="cek-item" data-nilai="Beribadah"><span class="kotak"><span class="centang">&#10003;</span></span><span>&#128330; Beribadah <span class="ket">(sholat, mengaji)</span></span></button>
+          <button type="button" class="cek-item" data-nilai="Berolahraga"><span class="kotak"><span class="centang">&#10003;</span></span><span>&#127939; Berolahraga</span></button>
+          <button type="button" class="cek-item" data-nilai="Makan sehat dan bergizi"><span class="kotak"><span class="centang">&#10003;</span></span><span>&#129367; Makan sehat dan bergizi</span></button>
+          <button type="button" class="cek-item" data-nilai="Gemar belajar"><span class="kotak"><span class="centang">&#10003;</span></span><span>&#128218; Gemar belajar</span></button>
+          <button type="button" class="cek-item" data-nilai="Bermasyarakat"><span class="kotak"><span class="centang">&#10003;</span></span><span>&#129309; Bermasyarakat <span class="ket">(membantu, peduli sesama)</span></span></button>
+          <button type="button" class="cek-item" data-nilai="Tidur cepat"><span class="kotak"><span class="centang">&#10003;</span></span><span>&#127769; Tidur cepat</span></button>
+          <button type="button" class="cek-item" data-nilai="Lainnya"><span class="kotak"><span class="centang">&#10003;</span></span><span>&#9999; Lainnya (tulis sendiri)</span></button>
         </div>
         <div class="lainnya-wrap" id="kebaikanLainWrap">
           <input class="teks" id="kebaikanLain" type="text" placeholder="Tulis kebaikanmu yang lain...">
         </div>
-        <p class="galat">Centang minimal satu kebaikan.</p>
+        <p class="galat">Centang minimal satu kebiasaan.</p>
       </div>
 
       <div class="field">
@@ -303,7 +302,7 @@
       </div>
 
       <button class="kirim" id="kirim" type="button">Kirim Check-in</button>
-      <p class="privasi">Jawabanmu hanya dibaca Pak Imron dan asistennya, Musaa&rsquo;id &mdash; tidak disebar ke siapa pun.<br>Tidak perlu akun apa pun, cukup buka tautan ini dan isi.</p>
+      <p class="privasi">Jawabanmu hanya dibaca Pak Imron dan asistennya, Musaa&rsquo;id — tidak disebar ke siapa pun.<br>Tidak perlu akun apa pun, cukup masukkan NISN dan isi.</p>
     </div>
   </div>
 
@@ -333,82 +332,39 @@
 (function () {
   var $ = function (id) { return document.getElementById(id); };
 
-  /* Data 15 siswa Kelompok XII C — URUT ABJAD (A-Z) di tiap kelas */
+  /* Data 15 siswa Kelompok XII C — kunci masuk kamar = NISN (terverifikasi lawan daftar-siswa) */
   var SISWA = [
-    { nama: 'Muhammad Halim Pratama', kelas: 'XII 2', panggilan: '', biodata: false },
-    { nama: 'Noor Rizka Bilghina', kelas: 'XII 2', panggilan: '', biodata: false },
-    { nama: 'Novi Aulia', kelas: 'XII 2', panggilan: 'Novi', biodata: true },
-    { nama: 'Risna Yuliyana', kelas: 'XII 2', panggilan: 'Risna', biodata: true },
-    { nama: 'Muhammad Raffa', kelas: 'XII 3', panggilan: 'Raffa', biodata: true },
-    { nama: 'Muhammad Rizky Effendi', kelas: 'XII 3', panggilan: 'Fendi', biodata: true },
-    { nama: 'Nor Pina', kelas: 'XII 3', panggilan: 'Pina', biodata: true },
-    { nama: 'Nur Azkiya', kelas: 'XII 3', panggilan: '', biodata: false },
-    { nama: 'Rafizal Nur Rahman', kelas: 'XII 3', panggilan: 'Rafizal', biodata: true },
-    { nama: 'Riana', kelas: 'XII 3', panggilan: '', biodata: false },
-    { nama: 'Salsabila Anggraini', kelas: 'XII 3', panggilan: '', biodata: false },
-    { nama: 'Muhammad Rizki', kelas: 'XII 4', panggilan: 'Iki', biodata: true },
-    { nama: 'Muhammad Sugianor', kelas: 'XII 4', panggilan: 'Sugi', biodata: true },
-    { nama: 'Naysella Aulia Sabrina', kelas: 'XII 4', panggilan: 'Sella', biodata: true },
-    { nama: 'Nur Raihan Gifari', kelas: 'XII 4', panggilan: 'Raihan', biodata: true }
+    { nisn: '0079425140', nama: 'Muhammad Halim Pratama', kelas: 'XII 2', panggilan: '', biodata: false },
+    { nisn: '0092330101', nama: 'Noor Rizka Bilghina', kelas: 'XII 2', panggilan: '', biodata: false },
+    { nisn: '0087124588', nama: 'Novi Aulia', kelas: 'XII 2', panggilan: 'Novi', biodata: true },
+    { nisn: '0099963598', nama: 'Risna Yuliyana', kelas: 'XII 2', panggilan: 'Risna', biodata: true },
+    { nisn: '0082689182', nama: 'Muhammad Raffa', kelas: 'XII 3', panggilan: 'Raffa', biodata: true },
+    { nisn: '0081396436', nama: 'Muhammad Rizky Effendi', kelas: 'XII 3', panggilan: 'Fendi', biodata: true },
+    { nisn: '3085484331', nama: 'Nor Pina', kelas: 'XII 3', panggilan: 'Pina', biodata: true },
+    { nisn: '0098075595', nama: 'Nur Azkiya', kelas: 'XII 3', panggilan: '', biodata: false },
+    { nisn: '0093640579', nama: 'Rafizal Nur Rahman', kelas: 'XII 3', panggilan: 'Rafizal', biodata: true },
+    { nisn: '0087989048', nama: 'Riana', kelas: 'XII 3', panggilan: '', biodata: false },
+    { nisn: '0085779385', nama: 'Salsabila Anggraini', kelas: 'XII 3', panggilan: '', biodata: false },
+    { nisn: '0084242979', nama: 'Muhammad Rizki', kelas: 'XII 4', panggilan: 'Iki', biodata: true },
+    { nisn: '3077641884', nama: 'Muhammad Sugianor', kelas: 'XII 4', panggilan: 'Sugi', biodata: true },
+    { nisn: '0082258759', nama: 'Naysella Aulia Sabrina', kelas: 'XII 4', panggilan: 'Sella', biodata: true },
+    { nisn: '3098386601', nama: 'Nur Raihan Gifari', kelas: 'XII 4', panggilan: 'Raihan', biodata: true }
   ];
-  var nilai = { nama: '', kelas: '', panggilan: '', kabar: '', kendala: '', bantuan: '', konfirmasi: '' };
+  var OLEH_NISN = {};
+  SISWA.forEach(function (s) { OLEH_NISN[s.nisn] = s; });
+  var nilai = { nisn: '', nama: '', kelas: '', panggilan: '', kabar: '', kendala: '', bantuan: '', konfirmasi: '' };
   var kebaikanSet = {};
   var siswaTerpilih = null;
   var KUNCI_SIMPAAN = 'checkin-wali-';
+  var KUNCI_NISN = 'checkin-wali-nisn';
 
-  /* Bangun dropdown nama (dikelompokkan per kelas, urut abjad) */
-  var ddNamaList = $('ddNamaList'), namaAsli = $('namaAsli');
-  var kelasTerakhir = '';
-  SISWA.forEach(function (s) {
-    if (s.kelas !== kelasTerakhir) {
-      var g = document.createElement('div');
-      g.className = 'dd-opt grup';
-      g.textContent = 'Kelas ' + s.kelas;
-      ddNamaList.appendChild(g);
-      kelasTerakhir = s.kelas;
-    }
-    var o = document.createElement('div');
-    o.className = 'dd-opt';
-    o.setAttribute('data-nilai', s.nama);
-    o.textContent = s.nama;
-    ddNamaList.appendChild(o);
-  });
-  SISWA.forEach(function (s) {
-    var op = document.createElement('option');
-    op.value = s.nama;
-    op.textContent = s.nama;
-    namaAsli.appendChild(op);
-  });
+  /* Ingat NISN di HP ini (pre-fill kolom login) */
+  try {
+    var nisnTersimpan = localStorage.getItem(KUNCI_NISN) || '';
+    if (nisnTersimpan) $('nisn').value = nisnTersimpan;
+  } catch (e) { /* abaikan */ }
 
-  /* Dropdown nama */
-  (function () {
-    var dd = $('ddNama'), btn = $('ddNamaBtn');
-    btn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var buka = dd.classList.toggle('buka');
-      btn.setAttribute('aria-expanded', buka ? 'true' : 'false');
-    });
-    ddNamaList.addEventListener('click', function (e) {
-      var opt = e.target.closest('.dd-opt');
-      if (!opt || opt.classList.contains('grup')) return;
-      var v = opt.getAttribute('data-nilai');
-      $('ddNamaLabel').textContent = v;
-      $('ddNamaLabel').classList.remove('pilih-kosong');
-      namaAsli.value = v;
-      ddNamaList.querySelectorAll('.dd-opt').forEach(function (o) { o.classList.toggle('pilih', o === opt); });
-      dd.classList.remove('buka');
-      btn.setAttribute('aria-expanded', 'false');
-      pilihNama(v);
-    });
-    document.addEventListener('click', function (e) {
-      if (!dd.contains(e.target)) { dd.classList.remove('buka'); btn.setAttribute('aria-expanded', 'false'); }
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') { dd.classList.remove('buka'); btn.setAttribute('aria-expanded', 'false'); }
-    });
-  })();
-
-  /* Bilah kemajuan: 4 bagian (kabar, kendala, bantuan, kebaikan) */
+  /* Bilah kemajuan: 4 bagian (kabar, kendala, bantuan, kebaikan/G7KAIH) */
   function kebaikanLengkap() {
     var ada = Object.keys(kebaikanSet).length > 0;
     if (!ada) return false;
@@ -432,7 +388,7 @@
       : 'Kamu sudah mengisi ' + selesai + ' dari 4 bagian';
   }
 
-  /* Bersihkan isian kamar (dipakai saat ganti nama / isi lagi) */
+  /* Bersihkan isian kamar (dipakai saat buka kamar / isi lagi) */
   function bersihkanKamar() {
     nilai.kabar = ''; nilai.kendala = ''; nilai.bantuan = ''; nilai.konfirmasi = '';
     kebaikanSet = {};
@@ -449,35 +405,30 @@
     perbaruiKemajuan();
   }
 
-  /* Pilih nama: kelas otomatis (tersembunyi), buka kamar, isi papan nama + biodata + pre-fill */
-  function pilihNama(v) {
-    nilai.nama = v;
-    $('fNama').classList.remove('salah');
-    siswaTerpilih = null;
-    SISWA.forEach(function (s) { if (s.nama === v) siswaTerpilih = s; });
-    if (!siswaTerpilih) return;
-    nilai.kelas = siswaTerpilih.kelas; /* kelas ditentukan dari nama — tidak ada dropdown kelas */
-    nilai.panggilan = siswaTerpilih.panggilan || '';
+  /* Buka kamar siswa */
+  function bukaKamar(s) {
+    siswaTerpilih = s;
+    nilai.nisn = s.nisn;
+    nilai.nama = s.nama;
+    nilai.kelas = s.kelas;
+    nilai.panggilan = s.panggilan || '';
     bersihkanKamar();
-    /* Papan nama */
-    $('papanNama').textContent = siswaTerpilih.nama;
-    var pil = siswaTerpilih.panggilan || '(belum ada panggilan)';
-    $('papanPanggilan').textContent = 'Panggilan: ' + pil;
-    $('papanKelas').textContent = 'Kelas ' + siswaTerpilih.kelas + ' • Kelompok XII C';
-    /* Biodata */
-    if (siswaTerpilih.biodata) {
+    $('papanNama').textContent = s.nama;
+    $('papanPanggilan').textContent = 'Panggilan: ' + (s.panggilan || '(belum ada panggilan)');
+    $('papanKelas').textContent = 'Kelas ' + s.kelas + ' • Kelompok XII C';
+    if (s.biodata) {
       $('kartuLengkapi').classList.remove('tampil');
-      $('kdNama').textContent = siswaTerpilih.nama;
-      $('kdKelas').textContent = siswaTerpilih.kelas;
-      $('kdPanggilan').textContent = siswaTerpilih.panggilan;
+      $('kdNama').textContent = s.nama;
+      $('kdKelas').textContent = s.kelas;
+      $('kdPanggilan').textContent = s.panggilan;
       $('kartuData').classList.add('tampil');
     } else {
       $('kartuData').classList.remove('tampil');
       $('kartuLengkapi').classList.add('tampil');
     }
-    /* Pre-fill ceklis bulan lalu dari penyimpanan lokal (bila ada) */
+    /* Pre-fill ceklis bulan lalu dari penyimpanan lokal (kunci = NISN) */
     var tersimpan = null;
-    try { tersimpan = JSON.parse(localStorage.getItem(KUNCI_SIMPAAN + v) || 'null'); } catch (e) { tersimpan = null; }
+    try { tersimpan = JSON.parse(localStorage.getItem(KUNCI_SIMPAAN + s.nisn) || 'null'); } catch (e) { tersimpan = null; }
     var adaLalu = !!tersimpan;
     if (tersimpan) {
       if (tersimpan.kabar) { nilai.kabar = tersimpan.kabar; document.querySelectorAll('#skala button').forEach(function (x) { x.classList.toggle('pilih', x.getAttribute('data-nilai') === tersimpan.kabar); }); }
@@ -497,14 +448,35 @@
       if (tersimpan.lain !== undefined) $('lain').value = tersimpan.lain;
     }
     $('catatanBulanLalu').classList.toggle('tampil', adaLalu);
+    $('pintu').style.display = 'none';
     $('kamar').classList.add('tampil');
     perbaruiKemajuan();
     $('kamar').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  /* Ganti nama: tutup kamar, kembali ke pintu */
-  $('gantiNama').addEventListener('click', function () {
+  /* Login NISN */
+  function tampilGalatLogin(pesan) {
+    var g = $('galatLogin');
+    g.textContent = pesan;
+    g.classList.add('tampil');
+  }
+  function masukKamar() {
+    var nisn = $('nisn').value.replace(/\D/g, '').trim();
+    $('galatLogin').classList.remove('tampil');
+    if (nisn.length !== 10) { tampilGalatLogin('NISN harus 10 angka. Periksa lagi, nak.'); return; }
+    var s = OLEH_NISN[nisn];
+    if (!s) { tampilGalatLogin('NISN tidak ditemukan. Periksa lagi 10 angka NISN kamu, atau tanya Pak Imron.'); return; }
+    try { localStorage.setItem(KUNCI_NISN, nisn); } catch (e) { /* abaikan */ }
+    bukaKamar(s);
+  }
+  $('masuk').addEventListener('click', masukKamar);
+  $('nisn').addEventListener('keydown', function (e) { if (e.key === 'Enter') masukKamar(); });
+  $('nisn').addEventListener('input', function () { $('galatLogin').classList.remove('tampil'); });
+
+  /* Keluar dari kamar (kembali ke login) */
+  $('keluar').addEventListener('click', function () {
     $('kamar').classList.remove('tampil');
+    $('pintu').style.display = 'block';
     $('pintu').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
@@ -550,7 +522,7 @@
     perbaruiKemajuan();
   });
 
-  /* Ceklis kebaikan (pilih banyak) */
+  /* Ceklis G7KAIH (pilih banyak) */
   $('kebaikanList').addEventListener('click', function (e) {
     var b = e.target.closest('.cek-item');
     if (!b) return;
@@ -563,7 +535,7 @@
   });
   $('kebaikanLain').addEventListener('input', function () { $('fKebaikan').classList.remove('salah'); perbaruiKemajuan(); });
 
-  /* Nilai kebaikan untuk dikirim: gabungan centangan (+ tulisan Lainnya) */
+  /* Nilai kebaikan untuk dikirim: gabungan centangan G7KAIH (+ tulisan Lainnya) */
   function nilaiKebaikan() {
     var daftar = Object.keys(kebaikanSet).filter(function (k) { return k !== 'Lainnya'; });
     if (kebaikanSet['Lainnya'] && $('kebaikanLain').value.trim()) daftar.push($('kebaikanLain').value.trim());
@@ -581,7 +553,7 @@
   var kirimBtn = $('kirim');
   kirimBtn.addEventListener('click', function () {
     var ok = true;
-    if (!nilai.nama) { tandaiSalah('fNama'); ok = false; }
+    if (!nilai.nama) { ok = false; }
     if (siswaTerpilih && !siswaTerpilih.biodata) {
       nilai.panggilan = $('panggilan').value.trim();
       if (!nilai.panggilan) { tandaiSalah('fPanggilan'); ok = false; }
@@ -609,9 +581,9 @@
     $('hBantuan').value = nilai.bantuan;
     $('hKebaikan').value = nilaiKebaikan();
     $('hLain').value = lain;
-    /* Simpan ceklis untuk pre-fill bulan depan (di HP ini) */
+    /* Simpan ceklis untuk pre-fill bulan depan (kunci = NISN, di HP ini) */
     try {
-      localStorage.setItem(KUNCI_SIMPAAN + nilai.nama, JSON.stringify({
+      localStorage.setItem(KUNCI_SIMPAAN + nilai.nisn, JSON.stringify({
         kabar: nilai.kabar, kendala: nilai.kendala, kendalaLain: $('kendalaLain').value.trim(),
         bantuan: nilai.bantuan, kebaikan: Object.keys(kebaikanSet), kebaikanLain: $('kebaikanLain').value.trim(), lain: lain
       }));
@@ -627,13 +599,9 @@
   /* Isi lagi */
   $('lagi').addEventListener('click', function () {
     $('lain').value = '';
-    nilai = { nama: '', kelas: '', panggilan: '', kabar: '', kendala: '', bantuan: '', konfirmasi: '' };
+    nilai = { nisn: nilai.nisn, nama: '', kelas: '', panggilan: '', kabar: '', kendala: '', bantuan: '', konfirmasi: '' };
     kebaikanSet = {};
     siswaTerpilih = null;
-    $('ddNamaLabel').textContent = 'Pilih namamu';
-    $('ddNamaLabel').classList.add('pilih-kosong');
-    namaAsli.value = '';
-    document.querySelectorAll('#ddNamaList .dd-opt').forEach(function (o) { o.classList.remove('pilih'); });
     $('kartuData').classList.remove('tampil');
     $('kartuLengkapi').classList.remove('tampil');
     $('catatanBulanLalu').classList.remove('tampil');
@@ -641,6 +609,7 @@
     kirimBtn.disabled = false;
     kirimBtn.textContent = 'Kirim Check-in';
     $('sukses').style.display = 'none';
+    $('pintu').style.display = 'block';
     $('pintu').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
   perbaruiKemajuan();
