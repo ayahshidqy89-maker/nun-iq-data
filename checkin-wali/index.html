@@ -758,11 +758,12 @@ function renderProfil(){
   h+='<div class="grup"><h3>🪪 Data Diri</h3>'
     +baris('Nama Lengkap',b.nama)+baris('Nama Panggilan',b.panggilan)+baris('NISN',b.nisn)
     +baris('Jenis Kelamin',b.jk)+baris('Agama',b.agama)+baris('Kelas',b.kelas)+'</div>';
+  function org(nama,hp){ return nama ? nama+(hp?' • '+hp:'') : ''; }
   h+='<div class="grup"><h3>👨‍👩‍👧 Keluarga</h3>'
-    +baris('Ayah',b.ayah+(b.hpAyah?' • '+b.hpAyah:''))+baris('Ibu',b.ibu+(b.hpIbu?' • '+b.hpIbu:''))
-    +baris('Ayah Sambung',b.ayahSambung+(b.hpAyahSambung?' • '+b.hpAyahSambung:''))
-    +baris('Ibu Sambung',b.ibuSambung+(b.hpIbuSambung?' • '+b.hpIbuSambung:''))
-    +baris('Wali',b.wali+(b.hpWali?' • '+b.hpWali:''))
+    +baris('Ayah',org(b.ayah,b.hpAyah))+baris('Ibu',org(b.ibu,b.hpIbu))
+    +baris('Ayah Sambung',org(b.ayahSambung,b.hpAyahSambung))
+    +baris('Ibu Sambung',org(b.ibuSambung,b.hpIbuSambung))
+    +baris('Wali',org(b.wali,b.hpWali))
     +baris('Alamat',b.alamat)+baris('Tinggal Bersama',b.tinggal)+'</div>';
   h+='<div class="grup"><h3>🏫 Riwayat Sekolah</h3>'
     +baris('TK',b.tk)+baris('SD',b.sd)+baris('SMP',b.smp)+baris('SMA',b.sma)+'</div>';
