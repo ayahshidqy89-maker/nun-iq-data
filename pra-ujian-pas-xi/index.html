@@ -166,7 +166,7 @@ select.dd-asli{position:absolute;width:1px;height:1px;opacity:0;pointer-events:n
     </div>
 
     <button type="button" class="btn" id="btn-mulai" disabled>Mulai Mengerjakan</button>
-    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 4.7 &middot; lanjutan kiriman Jumat</p>
+    <p class="ket" style="text-align:center;margin-top:10px;color:#94a3b8;font-size:12px">versi 4.8 &middot; cadangan progres server</p>
     <p class="ket" id="info-jadwal" hidden style="text-align:center;margin-top:12px"></p>
   </section>
 
@@ -705,6 +705,85 @@ function simpanProgres(){
   try{
     localStorage.setItem(kunciSimpan(), JSON.stringify({ jawaban: state.jawaban, idx: state.idx, pindah: state.pindah, mulai: state.mulai }));
   }catch(e){}
+  jadwalkanProgresServer();
+}
+/* ---------- Cadangan progres di server (v4.8) ----------
+   Insiden 19 Nov 2026: Amelia Putri (XI-6, PAQ) kehilangan 39 jawaban
+   pas istirahat padahal tidak melanggar apa pun (bukan mode privat,
+   HP/browser sama, data tidak dihapus). Penyebab pasti tidak ketemu
+   dari kode — simpanan localStorage hilang diam-diam. Mulai v4.8,
+   setiap jawaban juga dicadangkan ke server (tab "Progres" di Sheet)
+   sehingga bila simpanan HP hilang, aplikasi memulihkan dari server.
+   Kirim di-throttle: paling cepat 3 detik sesudah perubahan terakhir;
+   bila sudah 15 detik sejak kirim terakhir, kirim langsung. Gagal
+   kirim (offline) diam saja — tidak mengganggu siswa. */
+var progresServerTimer = null;
+var progresServerTerakhir = 0;
+var progresServerTerkirim = "";
+function stringJawaban(){
+  return state.jawaban.map(function(a){ return a === null ? "-" : String(a); }).join("");
+}
+function kirimProgresServer(){
+  if(WEBGAS_URL.indexOf("__") !== -1) return;
+  if(state.sudahKumpul) return;
+  if(typeof fetch === "undefined") return;
+  if(!state.mapel || !state.kelas || !state.nama) return;
+  var isi = stringJawaban();
+  var kunci = state.mapel + "|" + state.kelas + "|" + state.nama + "|" + isi + "|" + state.idx;
+  if(kunci === progresServerTerkirim) return;
+  progresServerTerkirim = kunci;
+  progresServerTerakhir = Date.now();
+  try{
+    fetch(WEBGAS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        action: "autosave",
+        kelas: state.kelas, nama: state.nama, mapel: state.mapel,
+        jawaban: isi, idx: state.idx, pindah: state.pindah, mulai: state.mulai
+      })
+    }).catch(function(){});
+  }catch(e){}
+}
+function jadwalkanProgresServer(){
+  if(progresServerTimer) return;
+  var tunggu = (Date.now() - progresServerTerakhir > 15000) ? 0 : 3000;
+  progresServerTimer = setTimeout(function(){
+    progresServerTimer = null;
+    kirimProgresServer();
+  }, tunggu);
+}
+/* Ambil progres dari server (tab "Progres"). Dipakai bila simpanan HP
+   tidak ketemu. Baris: Timestamp | Kelas | Nama | Mapel | Jawaban |
+   Idx | Pindah | Mulai. Bila tab belum ada / gagal baca, cb(null). */
+function muatProgresServer(cb){
+  if(SHEET_ID.indexOf("__") !== -1){ cb(null); return; }
+  if(typeof fetch === "undefined"){ cb(null); return; }
+  var urlCsv = "https://docs.google.com/spreadsheets/d/" + SHEET_ID
+    + "/gviz/tq?tqx=out:csv&sheet=" + encodeURIComponent("Progres") + "&headers=1&_cb=" + Date.now();
+  var selesai = false;
+  function done(hasil){ if(selesai) return; selesai = true; cb(hasil); }
+  var t = setTimeout(function(){ done(null); }, 8000);
+  fetch(urlCsv, { cache: "no-store" }).then(function(res){
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    return res.text();
+  }).then(function(teks){
+    clearTimeout(t);
+    var ketemu = null;
+    var baris = teks.split(/\r?\n/);
+    for(var i = 1; i < baris.length; i++){
+      var f = parseCsvBaris(baris[i]);
+      if(f.length < 8) continue;
+      if(String(f[1] || "").trim() !== state.kelas.trim()) continue;
+      if(String(f[2] || "").trim().toLowerCase() !== state.nama.trim().toLowerCase()) continue;
+      if(String(f[3] || "").trim().toUpperCase() !== state.mapel) continue;
+      var jwb = pulihkanJawaban(f[4] || "", state.soal.length);
+      if(!jwb || jwb.length !== state.soal.length) continue;
+      ketemu = { jawaban: jwb, idx: parseInt(f[5], 10) || 0, pindah: parseInt(f[6], 10) || 0, mulai: parseInt(f[7], 10) || 0 };
+    }
+    done(ketemu);
+  }).catch(function(){ clearTimeout(t); done(null); });
 }
 function muatProgres(){
   try{
@@ -1078,39 +1157,59 @@ function mulaiBaruUntukHariIni(mulaiLama){
   if(d.getFullYear() === k.getFullYear() && d.getMonth() === k.getMonth() && d.getDate() === k.getDate()) return mulaiLama;
   return Date.now();
 }
+function terapkanPulih(pulih){
+  /* Pulihkan jawaban + timer dari progres tersimpan (HP atau server).
+     Kunci waktu tetap dicek: boleh lanjut bila jendela sedang buka,
+     atau masih dalam masa tenggang 60 menit sesudah jendela hari ini
+     habis. Di luar itu tampilkan layar kunci. Mengembalikan false
+     bila dikunci (pemanggil tidak boleh lanjut). */
+  var cek = cekJadwal(state.kelas, state.mapel);
+  if(!cek.buka && !dalamTenggang(state.kelas, state.mapel)){ tampilKunci(cek); return false; }
+  state.jawaban = pulih.jawaban;
+  state.idx = Math.min(Math.max(pulih.idx || 0, 0), state.soal.length - 1);
+  state.pindah = pulih.pindah || 0;
+  state.mulai = mulaiBaruUntukHariIni(pulih.mulai);
+  return true;
+}
 function masukUjian(){
   siapkanAcak();
   var pulih = muatProgres();
   if(pulih){
-    /* Lanjutkan dari progres tersimpan — TAPI kunci waktu tetap dicek.
-       Boleh lanjut bila jendela sedang buka, atau masih dalam masa
-       tenggang 60 menit sesudah jendela hari ini habis. Di luar itu,
-       tampilkan layar kunci: supaya yang sudah sempat mulai tidak bisa
-       lanjut berjam-jam di luar jadwal sementara yang belum mulai
-       tetap terkunci. */
-    var cek = cekJadwal(state.kelas, state.mapel);
-    if(!cek.buka && !dalamTenggang(state.kelas, state.mapel)){ tampilKunci(cek); return; }
-    state.jawaban = pulih.jawaban;
-    state.idx = pulih.idx || 0;
-    state.pindah = pulih.pindah || 0;
-    state.mulai = mulaiBaruUntukHariIni(pulih.mulai);
-  } else {
-    if(state.jawabanPulih){
-      /* Lanjutan kiriman: jawaban lama dipulihkan, langsung ke soal
-         kosong pertama. Timer BARU 90 menit dari jam masuk hari ini. */
-      state.jawaban = state.jawabanPulih;
-      state.idx = 0;
-      for(var j = 0; j < state.jawaban.length; j++){ if(state.jawaban[j] === null){ state.idx = j; break; } }
-    } else {
-      state.jawaban = [];
-      for(var j = 0; j < state.soal.length; j++) state.jawaban.push(null);
-      state.idx = 0;
-    }
+    if(!terapkanPulih(pulih)) return;
+    lanjutMasukUjian();
+    return;
+  }
+  if(state.jawabanPulih){
+    /* Lanjutan kiriman: jawaban lama dipulihkan, langsung ke soal
+       kosong pertama. Timer BARU 90 menit dari jam masuk hari ini. */
+    state.jawaban = state.jawabanPulih;
+    state.idx = 0;
+    for(var j = 0; j < state.jawaban.length; j++){ if(state.jawaban[j] === null){ state.idx = j; break; } }
     state.pindah = 0;
     state.mulai = Date.now();
     var cek = cekJadwal(state.kelas, state.mapel);
     if(!cek.buka && !(state.lanjutan && dalamTenggang(state.kelas, state.mapel))){ tampilKunci(cek); return; }
+    lanjutMasukUjian();
+    return;
   }
+  /* Simpanan HP tidak ada — coba pulihkan dari server (v4.8) sebelum
+     mulai dari awal. Bila server juga tidak punya, baru mulai baru. */
+  muatProgresServer(function(pulihServer){
+    if(pulihServer){
+      if(!terapkanPulih(pulihServer)) return;
+    } else {
+      state.jawaban = [];
+      for(var j = 0; j < state.soal.length; j++) state.jawaban.push(null);
+      state.idx = 0;
+      state.pindah = 0;
+      state.mulai = Date.now();
+      var cek2 = cekJadwal(state.kelas, state.mapel);
+      if(!cek2.buka && !(state.lanjutan && dalamTenggang(state.kelas, state.mapel))){ tampilKunci(cek2); return; }
+    }
+    lanjutMasukUjian();
+  });
+}
+function lanjutMasukUjian(){
   state.durasiMs = durasiUjianMs(state.kelas, state.mapel);
   if(sisaMs() <= 0){ state.waktuHabis = true; kirimJawaban(); return; }
   $("info-nama").textContent = state.nama;
