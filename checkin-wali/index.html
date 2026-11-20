@@ -147,7 +147,7 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 .kartu-pemberitahuan .butir-pb.rapel{border-color:#F3D98B;background:#FFFBEB}
 .kartu-pemberitahuan .butir-pb.rapel:hover{border-color:#D97706}
 .kepala-lekat .lencana-pb{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:999px;background:#DC2626;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;padding:0 5px;box-shadow:0 2px 6px rgba(220,38,38,.5);animation:denyut 1.6s ease-in-out infinite}
-.kepala-lekat .sholat-mini{font-size:11px;color:var(--redup);font-weight:700;margin-top:1px}
+.kepala-lekat .sholat-mini{font-size:11px;color:var(--redup);font-weight:700;margin-top:1px;white-space:nowrap;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
 .kepala-lekat .avatar{overflow:hidden}
 .kepala-lekat .avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
 .ingat{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--teks);margin:10px 0 12px;cursor:pointer}
@@ -190,6 +190,18 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 .kepala-lekat .jam{margin-left:auto;text-align:right;flex:none}
 .kepala-lekat .jam .w{font-family:'Poppins';font-weight:800;font-size:16px;color:var(--aksi-gelap);font-variant-numeric:tabular-nums}
 .kepala-lekat .jam .t{font-size:10.5px;color:var(--redup);font-weight:700}
+/* v9.8: header stabil + bisa diketuk (popup) */
+.kepala-lekat .kepala-tengah{flex:1;min-width:0}
+.kepala-lekat .lencana-pb,.kepala-lekat .avatar{cursor:pointer}
+.popup-latar{position:fixed;inset:0;background:rgba(23,33,43,.55);z-index:200;display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.popup-kartu{background:#fff;border-radius:22px;max-width:430px;width:100%;max-height:82vh;overflow:auto;padding:18px;box-shadow:0 24px 60px -12px rgba(0,0,0,.4);animation:popMasuk .25s ease}
+.popup-kartu h3{font-family:'Poppins';font-size:16px;margin:0 0 10px;padding-right:36px}
+.popup-tutup{float:right;width:32px;height:32px;border-radius:50%;border:1px solid var(--garis);background:#fff;font-size:15px;font-weight:900;color:var(--redup);cursor:pointer}
+.popup-kartu .butir-pb{width:100%;margin-bottom:8px}
+.popup-baris{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--garis2);font-size:13.5px}
+.popup-baris b{font-weight:800}
+.popup-baris span{color:var(--redup);text-align:right}
+@keyframes popMasuk{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
 .tombol-ikon{flex:none;width:40px;height:40px;border-radius:50%;border:2px solid var(--isi-garis);background:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s}
 .tombol-ikon:hover{transform:scale(1.08)}
 .tombol-ikon.keluar{font-size:15px;width:auto;padding:0 12px;border-radius:999px;font-weight:800;color:var(--aksi-gelap)}
@@ -381,9 +393,9 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
   </div>
   <!-- HEADER LEKAT (tetap kelihatan saat scroll) -->
   <div class="kepala-lekat">
-    <span class="lencana-pb tersembunyi" id="lencanaPb"></span>
-    <div class="avatar"><img id="avatarFoto" class="tersembunyi" alt=""><span id="avatarHuruf">N</span></div>
-    <div><div class="nm" id="papanNama">—</div><div class="tg" id="papanKelas">—</div><div class="sholat-mini" id="sholatMini">—</div></div>
+    <span class="lencana-pb tersembunyi" id="lencanaPb" title="Lihat yang belum diisi"></span>
+    <div class="avatar" id="kepalaAvatar" title="Lihat profilku"><img id="avatarFoto" class="tersembunyi" alt=""><span id="avatarHuruf">N</span></div>
+    <div class="kepala-tengah" id="kepalaProfil"><div class="nm" id="papanNama">—</div><div class="tg" id="papanKelas">—</div><div class="sholat-mini" id="sholatMini" title="Lihat jadwal sholat hari ini">—</div></div>
     <div class="jam"><div class="w" id="jamHidup">--:--:--</div><div class="t" id="tglKecil">—</div></div>
     <button class="tombol-ikon" id="tombolSuara" title="Suara">🔊</button>
     <button class="tombol-ikon keluar" id="keluar">Keluar</button>
@@ -566,6 +578,15 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
   <input name="entry.441367660" id="cNama"><input name="entry.651555992" id="cKelas">
   <input name="entry.176143365" id="cNisn"><input name="entry.1573722959" id="cCurhat">
 </form>
+
+<!-- v9.8: POPUP HEADER (badge / profil / jadwal sholat) -->
+<div class="popup-latar tersembunyi" id="popupLatar">
+  <div class="popup-kartu" role="dialog" aria-modal="true">
+    <button type="button" class="popup-tutup" id="popupTutup" aria-label="Tutup">✕</button>
+    <h3 id="popupJudul"></h3>
+    <div id="popupIsi"></div>
+  </div>
+</div>
 
 <script>
 // Biodata lengkap (dari Tally, diverifikasi lawan SK + daftar-siswa).
@@ -1770,9 +1791,60 @@ function perbaruiHitungMundur(){
   if(!sb){ if(teksEl) teksEl.textContent='Memuat jadwal sholat…'; return; }
   if(jamEl) jamEl.textContent=sb.sisaTeks;
   if(teksEl) teksEl.textContent='Menuju '+sb.nama+(sb.besok?' besok':'')+' pukul '+sb.jam+' WITA';
-  const sm=$('sholatMini'); if(sm && siswa) sm.textContent='🕌 '+sb.nama+(sb.besok?' (besok)':'')+' '+sb.jam+' • '+sb.sisaTeks;
+  const sm=$('sholatMini'); if(sm && siswa) sm.textContent='🕌 '+sb.nama+(sb.besok?' (besok)':'')+' '+sb.jam+' • '+formatSisaSingkat(sb.sisaDetik);
   const ps=$('prevSholat'); if(ps && siswa) ps.textContent='Berikutnya: '+sb.nama+' pukul '+sb.jam+' (dalam '+sb.sisaTeks+').';
 }
+/* v9.8: hitung mundur singkat untuk header — jelas + stabil (berubah per menit, bukan per detik) */
+function formatSisaSingkat(detik){
+  detik=Math.max(0, detik);
+  const j=Math.floor(detik/3600), m=Math.floor(detik%3600/60), d=detik%60;
+  if(j>0) return j+' jam'+(m>0 ? ' '+m+' mnt' : '')+' lagi';
+  if(m>0) return m+' mnt lagi';
+  return d+' dtk lagi';
+}
+/* v9.8: popup header — badge / profil / jadwal sholat */
+function bukaPopup(judul, isiHTML){
+  const latar=$('popupLatar'); if(!latar) return;
+  $('popupJudul').textContent=judul;
+  $('popupIsi').innerHTML=isiHTML;
+  latar.classList.remove('tersembunyi');
+}
+function tutupPopup(){ const latar=$('popupLatar'); if(latar) latar.classList.add('tersembunyi'); }
+function popupBelum(){
+  if(!siswa) return;
+  const belum=hitungBelum();
+  if(!belum.length){ bukaPopup('Yang belum diisi','<p class="muted">✅ Semua sudah diisi hari ini. 👍</p>'); return; }
+  bukaPopup('Yang belum diisi ('+belum.length+')', belum.map(tombolPb).join('')+'<p class="muted" style="margin-top:6px">Ketuk salah satu untuk mengisinya.</p>');
+}
+function popupProfil(){
+  if(!siswa) return;
+  let foto=null; try{ foto=localStorage.getItem('foto-'+nisnAktif); }catch(e){}
+  const baris=[['Nama',siswa.nama],['Panggilan',siswa.panggilan],['NISN',nisnAktif],['Kelas',siswa.kelas],['Kelompok','XII C'],['Agama',siswa.agama]];
+  let h='';
+  if(foto) h+='<div style="text-align:center;margin-bottom:8px"><img src="'+foto+'" alt="" style="width:72px;height:72px;border-radius:50%;object-fit:cover"></div>';
+  baris.forEach(r=>{ h+='<div class="popup-baris"><b>'+r[0]+'</b><span>'+(r[1]||'—')+'</span></div>'; });
+  h+='<button type="button" class="butir-pb" style="margin-top:12px" onclick="tutupPopup();tampilView(\'profil\')">Lihat Profilku →</button>';
+  bukaPopup('Profilku', h);
+}
+function popupSholat(){
+  if(!jadwalSholat){ bukaPopup('Jadwal sholat','<p class="muted">Memuat jadwal sholat…</p>'); return; }
+  const sb=sholatBerikut();
+  let h='';
+  NAMA_SHOLAT.forEach(nama=>{
+    const berikut=sb && sb.nama===nama && !sb.besok;
+    h+='<div class="baris-sholat'+(berikut?' berikut':'')+'"><span class="ico-sholat">🕌</span><span class="nm-sholat">'+nama+(berikut?' <span class="lencana-sholat">BERIKUTNYA</span>':'')+'</span><span class="jam-sholat">'+jadwalSholat[nama]+'</span></div>';
+  });
+  if(sb) h+='<p class="muted" style="margin-top:10px">Berikutnya: '+sb.nama+' pukul '+sb.jam+' WITA — '+formatSisaSingkat(sb.sisaDetik)+'.</p>';
+  h+='<button type="button" class="butir-pb" style="margin-top:6px" onclick="tutupPopup();tampilView(\'sholat\')">Pengaturan pengingat →</button>';
+  bukaPopup('Jadwal sholat hari ini', h);
+}
+$('popupTutup').addEventListener('click', tutupPopup);
+$('popupLatar').addEventListener('click', (e)=>{ if(e.target===$('popupLatar')) tutupPopup(); });
+$('popupIsi').addEventListener('click', (e)=>{ if(e.target.closest('.butir-pb')) tutupPopup(); });
+$('lencanaPb').addEventListener('click', popupBelum);
+$('kepalaAvatar').addEventListener('click', popupProfil);
+$('kepalaProfil').addEventListener('click', popupProfil);
+$('sholatMini').addEventListener('click', (e)=>{ e.stopPropagation(); popupSholat(); });
 function bunyiAdzan(nama){
   // TODO-ADZAN-AUDIO: belum ada file suara adzan — pakai chime Connect sebagai penanda waktu.
   const p=bacaPengaturanSholat();
