@@ -578,10 +578,25 @@ var JADWAL = {
    ngoreksi tugas): yang sudah mulai Selasa lanjut tanpa mengulang jawaban;
    yang tidak hadir Selasa (Annisa, Teguh, Rahma) mulai baru di jendela yang
    sama. Timer tetap 90 menit dari jam masuk (masuk 10:15 → sampai 11:45) +
-   tenggang 60 menit sesudah jendela. Hanya berlaku tanggal itu. */
+   tenggang 60 menit sesudah jendela. Hanya berlaku tanggal itu.
+   PERPANJANGAN MAGHRIB — keputusan Imron 20 Nov 2026 10:02: pertemuan guru
+   wali XI jam 2-3 (08:00-09:00) bentrok dengan pra ujian PAI XI-3, dan
+   banyak siswa belum sempat mengerjakan. Semua kelas/mapel yang masih ada
+   yang belum mengirim (XI-3 PAI+PAQ, XI-4 PAI+PAQ, XI-5 PAI, XI-6 PAI+PAQ,
+   XI-7 PAI+PAQ) dibuka hari ini sampai Maghrib 18:16 WITA. XI-4 PAI yang
+   semula 10:15-10:45 diperpanjang sampai 18:16. XI-5 PAQ sudah lengkap
+   36/36, tidak perlu jendela. Hanya berlaku tanggal itu. */
 var JADWAL_KHUSUS = [
   { kelas:"XI 7", mapel:"PAI", tanggal:"2026-11-19", label:"Kamis, 19 November 2026", mulai:"15:15", selesai:"16:00" },
-  { kelas:"XI 4", mapel:"PAI", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"10:15", selesai:"10:45" }
+  { kelas:"XI 4", mapel:"PAI", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"10:15", selesai:"18:16" },
+  { kelas:"XI 3", mapel:"PAI", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" },
+  { kelas:"XI 3", mapel:"PAQ", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" },
+  { kelas:"XI 4", mapel:"PAQ", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" },
+  { kelas:"XI 5", mapel:"PAI", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" },
+  { kelas:"XI 6", mapel:"PAI", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" },
+  { kelas:"XI 6", mapel:"PAQ", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" },
+  { kelas:"XI 7", mapel:"PAI", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" },
+  { kelas:"XI 7", mapel:"PAQ", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" }
 ];
 var NAMA_HARI = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 function menitDariJam(j){ var p = j.split(":"); return parseInt(p[0],10)*60 + parseInt(p[1],10); }
