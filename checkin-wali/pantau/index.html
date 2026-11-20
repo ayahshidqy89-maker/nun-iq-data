@@ -66,6 +66,10 @@ label.lbl{display:block;font-weight:800;font-size:13.5px;margin:18px 0 8px}
 .lencana.ok{background:#E6F9EE;color:var(--sukses-gelap)}
 .lencana.belum{background:#F1F5F9;color:var(--redup)}
 .lencana.merah{background:var(--merah-bg);color:var(--merah-teks)}
+.lencana.rapel{background:#FEF3C7;color:#92400E}
+@keyframes denyutMerah{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.45)}50%{box-shadow:0 0 0 7px rgba(220,38,38,0)}}
+.anak.perlu-merah{border-color:#DC2626;background:#FEF2F2;animation:denyutMerah 1.8s ease-in-out infinite}
+.anak.perlu-merah .nm{color:#B91C1C}
 .anak .detail{font-size:13.5px;line-height:1.65;color:var(--redup);margin-top:9px}
 .anak .detail b{color:var(--teks)}
 .anak .curhat-item{background:var(--isi);border:1px solid var(--garis);border-radius:14px;padding:10px 12px;font-size:13.5px;line-height:1.6;margin-top:8px;white-space:pre-line}
@@ -301,6 +305,30 @@ function tglDariSheet(ts){
   const bln = a>12 ? b : a, tgl = a>12 ? a : b;
   return y+'-'+String(bln).padStart(2,'0')+'-'+String(tgl).padStart(2,'0');
 }
+/* ===== v7: TANGGAL EFEKTIF — kolom "Tanggal pengisian" (diisi aplikasi) bila ada;
+   bila kosong/baris lama, pakai tanggal dari Timestamp. ===== */
+function parseTanggalSheet(v){
+  v=String(v||'').trim(); if(!v) return '';
+  let m=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(m) return m[1]+'-'+String(+m[2]).padStart(2,'0')+'-'+String(+m[3]).padStart(2,'0');
+  m=v.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+  if(m) return m[1]+'-'+String(+m[2]).padStart(2,'0')+'-'+String(+m[3]).padStart(2,'0');
+  m=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(m){ const a=+m[1], b=+m[2], y=+m[3]; const bln=a>12?b:a, tgl=a>12?a:b; if(bln<1||bln>12||tgl<1||tgl>31) return ''; return y+'-'+String(bln).padStart(2,'0')+'-'+String(tgl).padStart(2,'0'); }
+  if(/^\d+(\.\d+)?$/.test(v)){ const n=+v; if(n>30000&&n<60000){ const d=new Date((n-25569)*864e5); return d.toLocaleDateString('en-CA',{timeZone:'Asia/Makassar'}); } }
+  const d=new Date(v); if(!isNaN(d)) return d.toLocaleDateString('en-CA',{timeZone:'Asia/Makassar'});
+  return '';
+}
+function tglEfektif(r, idxTanggal){
+  const tg=parseTanggalSheet(r[idxTanggal]);
+  return tg || tglDariSheet(r[0]);
+}
+function adalahRapel(r, idxTanggal){
+  const tg=parseTanggalSheet(r[idxTanggal]);
+  if(!tg) return false;
+  const ts=tglDariSheet(r[0]);
+  return !!ts && tg!==ts;
+}
 function parseCSV(teks){
   const baris=[]; let cur='', dalam=false, bar=[];
   for(let i=0;i<teks.length;i++){
@@ -360,6 +388,9 @@ async function muat(){
     $('daftarAnak').innerHTML='<p class="muted">Data tidak dapat dimuat. Periksa koneksi, lalu ketuk "Segarkan data".</p>';
   }
 }
+/* ===== v7: DISPENSASI penanda merah — HANYA dua siswa ini (koreksi Imron 03:14).
+   Salsabila TIDAK dikecualikan (hitungan normal berlaku). Alasan TIDAK ditulis di Pantau. */
+const DIKECUALIKAN_MERAH = ['0082258759','0081396436'];
 /* ===== KEHADIRAN (v5) ===== */
 const HADIR_SINGKAT = {Hadir:'H', Terlambat:'T', Izin:'I', Sakit:'S', Alpa:'A'};
 function isoKemarin(iso){ return new Date(new Date(iso+'T00:00:00+08:00').getTime()-864e5).toLocaleDateString('en-CA',{timeZone:'Asia/Makassar'}); }
@@ -369,9 +400,9 @@ function polaKehadiran(ckBaris, namaNorm, hari){
   const perTgl={};
   (ckBaris||[]).forEach(r=>{
     if(norm(r[1])!==namaNorm) return;
-    const t=tglDariSheet(r[0]); if(!t||t<t7||t>hari) return;
+    const t=tglEfektif(r, 11); if(!t||t<t7||t>hari) return;
     const k=(r[9]||'').trim();
-    if(!perTgl[t] || String(r[0])>String(perTgl[t].waktu)) perTgl[t]={status:k, ket:(r[10]||'').trim(), waktu:r[0]};
+    if(!perTgl[t] || String(r[0])>String(perTgl[t].waktu)) perTgl[t]={status:k, ket:(r[10]||'').trim(), waktu:r[0], rapel:adalahRapel(r, 11)};
   });
   const hitung={Hadir:0,Terlambat:0,Izin:0,Sakit:0,Alpa:0};
   const pola=[];
@@ -396,18 +427,18 @@ function render(ckBaris, chBaris, g7Baris, hari){
   const g7PerNisn={};
   (g7Baris||[]).forEach(r=>{
     const nisn=String(r[3]||'').replace(/\.0$/,'').padStart(10,'0');
-    const t=tglDariSheet(r[0]); if(!t||!nisn) return;
+    const t=tglEfektif(r, 5); if(!t||!nisn) return;
     const daftar=pecahRincian(r[4]);
-    const ent={tgl:t, nama:r[1], kelas:r[2], nisn:nisn, daftar:daftar, jumlah:hitungG7Pantau(daftar), rincian:daftar.length, waktu:r[0]};
+    const ent={tgl:t, nama:r[1], kelas:r[2], nisn:nisn, daftar:daftar, jumlah:hitungG7Pantau(daftar), rincian:daftar.length, waktu:r[0], rapel:adalahRapel(r, 5)};
     if(!g7PerNisn[nisn] || t>=g7PerNisn[nisn].tgl) g7PerNisn[nisn]=ent;
     if(t===hari) g7PerNisn[nisn+'|hariini']=ent;
   });
   // peta nama -> entri check-in terbaru (per hari ini & terakhir)
   const perNama={};
   ckBaris.forEach(r=>{
-    const nama=norm(r[1]), t=tglDariSheet(r[0]);
+    const nama=norm(r[1]), t=tglEfektif(r, 11);
     if(!t) return;
-    const ent={tgl:t, nama:r[1], kelas:r[2], panggilan:r[3], kabar:+r[4]||null, kendala:r[5], bantuan:r[6], kebaikan:r[7], halLain:r[8], kehadiran:(r[9]||'').trim(), ketHadir:(r[10]||'').trim(), waktu:r[0]};
+    const ent={tgl:t, nama:r[1], kelas:r[2], panggilan:r[3], kabar:+r[4]||null, kendala:r[5], bantuan:r[6], kebaikan:r[7], halLain:r[8], kehadiran:(r[9]||'').trim(), ketHadir:(r[10]||'').trim(), waktu:r[0], rapel:adalahRapel(r, 11)};
     if(!perNama[nama] || t>=perNama[nama].tgl) perNama[nama]=ent;
     if(t===hari) perNama[nama+'|hariini']=ent;
   });
@@ -467,7 +498,7 @@ function render(ckBaris, chBaris, g7Baris, hari){
     const terakhir=perNama[norm(s.nama)];
     if(!terakhir || terakhir.tgl<kemarinISO) alasan.push('Tidak check-in 2+ hari'+(terakhir?(' (terakhir '+tglTampil(terakhir.tgl)+')'):' (belum pernah)'));
     if(pola.hariIni==='Hadir' && !g7PerNisn[s.nisn+'|hariini']) alasan.push('Hadir hari ini tapi belum isi G7KAIH (tidak konsisten)');
-    if(alasan.length) perhatian.push({nama:s.nama, kelas:s.kelas, alasan:alasan, pola:pola});
+    if(alasan.length) perhatian.push({nama:s.nama, kelas:s.kelas, nisn:s.nisn, alasan:alasan, pola:pola});
   });
   const elP=$('perluPerhatian');
   if(elP){
@@ -475,7 +506,8 @@ function render(ckBaris, chBaris, g7Baris, hari){
     else{
       let hp='<div class="peringat merah">🚨 <b>'+perhatian.length+' anak perlu perhatian:</b></div>';
       perhatian.forEach(pp=>{
-        hp+='<div class="anak"><div class="baris-atas"><div><div class="nm">'+pp.nama+'</div><div class="kls">Kelas '+pp.kelas+'</div></div></div><div>'+pp.alasan.join(' • ')+'</div><div class="muted">Pola 7 hari: '+pp.pola.pola.join(' ')+' (H'+pp.pola.hitung.Hadir+' T'+pp.pola.hitung.Terlambat+' I'+pp.pola.hitung.Izin+' S'+pp.pola.hitung.Sakit+' A'+pp.pola.hitung.Alpa+')</div></div>';
+        const dikecualikan = DIKECUALIKAN_MERAH.indexOf(pp.nisn)>=0;
+        hp+='<div class="anak'+(dikecualikan?'':' perlu-merah')+'"><div class="baris-atas"><div><div class="nm">'+pp.nama+'</div><div class="kls">Kelas '+pp.kelas+'</div></div>'+(dikecualikan?'':'<span class="lencana merah">🔴 Perlu perhatian</span>')+'</div><div>'+pp.alasan.join(' • ')+'</div><div class="muted">Pola 7 hari: '+pp.pola.pola.join(' ')+' (H'+pp.pola.hitung.Hadir+' T'+pp.pola.hitung.Terlambat+' I'+pp.pola.hitung.Izin+' S'+pp.pola.hitung.Sakit+' A'+pp.pola.hitung.Alpa+')</div></div>';
       });
       elP.innerHTML=hp;
     }
@@ -499,7 +531,7 @@ function render(ckBaris, chBaris, g7Baris, hari){
     const infaq=infaqMingguan[s.nisn]||0;
     html+='<tr><td><b>'+s.nama+'</b><br><span class="muted">'+s.kelas+' • '+(s.panggilan||'—')+' • Agama: '+(AGAMA[s.nisn]||'—')+' • Biodata '+(s.biodata?'✓':'✗')+'</span></td>';
     if(e){
-      html+='<td>'+(sudah?'<span class="lencana ok">✓ Hari ini</span>':'<span class="lencana belum">Terakhir '+tglTampil(e.tgl)+'</span>')+'<br>Kabar: '+(KABAR[e.kabar]?KABAR[e.kabar][0]+' '+KABAR[e.kabar][1]:'-')+'<br>Kendala: '+(e.kendala||'—')+'<br>Bantuan: '+(e.bantuan||'—')+'</td>';
+      html+='<td>'+(sudah?'<span class="lencana ok">✓ Hari ini</span>':'<span class="lencana belum">Terakhir '+tglTampil(e.tgl)+'</span>')+(e.rapel?' <span class="lencana rapel">🔁 rapel</span>':'')+'<br>Kabar: '+(KABAR[e.kabar]?KABAR[e.kabar][0]+' '+KABAR[e.kabar][1]:'-')+'<br>Kendala: '+(e.kendala||'—')+'<br>Bantuan: '+(e.bantuan||'—')+'</td>';
     } else {
       html+='<td><span class="lencana belum">Belum pernah</span></td>';
     }
@@ -509,7 +541,7 @@ function render(ckBaris, chBaris, g7Baris, hari){
     html+='<td>'+badgeHadir(pola.hariIni)+(ketHariIni?'<br><span class="muted">'+ketHariIni+'</span>':'')+'<br><span class="muted">7 hari: '+pola.pola.join(' ')+'</span><br><span class="muted">H'+pola.hitung.Hadir+' T'+pola.hitung.Terlambat+' I'+pola.hitung.Izin+' S'+pola.hitung.Sakit+' A'+pola.hitung.Alpa+'</span></td>';
     if(g7e){
       const persen=Math.round(g7e.jumlah/7*100);
-      html+='<td><b>'+g7e.jumlah+'/7</b>'+(g7Sudah?'':' (terakhir '+tglTampil(g7e.tgl)+')')+'<div class="mini-bar"><i style="width:'+persen+'%"></i></div>'+(g7e.daftar.length?'<span class="muted">'+g7e.daftar.slice(0,3).join(', ')+(g7e.daftar.length>3?'…':'')+'</span>':'')+'</td>';
+      html+='<td><b>'+g7e.jumlah+'/7</b>'+(g7Sudah?'':' (terakhir '+tglTampil(g7e.tgl)+')')+(g7e.rapel?' <span class="lencana rapel">🔁 rapel</span>':'')+'<div class="mini-bar"><i style="width:'+persen+'%"></i></div>'+(g7e.daftar.length?'<span class="muted">'+g7e.daftar.slice(0,3).join(', ')+(g7e.daftar.length>3?'…':'')+'</span>':'')+'</td>';
     } else {
       html+='<td>Belum pernah isi</td>';
     }

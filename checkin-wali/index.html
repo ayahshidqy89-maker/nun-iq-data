@@ -143,6 +143,21 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 .kartu-pemberitahuan .butir-pb{display:block;width:100%;text-align:left;border:none;background:#fff;border:2px solid var(--garis);border-radius:14px;padding:10px 12px;font-size:13.5px;font-weight:700;color:var(--teks);margin-top:8px;cursor:pointer;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 .kartu-pemberitahuan .butir-pb:hover{border-color:var(--aksi)}
 .kartu-pemberitahuan .butir-pb .aksi-pb{float:right;color:var(--aksi-gelap);font-weight:800}
+.kartu-pemberitahuan .judul-pb.rapel{margin-top:10px;color:#92400E}
+.kartu-pemberitahuan .butir-pb.rapel{border-color:#F3D98B;background:#FFFBEB}
+.kartu-pemberitahuan .butir-pb.rapel:hover{border-color:#D97706}
+.kepala-lekat .lencana-pb{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:999px;background:#DC2626;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;padding:0 5px;box-shadow:0 2px 6px rgba(220,38,38,.5);animation:denyut 1.6s ease-in-out infinite}
+.kepala-lekat .sholat-mini{font-size:11px;color:var(--redup);font-weight:700;margin-top:1px}
+.kepala-lekat .avatar{overflow:hidden}
+.kepala-lekat .avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.ingat{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--teks);margin:10px 0 12px;cursor:pointer}
+.ingat input{width:18px;height:18px;accent-color:var(--aksi);flex:none}
+.banner-rapel{border:2px solid #F3D98B;background:#FFFBEB;border-radius:14px;padding:10px 12px;font-size:13px;font-weight:700;margin-bottom:12px;line-height:1.5}
+.banner-rapel .tombol{margin-top:8px}
+.kartu-foto{display:flex;align-items:center;gap:12px;border:2px solid var(--garis);border-radius:16px;padding:12px;margin-bottom:12px}
+.kartu-foto .avatar.besar{width:64px;height:64px;flex:none}
+.kartu-foto .avatar.besar span{font-size:24px}
+.kartu-foto .tombol{margin-left:auto;flex:none}
 .kartu-ajak-curhat{border:2px solid #BFE3F7;background:#EAF6FE;border-radius:20px;padding:13px 15px;margin-bottom:10px;font-size:13.5px;line-height:1.6;color:var(--redup)}
 .kartu-ajak-curhat b{color:var(--teks)}
 .kartu-ajak-curhat .tombol{margin-top:10px}
@@ -323,13 +338,14 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
     <input class="kolom tengah" id="nisn" type="text" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="0087123456">
   </div>
   <div class="galat" id="galatLogin"></div>
+  <label class="ingat"><input type="checkbox" id="ingatSaya" checked> Ingat saya di perangkat ini</label>
   <button class="tombol" id="masuk">Masuk ke Kamarku →</button>
   <div class="hadits">
     <div class="lbl-h">✦ Penguatan Karakter ✦</div>
     <div class="ar">إِنَّ مِنْ خِيَارِكُمْ أَحْسَنَكُمْ أَخْلَاقًا</div>
     <div class="tr">"Sesungguhnya di antara yang terbaik dari kalian adalah yang paling baik akhlaknya."<br>(HR. Bukhari dan Muslim)</div>
   </div>
-  <p class="petunjuk">NISN kamu 10 angka — ada di kartu pelajar. NISN akan diingat di perangkat ini, jadi besok tinggal ketuk saja.</p>
+  <p class="petunjuk">NISN kamu 10 angka — ada di kartu pelajar. Centang "Ingat saya" supaya besok langsung masuk tanpa ketik NISN lagi.</p>
 </div>
 
 <!-- ============ KAMAR ============ -->
@@ -365,8 +381,9 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
   </div>
   <!-- HEADER LEKAT (tetap kelihatan saat scroll) -->
   <div class="kepala-lekat">
-    <div class="avatar"><span id="avatarHuruf">N</span></div>
-    <div><div class="nm" id="papanNama">—</div><div class="tg" id="papanKelas">—</div></div>
+    <span class="lencana-pb tersembunyi" id="lencanaPb"></span>
+    <div class="avatar"><img id="avatarFoto" class="tersembunyi" alt=""><span id="avatarHuruf">N</span></div>
+    <div><div class="nm" id="papanNama">—</div><div class="tg" id="papanKelas">—</div><div class="sholat-mini" id="sholatMini">—</div></div>
     <div class="jam"><div class="w" id="jamHidup">--:--:--</div><div class="t" id="tglKecil">—</div></div>
     <button class="tombol-ikon" id="tombolSuara" title="Suara">🔊</button>
     <button class="tombol-ikon keluar" id="keluar">Keluar</button>
@@ -439,6 +456,7 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
   <div class="kartu kartu-ruang" id="bagianG7">
     <div class="judul-bagian"><span class="ico">🌱</span><h3>G7KAIH Hari Ini</h3><span class="garis-b"></span></div>
     <div class="ringkas" style="margin-bottom:12px">🌱 <b>Gerakan 7 Kebiasaan Anak Indonesia Hebat.</b><br>Tiap kebiasaan dipecah jadi rincian — misal <b>Beribadah: Shubuh, Dzhuhhr, 'Ashr, Maghrib, 'Isya</b>. Isi sedikit-sedikit sepanjang hari — <b>tidak harus sekaligus</b>. Tiap kebiasaan <b>boleh kosong</b> — isi yang kamu gawi saja. Setiap yang kamu centang langsung tersimpan. Bila sampai sore belum diisi, Musaa'id akan mengingatkanmu.</div>
+    <div class="banner-rapel tersembunyi" id="bannerRapelG7">🔁 <span id="teksRapelG7"></span><br><button class="tombol putih" id="batalRapelG7" type="button">Kembali ke hari ini</button></div>
     <div class="donat-wrap" style="justify-content:center;margin-bottom:14px"><svg class="donat" width="110" height="110" viewBox="0 0 110 110"><circle cx="55" cy="55" r="44" fill="none" stroke="#D9F0E2" stroke-width="11"/><circle id="donatG7BesarIsi" cx="55" cy="55" r="44" fill="none" stroke="#25D366" stroke-width="11" stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="276.46" transform="rotate(-90 55 55)"/><text class="angka-donat" id="donatG7BesarAngka" x="55" y="52" style="font-size:24px">0/7</text><text class="lbl-donat" x="55" y="72" style="font-size:11px">kebiasaan</text></svg></div>
     <div style="text-align:center;font-size:13px;font-weight:700;color:var(--redup);margin-bottom:12px" id="skorG7Tepat"></div>
     <div id="daftarG7"></div>
@@ -451,6 +469,12 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
   <div class="tampilan" id="viewProfil">
   <div class="kartu kartu-ruang" id="bagianProfil">
     <div class="judul-bagian"><span class="ico">🪪</span><h3>Profilku</h3><span class="garis-b"></span></div>
+    <div class="kartu-foto" id="kartuFoto">
+      <div class="avatar besar"><img id="fotoProfilBesar" class="tersembunyi" alt=""><span id="fotoHurufBesar">N</span></div>
+      <div><div style="font-weight:800">Foto profilmu</div><div class="muted" style="font-size:12.5px">Foto ini tampil di header kamarmu.</div></div>
+      <input type="file" id="inputFoto" accept="image/*" class="tersembunyi">
+      <button class="tombol putih" id="tombolUbahFoto" type="button">📷 Ubah foto</button>
+    </div>
     <div id="isiProfil"></div>
     <div id="kartuLengkapi" class="tersembunyi">
       <div class="ringkas"><b>Profilmu belum lengkap, nak.</b><br>Lengkapi profilmu supaya kamar terbuka sepenuhnya — termasuk uang saku dan nomor HP.</div>
@@ -527,7 +551,7 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 <iframe name="bingkaiG7" style="display:none"></iframe>
 <form id="formG7" action="https://docs.google.com/forms/d/e/1FAIpQLSdqst_GGVfLdHBsqM4NsXdeIRJbiknYowvcQNK2EWPZ8lW7iw/formResponse" method="POST" target="bingkaiG7" style="display:none">
   <input name="entry.2097179707" id="gNama"><input name="entry.302237747" id="gKelas">
-  <input name="entry.390718255" id="gNisn"><input name="entry.1739260824" id="gKebaikan">
+  <input name="entry.390718255" id="gNisn"><input name="entry.1739260824" id="gKebaikan"><input name="entry.86338787" id="gTanggal">
 </form>
 <!-- form tersembunyi: check-in harian -->
 <iframe name="bingkai" style="display:none"></iframe>
@@ -536,7 +560,7 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
   <input name="entry.126844025" id="hPanggilan"><input name="entry.326665571" id="hKabar">
   <input name="entry.1276742123" id="hKendala"><input name="entry.872595628" id="hBantuan">
   <input name="entry.10598383" id="hKebaikan"><input name="entry.822871052" id="hHalLain">
-  <input name="entry.1103355665" id="hKehadiran"><input name="entry.1090458692" id="hKetHadir">
+  <input name="entry.1103355665" id="hKehadiran"><input name="entry.1090458692" id="hKetHadir"><input name="entry.2118854163" id="hTanggal">
 </form>
 <form id="formCurhat" action="https://docs.google.com/forms/d/e/1FAIpQLSeirUfUZLvjg0UGO-bXsQtLeROBezul_kfPVtmeeHUTiVKY8Q/formResponse" method="POST" target="bingkai" style="display:none">
   <input name="entry.441367660" id="cNama"><input name="entry.651555992" id="cKelas">
@@ -997,6 +1021,7 @@ function bacaTabTersimpan(){
 }
 function tampilView(nama){
   if(!DAFTAR_VIEW.includes(nama)) return;
+  if(nama==='beranda'){ window.__rapelCheckin=null; window.__rapelG7=null; }
   try{ localStorage.setItem(KUNCI_TAB, nama); }catch(e){}
   bunyi('Klik');
   DAFTAR_VIEW.forEach(v=>{
@@ -1014,12 +1039,18 @@ function tampilView(nama){
 }
 function hariIni(){ return new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Makassar'}); }
 function kemarinStr(){ const d=new Date(Date.now()-864e5); return d.toLocaleDateString('en-CA',{timeZone:'Asia/Makassar'}); }
+function lusaKemarinStr(){ const d=new Date(Date.now()-2*864e5); return d.toLocaleDateString('en-CA',{timeZone:'Asia/Makassar'}); }
+/* ===== v9.7 RAPEL: tanggal yang sedang dirapel (null = hari ini) ===== */
+window.__rapelCheckin = null;
+window.__rapelG7 = null;
+function tanggalCheckinAktif(){ return window.__rapelCheckin || hariIni(); }
+function tanggalG7Aktif(){ return window.__rapelG7 || hariIni(); }
 function tglTampil(iso){ const [y,m,dd]=iso.split('-'); const nama=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']; return dd.replace(/^0/,'')+' '+nama[+m-1]+' '+y; }
 function sapaanWaktu(){ const j=+new Date().toLocaleString('en-US',{timeZone:'Asia/Makassar',hour:'numeric',hour12:false}); if(j>=4&&j<11)return'Selamat pagi'; if(j>=11&&j<15)return'Selamat siang'; if(j>=15&&j<19)return'Selamat sore'; return'Selamat malam'; }
 function panggil(s){ return (s.panggilan||s.nama.split(' ')[0]); }
 function kunciHari(nisn){ return 'checkin-harian-'+nisn+'-'+hariIni(); }
 function bacaHari(nisn,iso){ try{ return JSON.parse(localStorage.getItem('checkin-harian-'+nisn+'-'+iso)||'null'); }catch(e){ return null; } }
-function simpanHari(nisn,data){ localStorage.setItem(kunciHari(nisn), JSON.stringify(data)); }
+function simpanHari(nisn,data,iso){ localStorage.setItem('checkin-harian-'+nisn+'-'+(iso||hariIni()), JSON.stringify(data)); }
 function hitungStreak(nisn){
   try{ const s=JSON.parse(localStorage.getItem('checkin-harian-streak-'+nisn)||'null'); return s||{terakhir:null,jumlah:0}; }catch(e){ return {terakhir:null,jumlah:0}; }
 }
@@ -1041,7 +1072,7 @@ function masukKamar(){
   if(!s){ galat('NISN tidak ditemukan. Pastikan 10 angkanya benar — atau tanyakan ke Pak Imron.'); return; }
   nisnAktif=v; siswa=s;
   bunyi('Masuk');
-  localStorage.setItem('checkin-wali-nisn', v);
+  try{ if($('ingatSaya') && $('ingatSaya').checked){ localStorage.setItem('checkin-wali-nisn', v); } else { localStorage.removeItem('checkin-wali-nisn'); } }catch(e){}
   $('pintu').classList.add('tersembunyi');
   $('kamar').classList.remove('tersembunyi');
   lanjutSesudahLogin();
@@ -1081,8 +1112,10 @@ $('keluar').addEventListener('click', ()=>{
 /* ===== KAMAR ===== */
 let langkah=0, jawab={kehadiran:null,ketHadir:'',kabar:null,kendala:null,kendalaLain:'',bantuan:null,halLain:''};
 function bukaKamar(){
+  window.__rapelCheckin=null; window.__rapelG7=null;
   const pg=panggil(siswa);
   $('avatarHuruf').textContent = (siswa.nama||'?')[0].toUpperCase();
+  segarkanAvatar();
   $('papanNama').textContent = siswa.nama;
   $('papanKelas').textContent = 'Kelas '+siswa.kelas+' • Kelompok XII C';
   // kartu sapaan + tanggal
@@ -1134,7 +1167,15 @@ function bacaG7(nisn, tgl){
 function simpanG7Lokal(nisn, tgl, list){ localStorage.setItem(kunciG7(nisn,tgl), JSON.stringify(list)); }
 function renderG7(){
   const wadah = $('daftarG7'); if(!wadah || !siswa) return;
-  const sudah = bacaG7(nisnAktif, hariIni());
+  const tglG7 = tanggalG7Aktif();
+  const sudah = bacaG7(nisnAktif, tglG7);
+  const banner=$('bannerRapelG7');
+  if(banner){
+    if(window.__rapelG7){ banner.classList.remove('tersembunyi'); $('teksRapelG7').textContent='Mengisi rapel G7KAIH untuk '+tglTampil(window.__rapelG7)+' — centang yang kamu gawi hari itu.'; }
+    else banner.classList.add('tersembunyi');
+  }
+  const btnSimpan=$('simpanG7');
+  if(btnSimpan) btnSimpan.textContent = window.__rapelG7 ? ('Simpan Rapel G7KAIH ('+tglTampil(window.__rapelG7)+') ✓') : 'Simpan G7KAIH Hari Ini ✓';
   wadah.innerHTML = '';
   G7Aktif().forEach(g=>{
     const grup = document.createElement('div');
@@ -1153,10 +1194,10 @@ function renderG7(){
       b.className = 'g7-sub' + (on ? ' pilih' : '');
       b.innerHTML = '<span class="kotak-ce">'+(on?'\u2713':'')+'</span>' + sub;
       b.onclick = ()=>{
-        const list = bacaG7(nisnAktif, hariIni());
+        const list = bacaG7(nisnAktif, tanggalG7Aktif());
         const idx = list.indexOf(sub);
         if(idx >= 0) list.splice(idx, 1); else list.push(sub);
-        simpanG7Lokal(nisnAktif, hariIni(), list);
+        simpanG7Lokal(nisnAktif, tanggalG7Aktif(), list);
         bunyi('Centang');
         renderG7(); perbaruiDonat(); perbaruiPratinjau();
       };
@@ -1168,7 +1209,7 @@ function renderG7(){
   perbaruiDonat();
 }
 function perbaruiDonat(){
-  const list = siswa ? bacaG7(nisnAktif, hariIni()) : [];
+  const list = siswa ? bacaG7(nisnAktif, tanggalG7Aktif()) : [];
   const j = hitungG7(list);
   const kelilingKecil = 163.36, kelilingBesar = 276.46;
   const isi = $('donatG7Isi'); if(isi) isi.setAttribute('stroke-dashoffset', kelilingKecil * (1 - j/7));
@@ -1179,30 +1220,62 @@ function perbaruiDonat(){
   const angkaB = $('donatG7BesarAngka'); if(angkaB) angkaB.textContent = j + '/7';
   const st = $('skorG7Tepat'); if(st) st.textContent = list.length === 0 ? 'Belum ada rincian yang dicentang hari ini — tiap kebiasaan boleh kosong.' : ('Skor tepat: ' + skor + '% (' + list.length + ' dari ' + rincianDiharapkan() + ' rincian diharapkan).');
 }
-/* ===== v9.6: pemberitahuan beranda — yang belum diisi hari ini =====
-   Sumber status (logika yang sudah ada, riwayat lokal saja):
-   - Check-in: bacaHari(nisn, hariIni()) ada/tidak
-   - G7KAIH: bacaG7(nisn, hariIni()).length>0 (daftar kosong = belum diisi, sama seperti
-     logika prevG7 "0 dari 7 kebiasaan"; simpan G7 kosong tetap dihitung belum diisi)
-   - Profil: profilLengkap() (catatan: kunci profil menahan beranda bila profil belum
-     lengkap, jadi butir profil pada praktiknya jarang tampil — tetap ada demi kelengkapan) */
+/* ===== v9.7: pemberitahuan beranda — hari ini + rapel (max 2 hari ke belakang) =====
+   Sumber status (riwayat lokal saja):
+   - Check-in: bacaHari(nisn, tgl) ada/tidak
+   - G7KAIH: bacaG7(nisn, tgl).length>0 (daftar kosong = belum diisi)
+   - Profil: profilLengkap()
+   Rapel: kemarin + lusa kemarin yang belum diisi ditawarkan sebagai "Isi rapel" —
+   siswa tidak memilih tanggal; aplikasi yang menandai tanggalnya otomatis. */
+function hitungBelum(){
+  const belum=[];
+  if(!bacaHari(nisnAktif, hariIni())) belum.push({jenis:'checkin', tgl:hariIni(), rapel:false});
+  if(bacaG7(nisnAktif, hariIni()).length===0) belum.push({jenis:'g7', tgl:hariIni(), rapel:false});
+  [kemarinStr(), lusaKemarinStr()].forEach(d=>{
+    if(!bacaHari(nisnAktif, d)) belum.push({jenis:'checkin', tgl:d, rapel:true});
+    if(bacaG7(nisnAktif, d).length===0) belum.push({jenis:'g7', tgl:d, rapel:true});
+  });
+  if(!profilLengkap()) belum.push({jenis:'profil', tgl:hariIni(), rapel:false});
+  return belum;
+}
 function perbaruiPemberitahuan(){
   const el = $('kartuPemberitahuan'); if(!el || !siswa) return;
-  const butir = [];
-  if(!bacaHari(nisnAktif, hariIni())) butir.push({ico:'💬', teks:'Check-in harian hari ini belum diisi', view:'checkin', aksi:'Isi sekarang →'});
-  if(bacaG7(nisnAktif, hariIni()).length===0) butir.push({ico:'🌱', teks:'G7KAIH hari ini belum diisi', view:'g7', aksi:'Isi checklist →'});
-  if(!profilLengkap()) butir.push({ico:'🪪', teks:'Profilmu belum lengkap', view:'profil', aksi:'Lengkapi →'});
-  if(!butir.length){
+  const belum = hitungBelum();
+  const lencana = $('lencanaPb');
+  if(lencana){ lencana.textContent = belum.length ? String(belum.length) : ''; lencana.classList.toggle('tersembunyi', belum.length===0); }
+  if(!belum.length){
     el.classList.add('selesai');
     el.innerHTML = '<div class="judul-pb">✅ Semua sudah diisi hari ini 👍</div><div style="font-size:13px;color:var(--redup);margin-top:4px">Check-in, G7KAIH, dan profil sudah beres. Terima kasih, nak!</div>';
     return;
   }
   el.classList.remove('selesai');
-  let h = '<div class="judul-pb">🔔 Yang belum diisi hari ini ('+butir.length+')</div>';
-  butir.forEach(b=>{
-    h += '<button type="button" class="butir-pb" onclick="tampilView(\''+b.view+'\')">'+b.ico+' '+b.teks+'<span class="aksi-pb">'+b.aksi+'</span></button>';
-  });
+  const hariIniItems = belum.filter(b=>!b.rapel);
+  const rapelItems = belum.filter(b=>b.rapel);
+  let h = '';
+  if(hariIniItems.length){
+    h += '<div class="judul-pb">🔔 Yang belum diisi hari ini ('+hariIniItems.length+')</div>';
+    hariIniItems.forEach(b=>{ h += tombolPb(b); });
+  }
+  if(rapelItems.length){
+    h += '<div class="judul-pb rapel">🔁 Rapel — yang kelewat kemarin</div>';
+    rapelItems.forEach(b=>{ h += tombolPb(b); });
+  }
   el.innerHTML = h;
+}
+function tombolPb(b){
+  const tgl = (b.tgl===hariIni()) ? 'hari ini' : tglTampil(b.tgl);
+  if(b.jenis==='checkin') return '<button type="button" class="butir-pb'+(b.rapel?' rapel':'')+'" onclick="mulaiRapelCheckin(\''+b.tgl+'\')">💬 Check-in '+tgl+' belum diisi<span class="aksi-pb">'+(b.rapel?'Isi rapel →':'Isi sekarang →')+'</span></button>';
+  if(b.jenis==='g7') return '<button type="button" class="butir-pb'+(b.rapel?' rapel':'')+'" onclick="mulaiRapelG7(\''+b.tgl+'\')">🌱 G7KAIH '+tgl+' belum diisi<span class="aksi-pb">'+(b.rapel?'Isi rapel →':'Isi checklist →')+'</span></button>';
+  return '<button type="button" class="butir-pb" onclick="tampilView(\'profil\')">🪪 Profilmu belum lengkap<span class="aksi-pb">Lengkapi →</span></button>';
+}
+function mulaiRapelCheckin(tgl){
+  window.__rapelCheckin = (tgl===hariIni()) ? null : tgl;
+  tampilView('checkin');
+  mulaiPercakapan();
+}
+function mulaiRapelG7(tgl){
+  window.__rapelG7 = (tgl===hariIni()) ? null : tgl;
+  renderG7(); perbaruiDonat(); tampilView('g7');
 }
 function perbaruiPratinjau(){
   if(!siswa) return;
@@ -1237,7 +1310,9 @@ function mulaiPercakapan(){
   $('percakapan').innerHTML=''; $('pilihan').innerHTML='';
   jawab={kehadiran:null,ketHadir:'',kabar:null,kendala:null,kendalaLain:'',bantuan:null,halLain:''};
   setLangkah(0);
-  gelembungMus(sapaanWaktu()+', '+panggil(siswa)+'! Senang bertemu lagi di kamarmu. 🌞<br><b>Hari ini kamu hadir di sekolah?</b><br><span class="kecil">Pilih satu, nak — ini penting supaya Pak Imron tahu kamu turun atau tidak.</span>');
+  const tglCk = tanggalCheckinAktif();
+  const tanyaHadir = window.__rapelCheckin ? ('Kita isi rapel check-in untuk <b>'+tglTampil(tglCk)+'</b> ya, nak. 🌞<br><b>Hari itu kamu hadir di sekolah?</b>') : (sapaanWaktu()+', '+panggil(siswa)+'! Senang bertemu lagi di kamarmu. 🌞<br><b>Hari ini kamu hadir di sekolah?</b>');
+  gelembungMus(tanyaHadir+'<br><span class="kecil">Pilih satu, nak — ini penting supaya Pak Imron tahu kamu turun atau tidak.</span>');
   KEHADIRAN.forEach(o=>{
     const b=document.createElement('button'); b.type='button'; b.className='cip'; b.textContent=o.e+'  '+o.v;
     b.onclick=()=>jawabKehadiran(o.v,b); $('pilihan').appendChild(b);
@@ -1342,7 +1417,9 @@ $('kirim').addEventListener('click', ()=>{
   if(!jawab.kendala){ alert('Pilih dulu kendalamu hari ini, nak.'); return; }
   if(!jawab.bantuan){ alert('Pilih dulu butuh bantuan atau tidak, nak.'); return; }
   const kendala = jawab.kendala==='Lainnya...' ? ('Lainnya: '+(jawab.kendalaLain||'-')) : jawab.kendala;
-  const kebaikan = bacaG7(nisnAktif, hariIni()).slice();
+  const tglKirim = tanggalCheckinAktif();
+  const adalahRapel = !!window.__rapelCheckin;
+  const kebaikan = bacaG7(nisnAktif, tglKirim).slice();
   let halLain = jawab.halLain||'';
   const perb = (window.__perbaikan||'').trim();
   if(perb) halLain = '[Perbaikan data] '+perb + (halLain? '\n'+halLain : '');
@@ -1351,22 +1428,26 @@ $('kirim').addEventListener('click', ()=>{
   $('hKabar').value=String(jawab.kabar); $('hKendala').value=kendala; $('hBantuan').value=jawab.bantuan;
   $('hKehadiran').value=jawab.kehadiran; $('hKetHadir').value=jawab.ketHadir||'';
   $('hKebaikan').value=kebaikan.join(' | '); $('hHalLain').value=halLain;
+  $('hTanggal').value=tglKirim;
   $('formCheckin').submit();
   const data={kehadiran:jawab.kehadiran,ketHadir:jawab.ketHadir||'',kabar:jawab.kabar,kendala,bantuan:jawab.bantuan,kebaikan,halLain,waktu:new Date().toISOString()};
-  simpanHari(nisnAktif,data);
-  const streak=catatStreak(nisnAktif);
+  simpanHari(nisnAktif,data,tglKirim);
+  const streak= adalahRapel ? hitungStreak(nisnAktif).jumlah : catatStreak(nisnAktif);
+  window.__rapelCheckin=null;
   window.__perbaikan='';
   bunyi('Sukses');
   perbaruiStatistik();
-  setTimeout(()=>tampilSudah(data, streak), 900);
+  setTimeout(()=>tampilSudah(data, streak, tglKirim), 900);
 });
-function tampilSudah(data, streak){
+function tampilSudah(data, streak, iso){
+  const tglS = iso||hariIni();
+  const labelTgl = (tglS!==hariIni()) ? 'Rapel (' : 'Hari ini (';
   perbaruiStatistik();
   $('pilihan').innerHTML=''; $('lanjut').classList.add('tersembunyi'); $('areaKirim').classList.add('tersembunyi');
   $('percakapan').innerHTML='';
-  gelembungMus('Jazaakallaahu khoyron katsiiron, '+panggil(siswa)+'! Check-in hari ini sudah sampai ke Pak Imron. Semoga besok lebih baik lagi. 🌟');
-  const kb = (data.kebaikan && data.kebaikan.length) ? data.kebaikan : bacaG7(nisnAktif, hariIni());
-  $('ringkasHariIni').innerHTML='Hari ini ('+tglTampil(hariIni())+'): '+(data.kehadiran?('kehadiran '+data.kehadiran+(data.ketHadir?' ('+data.ketHadir+')':'')+' • '):'')+'kabar '+(KABAR[data.kabar]?KABAR[data.kabar][0]+' '+KABAR[data.kabar][1]:'-')+' • '+hitungG7(kb)+' dari 7 kebiasaan • '+(data.kendala||'—');
+  gelembungMus('Jazaakallaahu khoyron katsiiron, '+panggil(siswa)+'! Check-in '+(tglS!==hariIni() ? ('rapel untuk '+tglTampil(tglS)) : 'hari ini')+' sudah sampai ke Pak Imron. Semoga besok lebih baik lagi. 🌟');
+  const kb = (data.kebaikan && data.kebaikan.length) ? data.kebaikan : bacaG7(nisnAktif, tglS);
+  $('ringkasHariIni').innerHTML=labelTgl+tglTampil(tglS)+'): '+(data.kehadiran?('kehadiran '+data.kehadiran+(data.ketHadir?' ('+data.ketHadir+')':'')+' • '):'')+'kabar '+(KABAR[data.kabar]?KABAR[data.kabar][0]+' '+KABAR[data.kabar][1]:'-')+' • '+hitungG7(kb)+' dari 7 kebiasaan • '+(data.kendala||'—');
   const st = (streak!==undefined)? streak : hitungStreak(nisnAktif).jumlah;
   $('teksStreakSukses').textContent = st>1 ? ('🔥 Kamu sudah check-in '+st+' hari berturut-turut!') : '🔥 Hari pertama rentetanmu — lanjutkan besok!';
   $('areaSudah').classList.remove('tersembunyi');
@@ -1375,15 +1456,64 @@ $('perbarui').addEventListener('click', ()=>{ $('areaSudah').classList.add('ters
 $('keCurhat').addEventListener('click', ()=>tampilView('curhat'));
 
 
-/* ===== KIRIM G7KAIH (Form G7KAIH sendiri) ===== */
+/* ===== KIRIM G7KAIH (Form G7KAIH sendiri) — v9.7: dukung rapel ===== */
 $('simpanG7').addEventListener('click', ()=>{
-  const list = bacaG7(nisnAktif, hariIni());
+  const tglG7 = tanggalG7Aktif();
+  const adalahRapelG7 = !!window.__rapelG7;
+  const list = bacaG7(nisnAktif, tglG7);
   $('gNama').value = siswa.nama; $('gKelas').value = siswa.kelas; $('gNisn').value = nisnAktif;
   $('gKebaikan').value = list.length ? list.join(' | ') : '(belum ada kebiasaan hari ini)';
+  $('gTanggal').value = tglG7;
   $('formG7').submit();
   bunyi('Sukses');
-  const st=$('statusG7'); st.textContent = list.length ? ('G7KAIH hari ini sudah tersimpan ✓ ('+hitungG7(list)+' dari 7 kebiasaan • skor tepat '+skorG7Tepat(list)+'%). Boleh ditambah lagi nanti.') : 'G7KAIH hari ini sudah tersimpan ✓ (belum ada kebiasaan — tidak apa-apa, isi yang kamu gawi saja).'; st.classList.remove('tersembunyi');
-  perbaruiDonat(); perbaruiPratinjau();
+  const labelTgl = adalahRapelG7 ? ('rapel '+tglTampil(tglG7)) : 'hari ini';
+  const st=$('statusG7'); st.textContent = list.length ? ('G7KAIH '+labelTgl+' sudah tersimpan ✓ ('+hitungG7(list)+' dari 7 kebiasaan • skor tepat '+skorG7Tepat(list)+'%). Boleh ditambah lagi nanti.') : ('G7KAIH '+labelTgl+' sudah tersimpan ✓ (belum ada kebiasaan — tidak apa-apa, isi yang kamu gawi saja).'); st.classList.remove('tersembunyi');
+  window.__rapelG7=null;
+  perbaruiDonat(); perbaruiPratinjau(); renderG7();
+});
+$('batalRapelG7').addEventListener('click', ()=>{ window.__rapelG7=null; renderG7(); perbaruiPratinjau(); });
+
+/* ===== v9.7: FOTO PROFIL (tersimpan per perangkat, data URI JPEG ≤256px) ===== */
+function kunciFoto(nisn){ return 'foto-'+nisn; }
+function bacaFoto(nisn){ try{ return localStorage.getItem(kunciFoto(nisn))||''; }catch(e){ return ''; } }
+function segarkanAvatar(){
+  if(!siswa) return;
+  const f=bacaFoto(nisnAktif);
+  const img=$('avatarFoto'), h=$('avatarHuruf');
+  if(img){
+    if(f){ img.src=f; img.classList.remove('tersembunyi'); if(h) h.classList.add('tersembunyi'); }
+    else { img.classList.add('tersembunyi'); img.removeAttribute('src'); if(h) h.classList.remove('tersembunyi'); }
+  }
+  const fb=$('fotoProfilBesar'), fh=$('fotoHurufBesar');
+  if(fb){
+    if(f){ fb.src=f; fb.classList.remove('tersembunyi'); if(fh) fh.classList.add('tersembunyi'); }
+    else { fb.classList.add('tersembunyi'); fb.removeAttribute('src'); if(fh){ fh.classList.remove('tersembunyi'); fh.textContent=(siswa.nama||'?')[0].toUpperCase(); } }
+  }
+}
+$('tombolUbahFoto').addEventListener('click', ()=>{ const i=$('inputFoto'); if(i) i.click(); });
+$('inputFoto').addEventListener('change', (e)=>{
+  const file=e.target.files && e.target.files[0];
+  if(!file) return;
+  if(!file.type || file.type.indexOf('image/')!==0){ alert('Pilih file gambar, nak.'); e.target.value=''; return; }
+  const rd=new FileReader();
+  rd.onload=()=>{
+    const im=new Image();
+    im.onload=()=>{
+      const S=256; let w=im.width, hh=im.height;
+      const sc=Math.min(1, S/Math.max(w,hh));
+      w=Math.max(1,Math.round(w*sc)); hh=Math.max(1,Math.round(hh*sc));
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=hh;
+      const cx=cv.getContext('2d'); cx.drawImage(im,0,0,w,hh);
+      let uri=''; try{ uri=cv.toDataURL('image/jpeg',0.8); }catch(err){ alert('Foto tidak bisa diproses, nak. Coba foto lain.'); return; }
+      try{ localStorage.setItem(kunciFoto(nisnAktif), uri); }
+      catch(err){ alert('Foto terlalu besar untuk disimpan di perangkat ini, nak. Coba foto lain yang lebih kecil.'); return; }
+      segarkanAvatar(); bunyi('Sukses');
+    };
+    im.onerror=()=>{ alert('Foto tidak bisa dibaca, nak. Coba foto lain.'); };
+    im.src=rd.result;
+  };
+  rd.readAsDataURL(file);
+  e.target.value='';
 });
 
 /* ===== PROFILKU ===== */
@@ -1640,6 +1770,7 @@ function perbaruiHitungMundur(){
   if(!sb){ if(teksEl) teksEl.textContent='Memuat jadwal sholat…'; return; }
   if(jamEl) jamEl.textContent=sb.sisaTeks;
   if(teksEl) teksEl.textContent='Menuju '+sb.nama+(sb.besok?' besok':'')+' pukul '+sb.jam+' WITA';
+  const sm=$('sholatMini'); if(sm && siswa) sm.textContent='🕌 '+sb.nama+(sb.besok?' (besok)':'')+' '+sb.jam+' • '+sb.sisaTeks;
   const ps=$('prevSholat'); if(ps && siswa) ps.textContent='Berikutnya: '+sb.nama+' pukul '+sb.jam+' (dalam '+sb.sisaTeks+').';
 }
 function bunyiAdzan(nama){
