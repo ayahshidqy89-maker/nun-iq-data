@@ -392,7 +392,7 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
   <div class="tampilan" id="viewCheckin">
   <div class="kartu kartu-ruang" id="bagianCheckin">
     <div class="judul-bagian"><span class="ico">💬</span><h3>Check-in Hari Ini</h3><span class="garis-b"></span></div>
-    <div class="kemajuan"><span class="txt" id="teksLangkah">Langkah 1 dari 4</span><div class="bar"><i id="barLangkah" style="width:25%"></i></div></div>
+    <div class="kemajuan"><span class="txt" id="teksLangkah">Langkah 1 dari 5</span><div class="bar"><i id="barLangkah" style="width:20%"></i></div></div>
     <div class="chat" id="percakapan"></div>
     <div class="pilihan" id="pilihan"></div>
     <button class="tombol putih tersembunyi" id="lanjut">Lanjut →</button>
@@ -516,6 +516,7 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
   <input name="entry.126844025" id="hPanggilan"><input name="entry.326665571" id="hKabar">
   <input name="entry.1276742123" id="hKendala"><input name="entry.872595628" id="hBantuan">
   <input name="entry.10598383" id="hKebaikan"><input name="entry.822871052" id="hHalLain">
+  <input name="entry.1103355665" id="hKehadiran"><input name="entry.1090458692" id="hKetHadir">
 </form>
 <form id="formCurhat" action="https://docs.google.com/forms/d/e/1FAIpQLSeirUfUZLvjg0UGO-bXsQtLeROBezul_kfPVtmeeHUTiVKY8Q/formResponse" method="POST" target="bingkai" style="display:none">
   <input name="entry.441367660" id="cNama"><input name="entry.651555992" id="cKelas">
@@ -912,6 +913,19 @@ const BANTUAN = [
   {v:'Tidak, saya baik-baik saja', e:'😊'},
   {v:'Belum tahu', e:'🤔'}
 ];
+/* ===== KEHADIRAN (v9.5) — chip bertema, bukan select native ===== */
+const KEHADIRAN = [
+  {v:'Hadir', e:'✅'},
+  {v:'Terlambat', e:'⏰'},
+  {v:'Izin', e:'📝'},
+  {v:'Sakit', e:'🤒'},
+  {v:'Alpa', e:'❌'}
+];
+const KET_HADIR = {
+  'Terlambat': 'Jam berapa kamu tiba? (mis. 07:30)',
+  'Izin': 'Tulis alasannya... (mis. ada acara keluarga)',
+  'Sakit': 'Tulis keluhanmu... (mis. demam)'
+};
 
 /* ===== UTIL ===== */
 const $ = id => document.getElementById(id);
@@ -1045,7 +1059,7 @@ $('keluar').addEventListener('click', ()=>{
 });
 
 /* ===== KAMAR ===== */
-let langkah=0, jawab={kabar:null,kendala:null,kendalaLain:'',bantuan:null,halLain:''};
+let langkah=0, jawab={kehadiran:null,ketHadir:'',kabar:null,kendala:null,kendalaLain:'',bantuan:null,halLain:''};
 function bukaKamar(){
   const pg=panggil(siswa);
   $('avatarHuruf').textContent = (siswa.nama||'?')[0].toUpperCase();
@@ -1066,7 +1080,7 @@ function bukaKamar(){
   const km=bacaHari(nisnAktif, kemarinStr());
   if(km){
     $('kemarin').classList.remove('tersembunyi');
-    $('kemarin').innerHTML='<b>Kemarin ('+tglTampil(kemarinStr())+'):</b> kabar '+ (KABAR[km.kabar]?KABAR[km.kabar][0]+' '+KABAR[km.kabar][1]:'-') + ' • '+hitungG7(km.kebaikan||[])+' dari 7 kebiasaan • '+(km.kendala||'—');
+    $('kemarin').innerHTML='<b>Kemarin ('+tglTampil(kemarinStr())+'):</b> '+(km.kehadiran?('kehadiran '+km.kehadiran+' • '):'')+'kabar '+ (KABAR[km.kabar]?KABAR[km.kabar][0]+' '+KABAR[km.kabar][1]:'-') + ' • '+hitungG7(km.kebaikan||[])+' dari 7 kebiasaan • '+(km.kendala||'—');
   } else $('kemarin').classList.add('tersembunyi');
   // sudah check-in hari ini?
   const sudah=bacaHari(nisnAktif, hariIni());
@@ -1149,7 +1163,7 @@ function perbaruiPratinjau(){
   if(!siswa) return;
   const h = bacaHari(nisnAktif, hariIni());
   const pc = $('prevCheckin');
-  if(pc) pc.textContent = h ? ('Sudah terkirim — kabar ' + (KABAR[h.kabar] ? KABAR[h.kabar][0] + ' ' + KABAR[h.kabar][1] : '')) : 'Belum check-in hari ini.';
+  if(pc) pc.textContent = h ? ('Sudah terkirim — ' + (h.kehadiran ? ('kehadiran ' + h.kehadiran + ' • ') : '') + 'kabar ' + (KABAR[h.kabar] ? KABAR[h.kabar][0] + ' ' + KABAR[h.kabar][1] : '')) : 'Belum check-in hari ini.';
   const g = bacaG7(nisnAktif, hariIni());
   const pg = $('prevG7');
   const jg = hitungG7(g);
@@ -1167,24 +1181,38 @@ function perbaruiPratinjau(){
   if(pk){ const pgk = bacaPengingatku(); pk.textContent = pgk.length ? (pgk.length + ' pengingat aktif — berikutnya pukul ' + pgk.map(x=>x.jam).sort()[0] + '.') : 'Belum ada pengingat.'; }
 }
 
-/* ===== PERCAKAPAN CHECK-IN (4 langkah — G7KAIH kini modul sendiri) ===== */
+/* ===== PERCAKAPAN CHECK-IN (5 langkah — v9.5: Kehadiran dulu, G7KAIH modul sendiri) ===== */
 function gelembungMus(teks){ const d=document.createElement('div'); d.className='gelembung mus'; d.innerHTML=teks; $('percakapan').appendChild(d); gulir(d); }
 function gelembungAku(teks){ const d=document.createElement('div'); d.className='gelembung aku'; d.textContent=teks; $('percakapan').appendChild(d); gulir(d); }
-function setLangkah(i){ langkah=i; $('teksLangkah').textContent='Langkah '+(i+1)+' dari 4'; $('barLangkah').style.width=((i+1)/4*100)+'%'; }
+function setLangkah(i){ langkah=i; $('teksLangkah').textContent='Langkah '+(i+1)+' dari 5'; $('barLangkah').style.width=((i+1)/5*100)+'%'; }
 function mulaiPercakapan(){
   $('areaKirim').classList.add('tersembunyi'); $('areaSudah').classList.add('tersembunyi');
   $('lanjut').classList.add('tersembunyi');
   $('percakapan').innerHTML=''; $('pilihan').innerHTML='';
-  jawab={kabar:null,kendala:null,kendalaLain:'',bantuan:null,halLain:''};
+  jawab={kehadiran:null,ketHadir:'',kabar:null,kendala:null,kendalaLain:'',bantuan:null,halLain:''};
   setLangkah(0);
-  gelembungMus(sapaanWaktu()+', '+panggil(siswa)+'! Senang bertemu lagi di kamarmu. 🌞<br><b>Bagaimana kabarmu hari ini?</b>');
-  const sk=document.createElement('div'); sk.className='skala';
-  [1,2,3,4,5].forEach(n=>{
-    const b=document.createElement('button'); b.type='button';
-    b.innerHTML=KABAR[n][0]+'<small>'+KABAR[n][1]+'</small>';
-    b.onclick=()=>jawabKabar(n,b); sk.appendChild(b);
+  gelembungMus(sapaanWaktu()+', '+panggil(siswa)+'! Senang bertemu lagi di kamarmu. 🌞<br><b>Hari ini kamu hadir di sekolah?</b><br><span class="kecil">Pilih satu, nak — ini penting supaya Pak Imron tahu kamu turun atau tidak.</span>');
+  KEHADIRAN.forEach(o=>{
+    const b=document.createElement('button'); b.type='button'; b.className='cip'; b.textContent=o.e+'  '+o.v;
+    b.onclick=()=>jawabKehadiran(o.v,b); $('pilihan').appendChild(b);
   });
-  $('pilihan').appendChild(sk);
+}
+function jawabKehadiran(v,btn){
+  if(jawab.kehadiran) return; jawab.kehadiran=v; bunyi('Klik');
+  document.querySelectorAll('#pilihan .cip').forEach(b=>b.classList.remove('pilih')); btn.classList.add('pilih');
+  gelembungAku(v);
+  const ket = KET_HADIR[v];
+  if(ket){
+    const inp=document.createElement('input'); inp.className='kolom mt'; inp.id='inputKetHadir'; inp.placeholder=ket; inp.maxLength=200;
+    inp.oninput=()=>{ jawab.ketHadir=inp.value.trim(); };
+    $('pilihan').appendChild(inp); inp.focus();
+  }
+  const r={'Hadir':'Alhamdulillaahh, senang kamu hadir hari ini, nak. Semoga harimu berkah. 😊',
+    'Terlambat':'Tidak apa-apa, nak — yang penting kamu datang. Besok usahakan lebih awal ya.',
+    'Izin':'Baik, nak — izinmu tercatat. Semoga urusanmu lancar.',
+    'Sakit':'Ane doakan cepat sembuh, nak. Istirahat yang cukup ya. 🤲',
+    'Alpa':'Baik, nak — tercatat. Kalau ada apa-apa, ceritakan ke ane ya.'}[v];
+  setTimeout(()=>{ gelembungMus(r); tampilLanjut(); },450);
 }
 function jawabKabar(n,btn){
   if(jawab.kabar) return; jawab.kabar=n; bunyi('Klik');
@@ -1201,18 +1229,27 @@ function tampilLanjut(){ $('lanjut').classList.remove('tersembunyi'); gulir($('l
 $('lanjut').addEventListener('click', ()=>{
   $('lanjut').classList.add('tersembunyi'); $('pilihan').innerHTML='';
   if(langkah===0){ setLangkah(1);
+    gelembungMus('<b>Bagaimana kabarmu hari ini?</b>');
+    const sk=document.createElement('div'); sk.className='skala';
+    [1,2,3,4,5].forEach(n=>{
+      const b=document.createElement('button'); b.type='button';
+      b.innerHTML=KABAR[n][0]+'<small>'+KABAR[n][1]+'</small>';
+      b.onclick=()=>jawabKabar(n,b); sk.appendChild(b);
+    });
+    $('pilihan').appendChild(sk);
+  } else if(langkah===1){ setLangkah(2);
     gelembungMus('<b>Ada kendala yang mengganggumu hari ini?</b><br><span class="kecil">Pilih satu yang paling terasa, nak.</span>');
     KENDALA.forEach(k=>{
       const b=document.createElement('button'); b.type='button'; b.className='cip'; b.textContent=k;
       b.onclick=()=>jawabKendala(k,b); $('pilihan').appendChild(b);
     });
-  } else if(langkah===1){ setLangkah(2);
+  } else if(langkah===2){ setLangkah(3);
     gelembungMus('<b>Butuh bantuan dari Pak Imron atau dari ane?</b>');
     BANTUAN.forEach(o=>{
       const b=document.createElement('button'); b.type='button'; b.className='tombol-pil'; b.textContent=o.e+'  '+o.v;
       b.onclick=()=>jawabBantuan(o.v,b); $('pilihan').appendChild(b);
     });
-  } else if(langkah===2){ setLangkah(3);
+  } else if(langkah===3){ setLangkah(4);
     const j=hitungG7(bacaG7(nisnAktif, hariIni()));
     gelembungMus(j===7?'Maa syaa Alloohh, <b>7 dari 7 kebiasaan</b> — lengkap hari ini! Terus pertahankan, nak. 🎉':(j>0?'Maa syaa Alloohh, kamu sudah melakukan <b>'+j+' dari 7 kebiasaan</b> hari ini. Terus pertahankan, nak.':'Tidak apa-apa, nak — hari masih panjang. Satu kebiasaan baik hari ini pun sudah berarti.'));
     gelembungMus('<b>Terakhir, ada hal lain yang ingin kamu sampaikan?</b><br><span class="kecil">Boleh cerita apa saja — atau kosongkan saja kalau tidak ada.</span>');
@@ -1254,6 +1291,7 @@ function jawabBantuan(v,btn){
 
 /* ===== KIRIM CHECK-IN ===== */
 $('kirim').addEventListener('click', ()=>{
+  if(!jawab.kehadiran){ alert('Pilih dulu kehadiranmu hari ini, nak.'); return; }
   if(!jawab.kabar){ alert('Pilih dulu kabarmu hari ini, nak.'); return; }
   if(!jawab.kendala){ alert('Pilih dulu kendalamu hari ini, nak.'); return; }
   if(!jawab.bantuan){ alert('Pilih dulu butuh bantuan atau tidak, nak.'); return; }
@@ -1265,9 +1303,10 @@ $('kirim').addEventListener('click', ()=>{
   const panggilan = (siswa.panggilan || profilGabungan(nisnAktif).panggilan || siswa.nama.split(' ')[0]);
   $('hNama').value=siswa.nama; $('hKelas').value=siswa.kelas; $('hPanggilan').value=panggilan;
   $('hKabar').value=String(jawab.kabar); $('hKendala').value=kendala; $('hBantuan').value=jawab.bantuan;
+  $('hKehadiran').value=jawab.kehadiran; $('hKetHadir').value=jawab.ketHadir||'';
   $('hKebaikan').value=kebaikan.join(' | '); $('hHalLain').value=halLain;
   $('formCheckin').submit();
-  const data={kabar:jawab.kabar,kendala,bantuan:jawab.bantuan,kebaikan,halLain,waktu:new Date().toISOString()};
+  const data={kehadiran:jawab.kehadiran,ketHadir:jawab.ketHadir||'',kabar:jawab.kabar,kendala,bantuan:jawab.bantuan,kebaikan,halLain,waktu:new Date().toISOString()};
   simpanHari(nisnAktif,data);
   const streak=catatStreak(nisnAktif);
   window.__perbaikan='';
@@ -1281,7 +1320,7 @@ function tampilSudah(data, streak){
   $('percakapan').innerHTML='';
   gelembungMus('Jazaakallaahu khoyron katsiiron, '+panggil(siswa)+'! Check-in hari ini sudah sampai ke Pak Imron. Semoga besok lebih baik lagi. 🌟');
   const kb = (data.kebaikan && data.kebaikan.length) ? data.kebaikan : bacaG7(nisnAktif, hariIni());
-  $('ringkasHariIni').innerHTML='Hari ini ('+tglTampil(hariIni())+'): kabar '+(KABAR[data.kabar]?KABAR[data.kabar][0]+' '+KABAR[data.kabar][1]:'-')+' • '+hitungG7(kb)+' dari 7 kebiasaan • '+(data.kendala||'—');
+  $('ringkasHariIni').innerHTML='Hari ini ('+tglTampil(hariIni())+'): '+(data.kehadiran?('kehadiran '+data.kehadiran+(data.ketHadir?' ('+data.ketHadir+')':'')+' • '):'')+'kabar '+(KABAR[data.kabar]?KABAR[data.kabar][0]+' '+KABAR[data.kabar][1]:'-')+' • '+hitungG7(kb)+' dari 7 kebiasaan • '+(data.kendala||'—');
   const st = (streak!==undefined)? streak : hitungStreak(nisnAktif).jumlah;
   $('teksStreakSukses').textContent = st>1 ? ('🔥 Kamu sudah check-in '+st+' hari berturut-turut!') : '🔥 Hari pertama rentetanmu — lanjutkan besok!';
   $('areaSudah').classList.remove('tersembunyi');

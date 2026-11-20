@@ -65,6 +65,7 @@ label.lbl{display:block;font-weight:800;font-size:13.5px;margin:18px 0 8px}
 .lencana{margin-left:auto;flex:none;font-size:11.5px;font-weight:800;padding:5px 10px;border-radius:999px}
 .lencana.ok{background:#E6F9EE;color:var(--sukses-gelap)}
 .lencana.belum{background:#F1F5F9;color:var(--redup)}
+.lencana.merah{background:var(--merah-bg);color:var(--merah-teks)}
 .anak .detail{font-size:13.5px;line-height:1.65;color:var(--redup);margin-top:9px}
 .anak .detail b{color:var(--teks)}
 .anak .curhat-item{background:var(--isi);border:1px solid var(--garis);border-radius:14px;padding:10px 12px;font-size:13.5px;line-height:1.6;margin-top:8px;white-space:pre-line}
@@ -154,6 +155,8 @@ label.lbl{display:block;font-weight:800;font-size:13.5px;margin:18px 0 8px}
 
   <div id="peringatan"></div>
 
+  <h2 class="seksi" id="seksiPerhatian">🚨 Perlu Perhatian — Kehadiran</h2>
+  <div id="perluPerhatian"><p class="muted">Memuat pola kehadiran...</p></div>
   <h2 class="seksi" id="seksiAnak">👥 Per Anak — Hari Ini</h2>
   <div id="daftarAnak"><p class="muted">Memuat data check-in...</p></div>
 
@@ -357,6 +360,37 @@ async function muat(){
     $('daftarAnak').innerHTML='<p class="muted">Data tidak dapat dimuat. Periksa koneksi, lalu ketuk "Segarkan data".</p>';
   }
 }
+/* ===== KEHADIRAN (v5) ===== */
+const HADIR_SINGKAT = {Hadir:'H', Terlambat:'T', Izin:'I', Sakit:'S', Alpa:'A'};
+function isoKemarin(iso){ return new Date(new Date(iso+'T00:00:00+08:00').getTime()-864e5).toLocaleDateString('en-CA',{timeZone:'Asia/Makassar'}); }
+function polaKehadiran(ckBaris, namaNorm, hari){
+  // Baris lama (sebelum v9.5) kolom kehadiran KOSONG -> diabaikan, bukan galat.
+  const t7=new Date(new Date(hari+'T00:00:00+08:00').getTime()-6*864e5).toLocaleDateString('en-CA',{timeZone:'Asia/Makassar'});
+  const perTgl={};
+  (ckBaris||[]).forEach(r=>{
+    if(norm(r[1])!==namaNorm) return;
+    const t=tglDariSheet(r[0]); if(!t||t<t7||t>hari) return;
+    const k=(r[9]||'').trim();
+    if(!perTgl[t] || String(r[0])>String(perTgl[t].waktu)) perTgl[t]={status:k, ket:(r[10]||'').trim(), waktu:r[0]};
+  });
+  const hitung={Hadir:0,Terlambat:0,Izin:0,Sakit:0,Alpa:0};
+  const pola=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date(new Date(hari+'T00:00:00+08:00').getTime()-i*864e5).toLocaleDateString('en-CA',{timeZone:'Asia/Makassar'});
+    const e=perTgl[d];
+    if(e && e.status && hitung.hasOwnProperty(e.status)){ hitung[e.status]++; pola.push(HADIR_SINGKAT[e.status]||'?'); }
+    else pola.push('–');
+  }
+  return {perTgl:perTgl, hitung:hitung, pola:pola, hariIni:(perTgl[hari]&&perTgl[hari].status)||''};
+}
+function badgeHadir(st){
+  if(st==='Hadir') return '<span class="lencana ok">✅ Hadir</span>';
+  if(st==='Alpa') return '<span class="lencana merah">❌ Alpa</span>';
+  if(st==='Terlambat') return '<span class="lencana belum">⏰ Terlambat</span>';
+  if(st==='Izin') return '<span class="lencana belum">📝 Izin</span>';
+  if(st==='Sakit') return '<span class="lencana belum">🤒 Sakit</span>';
+  return '<span class="lencana belum">Belum mengisi</span>';
+}
 function render(ckBaris, chBaris, g7Baris, hari){
   // G7KAIH per NISN (kolom: Timestamp, Nama, Kelas, NISN, Kebaikan) — hitung jumlah kebiasaan dari daftar koma
   const g7PerNisn={};
@@ -373,7 +407,7 @@ function render(ckBaris, chBaris, g7Baris, hari){
   ckBaris.forEach(r=>{
     const nama=norm(r[1]), t=tglDariSheet(r[0]);
     if(!t) return;
-    const ent={tgl:t, nama:r[1], kelas:r[2], panggilan:r[3], kabar:+r[4]||null, kendala:r[5], bantuan:r[6], kebaikan:r[7], halLain:r[8], waktu:r[0]};
+    const ent={tgl:t, nama:r[1], kelas:r[2], panggilan:r[3], kabar:+r[4]||null, kendala:r[5], bantuan:r[6], kebaikan:r[7], halLain:r[8], kehadiran:(r[9]||'').trim(), ketHadir:(r[10]||'').trim(), waktu:r[0]};
     if(!perNama[nama] || t>=perNama[nama].tgl) perNama[nama]=ent;
     if(t===hari) perNama[nama+'|hariini']=ent;
   });
@@ -419,6 +453,33 @@ function render(ckBaris, chBaris, g7Baris, hari){
   if(belum.length) pw+='<div class="peringat kuning">⏰ <b>Belum check-in hari ini ('+belum.length+'):</b> '+belum.join(', ')+'.</div>';
   if(belumG7.length) pw+='<div class="peringat kuning">🌱 <b>Belum isi G7KAIH hari ini ('+belumG7.length+'):</b> '+belumG7.join(', ')+' — ingatkan di japri.</div>';
   $('peringatan').innerHTML=pw;
+  // kehadiran — pola 7 hari + perlu perhatian (v5)
+  const kemarinISO = isoKemarin(hari);
+  const polaPerSiswa={};
+  const perhatian=[];
+  SISWA.forEach(s=>{
+    const pola=polaKehadiran(ckBaris, norm(s.nama), hari);
+    polaPerSiswa[s.nisn]=pola;
+    const alasan=[];
+    if(pola.hitung.Alpa>=2) alasan.push('Alpa '+pola.hitung.Alpa+'× minggu ini');
+    if(pola.hitung.Terlambat>=3) alasan.push('Terlambat '+pola.hitung.Terlambat+'× minggu ini');
+    if((pola.hitung.Izin+pola.hitung.Sakit)>=3) alasan.push('Izin/Sakit '+(pola.hitung.Izin+pola.hitung.Sakit)+'× minggu ini');
+    const terakhir=perNama[norm(s.nama)];
+    if(!terakhir || terakhir.tgl<kemarinISO) alasan.push('Tidak check-in 2+ hari'+(terakhir?(' (terakhir '+tglTampil(terakhir.tgl)+')'):' (belum pernah)'));
+    if(pola.hariIni==='Hadir' && !g7PerNisn[s.nisn+'|hariini']) alasan.push('Hadir hari ini tapi belum isi G7KAIH (tidak konsisten)');
+    if(alasan.length) perhatian.push({nama:s.nama, kelas:s.kelas, alasan:alasan, pola:pola});
+  });
+  const elP=$('perluPerhatian');
+  if(elP){
+    if(!perhatian.length) elP.innerHTML='<p class="muted">✓ Tidak ada siswa yang perlu perhatian khusus minggu ini.</p>';
+    else{
+      let hp='<div class="peringat merah">🚨 <b>'+perhatian.length+' anak perlu perhatian:</b></div>';
+      perhatian.forEach(pp=>{
+        hp+='<div class="anak"><div class="baris-atas"><div><div class="nm">'+pp.nama+'</div><div class="kls">Kelas '+pp.kelas+'</div></div></div><div>'+pp.alasan.join(' • ')+'</div><div class="muted">Pola 7 hari: '+pp.pola.pola.join(' ')+' (H'+pp.pola.hitung.Hadir+' T'+pp.pola.hitung.Terlambat+' I'+pp.pola.hitung.Izin+' S'+pp.pola.hitung.Sakit+' A'+pp.pola.hitung.Alpa+')</div></div>';
+      });
+      elP.innerHTML=hp;
+    }
+  }
   // daftar anak — TABEL PADAT, satu baris per anak (v4)
   const t7=new Date(Date.now()-6*864e5).toLocaleDateString('en-CA',{timeZone:'Asia/Makassar'});
   const infaqMingguan={};
@@ -428,7 +489,7 @@ function render(ckBaris, chBaris, g7Baris, hari){
     const daftar=pecahRincian(r[4]);
     if(daftar.includes('Berinfaq/bershodaqohh (uang, barang, atau bantuan)')) infaqMingguan[nisn]=(infaqMingguan[nisn]||0)+1;
   });
-  let html='<table class="tabel-anak"><thead><tr><th>Anak</th><th>Check-in</th><th>G7KAIH</th><th>Curhat</th><th>Pola minggu ini</th></tr></thead><tbody>';
+  let html='<table class="tabel-anak"><thead><tr><th>Anak</th><th>Check-in</th><th>Kehadiran</th><th>G7KAIH</th><th>Curhat</th><th>Pola minggu ini</th></tr></thead><tbody>';
   SISWA.forEach(s=>{
     const e=perNama[norm(s.nama)+'|hariini'] || perNama[norm(s.nama)];
     const cur=curhatPerNisn[s.nisn]||[];
@@ -442,6 +503,10 @@ function render(ckBaris, chBaris, g7Baris, hari){
     } else {
       html+='<td><span class="lencana belum">Belum pernah</span></td>';
     }
+    const pola=polaPerSiswa[s.nisn];
+    const eHariIni=perNama[norm(s.nama)+'|hariini'];
+    const ketHariIni=eHariIni?eHariIni.ketHadir:'';
+    html+='<td>'+badgeHadir(pola.hariIni)+(ketHariIni?'<br><span class="muted">'+ketHariIni+'</span>':'')+'<br><span class="muted">7 hari: '+pola.pola.join(' ')+'</span><br><span class="muted">H'+pola.hitung.Hadir+' T'+pola.hitung.Terlambat+' I'+pola.hitung.Izin+' S'+pola.hitung.Sakit+' A'+pola.hitung.Alpa+'</span></td>';
     if(g7e){
       const persen=Math.round(g7e.jumlah/7*100);
       html+='<td><b>'+g7e.jumlah+'/7</b>'+(g7Sudah?'':' (terakhir '+tglTampil(g7e.tgl)+')')+'<div class="mini-bar"><i style="width:'+persen+'%"></i></div>'+(g7e.daftar.length?'<span class="muted">'+g7e.daftar.slice(0,3).join(', ')+(g7e.daftar.length>3?'…':'')+'</span>':'')+'</td>';
