@@ -449,6 +449,7 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
     <label class="lbl" for="teksCurhat">Tulis curhatmu di sini</label>
     <textarea class="kolom" id="teksCurhat" placeholder="Ceritakan apa yang kamu rasakan, apa yang mengganjal, atau apa pun yang ingin kamu sampaikan..." maxlength="2000"></textarea>
     <button class="tombol" id="kirimCurhat">Kirim Curhat 💌</button>
+    <button class="tombol putih" id="segarkanCurhat" style="margin-top:8px">↻ Segarkan balasan</button>
     <p class="petunjuk tersembunyi" id="statusCurhat"></p>
   </div>
 
@@ -825,6 +826,44 @@ function profilLengkap(){
   const p = profilGabungan(nisnAktif);
   return !!(p.nama && p.panggilan && p.nisn && p.kelas && p.agama && p.hpSiswa && p.hpOrtu && p.uangSaku!==null && p.uangSaku!=='' && !isNaN(+p.uangSaku));
 }
+/* ===== PROFIL DARI SHEET (v9.3: profil yang diisi di perangkat lain tetap dihitung) ===== */
+const SHEET_PROFIL_ID='1JxM5v46_8wq-soslI0-_SgQiRjfBMzSmx-7aWlgzMmw';
+const URL_GVIZ_PROFIL='https://docs.google.com/spreadsheets/d/'+SHEET_PROFIL_ID+'/gviz/tq?tqx=out:csv&sheet=Form%20Responses%201';
+async function muatProfilDariSheet(){
+  try{
+    const r=await fetch(URL_GVIZ_PROFIL+'&_t='+Date.now(), {cache:'no-store'});
+    if(!r.ok) return false;
+    const baris=parseCSVCurhat(await r.text()); // parser CSV generik, dipakai ulang
+    let ketemu=null;
+    baris.slice(1).forEach(function(row){
+      if(String(row[3]||'').trim()===nisnAktif) ketemu=row; // baris terakhir = terbaru
+    });
+    if(!ketemu) return false;
+    const data={
+      nama:String(ketemu[1]||'').trim(),
+      panggilan:String(ketemu[2]||'').trim(),
+      nisn:nisnAktif,
+      kelas:String(ketemu[4]||'').trim(),
+      agama:String(ketemu[5]||'').trim(),
+      hpSiswa:normalisasiHp(ketemu[6]||''),
+      hpOrtu:normalisasiHp(ketemu[7]||''),
+      uangSaku:(ketemu[8]===undefined||String(ketemu[8]).trim()==='')?null:+String(ketemu[8]).replace(/[^\d]/g,''),
+      alamat:String(ketemu[9]||'').trim()
+    };
+    if(!data.nama || !data.panggilan || !data.kelas || !data.agama || !data.hpSiswa || !data.hpOrtu || data.uangSaku===null || isNaN(data.uangSaku)) return false;
+    simpanProfilLokal(nisnAktif, data);
+    if(data.panggilan) siswa.panggilan=data.panggilan;
+    return true;
+  }catch(e){ return false; }
+}
+/* lanjut sesudah NISN terverifikasi: buka kamar, atau form profil (cek Sheet bila lokal belum lengkap) */
+function lanjutSesudahLogin(){
+  if(profilLengkap()){ bukaKamar(); return; }
+  bukaFormProfil();
+  muatProfilDariSheet().then(function(ok){
+    if(ok && profilLengkap()) tutupKunciProfil();
+  });
+}
 function agamaSiswa(){
   if(!nisnAktif) return 'Islam';
   const p = profilGabungan(nisnAktif);
@@ -962,11 +1001,19 @@ function masukKamar(){
   localStorage.setItem('checkin-wali-nisn', v);
   $('pintu').classList.add('tersembunyi');
   $('kamar').classList.remove('tersembunyi');
-  if(!profilLengkap()){
-    bukaFormProfil();
-    return;
-  }
-  bukaKamar();
+  lanjutSesudahLogin();
+}
+/* v9.3: pulihkan sesi saat halaman dimuat (termasuk sesudah hard refresh) — NISN tersimpan di localStorage */
+function pulihkanSesi(){
+  try{
+    const ingat=localStorage.getItem('checkin-wali-nisn');
+    if(!ingat || !SISWA[ingat]) return false;
+    nisnAktif=ingat; siswa=SISWA[ingat];
+    $('pintu').classList.add('tersembunyi');
+    $('kamar').classList.remove('tersembunyi');
+    lanjutSesudahLogin();
+    return true;
+  }catch(e){ return false; }
 }
 $('masuk').addEventListener('click', masukKamar);
 $('nisn').addEventListener('keydown', e=>{ if(e.key==='Enter') masukKamar(); });
@@ -980,6 +1027,8 @@ $('tombolSuara').addEventListener('click', ()=>{
 segarkanTombolSuara();
 $('keluar').addEventListener('click', ()=>{
   bunyiKeluar();
+  try{ localStorage.removeItem('checkin-wali-nisn'); }catch(e){} // v9.3: keluar = akhiri sesi (reload tidak masuk lagi otomatis)
+  $('nisn').value='';
   $('kamar').classList.add('tersembunyi'); $('pintu').classList.remove('tersembunyi');
   $('kunciProfil').classList.add('tersembunyi'); $('kamar').classList.remove('kunci-aktif');
   $('percakapan').innerHTML=''; $('pilihan').innerHTML='';
@@ -1322,8 +1371,9 @@ function parseCSVCurhat(teks){
 }
 async function muatBalasanCurhat(){
   try{
-    const r=await fetch(URL_GVIZ_CURHAT);
-    if(!r.ok) return;
+    // v9.3: cache-bust + no-store — balasan baru harus tampil saat tab Curhat dibuka, tanpa hard refresh
+    const r=await fetch(URL_GVIZ_CURHAT+'&_t='+Date.now(), {cache:'no-store'});
+    if(!r.ok) return false;
     const baris=parseCSVCurhat(await r.text());
     const peta={};
     baris.slice(1).forEach(row=>{
@@ -1335,7 +1385,8 @@ async function muatBalasanCurhat(){
     balasanCurhat=peta;
     try{ localStorage.setItem('balasan-curhat-'+nisnAktif, JSON.stringify(peta)); }catch(e){}
     renderCurhat();
-  }catch(e){ /* gviz gagal (offline): riwayat localStorage tetap tampil apa adanya */ }
+    return true;
+  }catch(e){ /* gviz gagal (offline): riwayat localStorage tetap tampil apa adanya */ return false; }
 }
 function pulihkanBalasanCurhat(){
   try{ const v=JSON.parse(localStorage.getItem('balasan-curhat-'+nisnAktif)||'null'); if(v && typeof v==='object') balasanCurhat=v; }catch(e){}
@@ -1378,6 +1429,13 @@ $('kirimCurhat').addEventListener('click', ()=>{
   const st=$('statusCurhat');
   st.textContent='Curhatmu sudah sampai ke Musaa\u2019id. Ane akan membalas dengan lembut — cek lagi kamarmu.';
   st.classList.remove('tersembunyi');
+});
+/* v9.3: tombol segarkan balasan — tarik ulang dari Sheet (tanpa hard refresh) */
+$('segarkanCurhat').addEventListener('click', async ()=>{
+  const st=$('statusCurhat');
+  if(st){ st.textContent='Memuat balasan terbaru…'; st.classList.remove('tersembunyi'); }
+  const ok=await muatBalasanCurhat();
+  if(st){ st.textContent= ok ? 'Balasan sudah yang terbaru ✓' : 'Tidak bisa memuat balasan — cek koneksi, lalu coba lagi.'; st.classList.remove('tersembunyi'); }
 });
 
 
@@ -1678,10 +1736,11 @@ if(!window.__intervalSholat){
   setInterval(()=>{ perbaruiHitungMundur(); pemicuAdzan(); pemicuPengingatku(); }, 1000);
 }
 
-/* ===== ISI NISN YANG DIINGAT ===== */
+/* ===== ISI NISN YANG DIINGAT + PULIHKAN SESI (v9.3) ===== */
 (function(){
   const ingat=localStorage.getItem('checkin-wali-nisn');
   if(ingat) $('nisn').value=ingat;
+  if(ingat) pulihkanSesi(); // hard refresh / buka ulang: langsung masuk kamar, tanpa login lagi
 })();
 </script>
 </body>
