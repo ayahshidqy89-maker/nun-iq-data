@@ -115,7 +115,7 @@ label.lbl{display:block;font-weight:800;font-size:13.5px;margin:18px 0 8px}
     <span class="pil">Khusus Guru</span>
   </div>
   <h1 class="judul">Akses Pantau</h1>
-  <p class="sub">Halaman ini khusus untuk Pak Imron. Masukkan PIN 4 angka untuk melihat check-in, G7KAIH, dan curhat seluruh anak.</p>
+  <p class="sub">Halaman ini khusus untuk Pak Imron. Masukkan PIN 4 angka untuk melihat check-in, G7KAIH, dan jumlah curhat seluruh anak. Isi curhat hanya dibaca Musaa'id — tidak ditampilkan di sini.</p>
   <label class="lbl" for="pin">PIN</label>
   <input class="kolom tengah" id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="••••">
   <div class="galat" id="galatPin"></div>
@@ -163,7 +163,7 @@ label.lbl{display:block;font-weight:800;font-size:13.5px;margin:18px 0 8px}
   <h2 class="seksi" id="seksiG7">🌱 Pola G7KAIH — 7 Hari Terakhir</h2>
   <div id="polaG7"><p class="muted">Memuat pola G7KAIH...</p></div>
 
-  <h2 class="seksi" id="seksiCurhat">💌 Curhat Terbaru</h2>
+  <h2 class="seksi" id="seksiCurhat">💌 Curhat — Jumlah per Anak</h2>
   <div id="daftarCurhat"><p class="muted">Memuat curhat...</p></div>
 </div>
 
@@ -513,20 +513,30 @@ function render(ckBaris, chBaris, g7Baris, hari){
     } else {
       html+='<td>Belum pernah isi</td>';
     }
-    html+='<td>'+(cur.length?('💌 '+cur.length+'×<br><span class="muted">'+cur[0].teks.slice(0,40)+(cur[0].teks.length>40?'…':'')+'</span>'):'—')+'</td>';
+    /* v6 — PRIVASI: kolom Curhat hanya menampilkan JUMLAH (tanpa isi curhat) + penanda baru hari ini */
+    const curBaruHariIni = cur.some(c=>c.tgl===hari);
+    html+='<td>'+(cur.length?('💌 <b>'+cur.length+' curhat</b>'+(curBaruHariIni?' <span class="lencana ok">baru hari ini</span>':'')):'<span class="lencana belum">Belum pernah curhat</span>')+'</td>';
     html+='<td>Infaq: <b>'+infaq+' kali</b></td></tr>';
   });
   html+='</tbody></table>';
   $('daftarAnak').innerHTML=html;
-  // curhat terbaru (5)
-  if(!curhatSemua.length){ $('daftarCurhat').innerHTML='<p class="muted">Belum ada curhat masuk.</p>'; }
-  else{
-    let hc='';
-    curhatSemua.slice(0,5).forEach(c=>{
-      hc+='<div class="anak"><div class="baris-atas"><div><div class="nm">'+c.nama+'</div><div class="kls">Kelas '+c.kelas+' • NISN '+c.nisn+'</div></div><span class="lencana belum">'+tglTampil(c.tgl||'')+'</span></div><div class="curhat-item">'+c.teks+'<div class="waktu">'+c.waktu+'</div></div></div>';
-    });
-    $('daftarCurhat').innerHTML=hc;
-  }
+  /* ===== v6 — CURHAT PRIVASI: isi curhat (kol 4) dan balasan Musaa'id (kol 5) TIDAK
+     ditampilkan ke guru wali. Yang tampil: nama + jumlah per anak, penanda "baru hari
+     ini", dan siapa yang belum pernah curhat. ===== */
+  const curhatPerAnak = SISWA.map(s=>{
+    const list = curhatPerNisn[s.nisn]||[];
+    const tgls = list.map(c=>c.tgl||'').filter(Boolean).sort().reverse();
+    return {s:s, jumlah:list.length, baru:list.some(c=>c.tgl===hari), terakhir:tgls[0]||''};
+  });
+  const pernahCurhat = curhatPerAnak.filter(x=>x.jumlah>0).sort((a,b)=>(b.terakhir||'').localeCompare(a.terakhir||''));
+  const belumPernahCurhat = curhatPerAnak.filter(x=>x.jumlah===0);
+  let hc='<p class="muted">Isi curhat tidak ditampilkan di sini — hanya Musaa\'id yang membacanya. Yang tampil di bawah hanya jumlah per anak.</p>';
+  if(!pernahCurhat.length) hc+='<p class="muted">Belum ada curhat masuk.</p>';
+  pernahCurhat.forEach(x=>{
+    hc+='<div class="anak"><div class="baris-atas"><div><div class="nm">'+x.s.nama+'</div><div class="kls">Kelas '+x.s.kelas+(x.terakhir?' • Terakhir: '+tglTampil(x.terakhir):'')+'</div></div><span class="lencana ok">💌 '+x.jumlah+' curhat</span>'+(x.baru?'<span class="lencana ok">baru hari ini</span>':'')+'</div></div>';
+  });
+  if(belumPernahCurhat.length) hc+='<p class="muted">Belum pernah curhat: '+belumPernahCurhat.map(x=>x.s.nama).join(', ')+'.</p>';
+  $('daftarCurhat').innerHTML=hc;
 }
 
 /* ===== POLA G7KAIH 7 HARI (v4) ===== */

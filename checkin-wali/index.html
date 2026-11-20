@@ -135,6 +135,17 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 /* kartu ringkas */
 .ringkas{background:var(--isi);border:1px solid var(--garis);border-radius:18px;padding:13px 15px;font-size:13.5px;line-height:1.6;color:var(--redup);margin-bottom:14px}
 .ringkas b{color:var(--teks)}
+/* v9.6: kartu pemberitahuan beranda + ajakan curhat */
+.kartu-pemberitahuan{border:2px solid #F3D98B;background:#FFF7E0;border-radius:20px;padding:13px 15px;margin-bottom:10px}
+.kartu-pemberitahuan.selesai{border-color:#BFEFCE;background:#F0FBF3}
+.kartu-pemberitahuan .judul-pb{font-family:'Poppins';font-weight:800;font-size:14.5px}
+.kartu-pemberitahuan.selesai .judul-pb{color:var(--sukses-gelap)}
+.kartu-pemberitahuan .butir-pb{display:block;width:100%;text-align:left;border:none;background:#fff;border:2px solid var(--garis);border-radius:14px;padding:10px 12px;font-size:13.5px;font-weight:700;color:var(--teks);margin-top:8px;cursor:pointer;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+.kartu-pemberitahuan .butir-pb:hover{border-color:var(--aksi)}
+.kartu-pemberitahuan .butir-pb .aksi-pb{float:right;color:var(--aksi-gelap);font-weight:800}
+.kartu-ajak-curhat{border:2px solid #BFE3F7;background:#EAF6FE;border-radius:20px;padding:13px 15px;margin-bottom:10px;font-size:13.5px;line-height:1.6;color:var(--redup)}
+.kartu-ajak-curhat b{color:var(--teks)}
+.kartu-ajak-curhat .tombol{margin-top:10px}
 /* profilku */
 .grup{margin-bottom:18px}
 .grup h3{font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--aksi-gelap);margin-bottom:9px;padding-bottom:7px;border-bottom:2px solid #E6F4FD}
@@ -375,6 +386,15 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
       <div class="kotak kuning"><div class="angka" id="statCheckin">–</div><div class="lbl2">Check-in hari ini</div></div>
     </div>
     <div class="ringkas tersembunyi" id="kemarin" style="margin-top:12px;margin-bottom:0"></div>
+  </div>
+
+  <!-- v9.6: pemberitahuan yang belum diisi hari ini (diisi JS: perbaruiPemberitahuan) -->
+  <div class="kartu-pemberitahuan" id="kartuPemberitahuan"></div>
+  <!-- v9.6: ajakan curhat yang lembut — privasi ditekankan, tidak memaksa, tidak menunjuk siapa pun -->
+  <div class="kartu-ajak-curhat" id="kartuAjakanCurhat">
+    💌 <b>Ada yang ingin diceritakan?</b><br>
+    Kalau ada yang mengganjal di hatimu, ceritakan ke Musaa'id di ruang curhat kamarmu. Hanya Musaa'id yang membaca curhatmu — guru wali tidak melihat isinya. Tidak ada paksaan, nak — cerita kalau kamu mau saja. 🤲
+    <button class="tombol putih" id="tombolAjakanCurhat" type="button" onclick="tampilView('curhat')">Mau curhat 💌</button>
   </div>
 
   <!-- KARTU PRATINJAU (ringkasan tiap modul — bukan duplikat navbar) -->
@@ -1159,8 +1179,34 @@ function perbaruiDonat(){
   const angkaB = $('donatG7BesarAngka'); if(angkaB) angkaB.textContent = j + '/7';
   const st = $('skorG7Tepat'); if(st) st.textContent = list.length === 0 ? 'Belum ada rincian yang dicentang hari ini — tiap kebiasaan boleh kosong.' : ('Skor tepat: ' + skor + '% (' + list.length + ' dari ' + rincianDiharapkan() + ' rincian diharapkan).');
 }
+/* ===== v9.6: pemberitahuan beranda — yang belum diisi hari ini =====
+   Sumber status (logika yang sudah ada, riwayat lokal saja):
+   - Check-in: bacaHari(nisn, hariIni()) ada/tidak
+   - G7KAIH: bacaG7(nisn, hariIni()).length>0 (daftar kosong = belum diisi, sama seperti
+     logika prevG7 "0 dari 7 kebiasaan"; simpan G7 kosong tetap dihitung belum diisi)
+   - Profil: profilLengkap() (catatan: kunci profil menahan beranda bila profil belum
+     lengkap, jadi butir profil pada praktiknya jarang tampil — tetap ada demi kelengkapan) */
+function perbaruiPemberitahuan(){
+  const el = $('kartuPemberitahuan'); if(!el || !siswa) return;
+  const butir = [];
+  if(!bacaHari(nisnAktif, hariIni())) butir.push({ico:'💬', teks:'Check-in harian hari ini belum diisi', view:'checkin', aksi:'Isi sekarang →'});
+  if(bacaG7(nisnAktif, hariIni()).length===0) butir.push({ico:'🌱', teks:'G7KAIH hari ini belum diisi', view:'g7', aksi:'Isi checklist →'});
+  if(!profilLengkap()) butir.push({ico:'🪪', teks:'Profilmu belum lengkap', view:'profil', aksi:'Lengkapi →'});
+  if(!butir.length){
+    el.classList.add('selesai');
+    el.innerHTML = '<div class="judul-pb">✅ Semua sudah diisi hari ini 👍</div><div style="font-size:13px;color:var(--redup);margin-top:4px">Check-in, G7KAIH, dan profil sudah beres. Terima kasih, nak!</div>';
+    return;
+  }
+  el.classList.remove('selesai');
+  let h = '<div class="judul-pb">🔔 Yang belum diisi hari ini ('+butir.length+')</div>';
+  butir.forEach(b=>{
+    h += '<button type="button" class="butir-pb" onclick="tampilView(\''+b.view+'\')">'+b.ico+' '+b.teks+'<span class="aksi-pb">'+b.aksi+'</span></button>';
+  });
+  el.innerHTML = h;
+}
 function perbaruiPratinjau(){
   if(!siswa) return;
+  perbaruiPemberitahuan();
   const h = bacaHari(nisnAktif, hariIni());
   const pc = $('prevCheckin');
   if(pc) pc.textContent = h ? ('Sudah terkirim — ' + (h.kehadiran ? ('kehadiran ' + h.kehadiran + ' • ') : '') + 'kabar ' + (KABAR[h.kabar] ? KABAR[h.kabar][0] + ' ' + KABAR[h.kabar][1] : '')) : 'Belum check-in hari ini.';
