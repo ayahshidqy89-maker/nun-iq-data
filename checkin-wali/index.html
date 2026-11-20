@@ -147,7 +147,8 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 .kartu-pemberitahuan .butir-pb.rapel{border-color:#F3D98B;background:#FFFBEB}
 .kartu-pemberitahuan .butir-pb.rapel:hover{border-color:#D97706}
 .kepala-lekat .lencana-pb{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:999px;background:#DC2626;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;padding:0 5px;box-shadow:0 2px 6px rgba(220,38,38,.5);animation:denyut 1.6s ease-in-out infinite}
-.kepala-lekat .sholat-mini{font-size:11px;color:var(--redup);font-weight:700;margin-top:1px;white-space:nowrap;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.kepala-lekat .nm,.kepala-lekat .tg{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kepala-lekat .sholat-mini{font-size:11px;color:var(--redup);font-weight:700;margin-top:0;padding-left:54px;white-space:nowrap;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
 .kepala-lekat .avatar{overflow:hidden}
 .kepala-lekat .avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
 .ingat{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--teks);margin:10px 0 12px;cursor:pointer}
@@ -181,13 +182,14 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 
 /* ===== v6: kamar sebagai dashboard (banyak box, header lekat) ===== */
 .ruang{position:relative;z-index:1;max-width:520px;margin:0 auto}
-.kepala-lekat{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid var(--garis);border-radius:22px;padding:10px 12px;margin-bottom:12px;box-shadow:0 10px 24px -14px rgba(23,33,43,.35)}
+.kepala-lekat{position:sticky;top:0;z-index:50;display:flex;flex-direction:column;align-items:stretch;gap:4px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid var(--garis);border-radius:22px;padding:10px 12px 8px;margin-bottom:12px;box-shadow:0 10px 24px -14px rgba(23,33,43,.35)}
+.kepala-lekat .kepala-baris{display:flex;align-items:center;gap:10px}
 .kepala-lekat .avatar{width:44px;height:44px}
 .kepala-lekat .avatar span{font-size:18px}
 .kepala-lekat .avatar::after{width:11px;height:11px}
 .kepala-lekat .nm{font-family:'Poppins';font-weight:800;font-size:14px;line-height:1.25}
 .kepala-lekat .tg{font-size:11.5px;color:var(--redup);margin-top:1px}
-.kepala-lekat .jam{margin-left:auto;text-align:right;flex:none}
+.kepala-lekat .jam{margin-left:auto;text-align:right;flex:none;width:58px}
 .kepala-lekat .jam .w{font-family:'Poppins';font-weight:800;font-size:16px;color:var(--aksi-gelap);font-variant-numeric:tabular-nums}
 .kepala-lekat .jam .t{font-size:10.5px;color:var(--redup);font-weight:700}
 /* v9.8: header stabil + bisa diketuk (popup) */
@@ -394,11 +396,14 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
   <!-- HEADER LEKAT (tetap kelihatan saat scroll) -->
   <div class="kepala-lekat">
     <span class="lencana-pb tersembunyi" id="lencanaPb" title="Lihat yang belum diisi"></span>
-    <div class="avatar" id="kepalaAvatar" title="Lihat profilku"><img id="avatarFoto" class="tersembunyi" alt=""><span id="avatarHuruf">N</span></div>
-    <div class="kepala-tengah" id="kepalaProfil"><div class="nm" id="papanNama">—</div><div class="tg" id="papanKelas">—</div><div class="sholat-mini" id="sholatMini" title="Lihat jadwal sholat hari ini">—</div></div>
-    <div class="jam"><div class="w" id="jamHidup">--:--:--</div><div class="t" id="tglKecil">—</div></div>
-    <button class="tombol-ikon" id="tombolSuara" title="Suara">🔊</button>
-    <button class="tombol-ikon keluar" id="keluar">Keluar</button>
+    <div class="kepala-baris">
+      <div class="avatar" id="kepalaAvatar" title="Lihat profilku"><img id="avatarFoto" class="tersembunyi" alt=""><span id="avatarHuruf">N</span></div>
+      <div class="kepala-tengah" id="kepalaProfil"><div class="nm" id="papanNama">—</div><div class="tg" id="papanKelas">—</div></div>
+      <div class="jam"><div class="w" id="jamHidup">--:--</div><div class="t" id="tglKecil">—</div></div>
+      <button class="tombol-ikon" id="tombolSuara" title="Suara">🔊</button>
+      <button class="tombol-ikon keluar" id="keluar">Keluar</button>
+    </div>
+    <div class="sholat-mini" id="sholatMini" title="Lihat jadwal sholat hari ini">—</div>
   </div>
 
   <!-- ===== TAMPILAN BERANDA ===== -->
@@ -1025,7 +1030,7 @@ function segarkanJam(){
   try{
     const skrg = new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Makassar'}));
     const p = n => String(n).padStart(2,'0');
-    const j = $('jamHidup'); if(j) j.textContent = p(skrg.getHours())+':'+p(skrg.getMinutes())+':'+p(skrg.getSeconds());
+    const j = $('jamHidup'); if(j) j.textContent = p(skrg.getHours())+':'+p(skrg.getMinutes()); // v9.9: tanpa detik — detak per detik mengubah lebar jam dan menggoyang header
     const t = $('tglKecil'); if(t) t.textContent = skrg.toLocaleDateString('id-ID',{timeZone:'Asia/Makassar',day:'numeric',month:'short'});
   }catch(e){}
 }
@@ -1138,7 +1143,7 @@ function bukaKamar(){
   $('avatarHuruf').textContent = (siswa.nama||'?')[0].toUpperCase();
   segarkanAvatar();
   $('papanNama').textContent = siswa.nama;
-  $('papanKelas').textContent = 'Kelas '+siswa.kelas+' • Kelompok XII C';
+  $('papanKelas').textContent = 'Kelas '+siswa.kelas; // v9.9: tanpa 'Kelompok XII C' — baris 1 header harus muat 1 baris (info kelompok ada di beranda + popup profil)
   // kartu sapaan + tanggal
   $('teksSapaan').textContent = sapaanWaktu()+', '+pg+'!';
   $('teksTanggal').textContent = tglTampil(hariIni()) + ' • Kelompok XII C';
