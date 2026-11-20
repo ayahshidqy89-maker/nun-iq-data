@@ -953,8 +953,17 @@ function segarkanJam(){
 setInterval(segarkanJam, 1000); segarkanJam();
 /* ===== NAVIGASI TAMPILAN (v7: satu tampilan saja yang tampil — ala modul Wafa) ===== */
 const DAFTAR_VIEW = ['beranda','checkin','g7','profil','curhat','sholat','pengingatku'];
+/* v9.4: ingat tab terakhir — refresh di Curhat tidak bebulik ke beranda */
+const KUNCI_TAB = 'checkin-wali-tab';
+function bacaTabTersimpan(){
+  try{
+    const t = localStorage.getItem(KUNCI_TAB);
+    return DAFTAR_VIEW.includes(t) ? t : null;
+  }catch(e){ return null; }
+}
 function tampilView(nama){
   if(!DAFTAR_VIEW.includes(nama)) return;
+  try{ localStorage.setItem(KUNCI_TAB, nama); }catch(e){}
   bunyi('Klik');
   DAFTAR_VIEW.forEach(v=>{
     const el = $('view'+v[0].toUpperCase()+v.slice(1));
@@ -1028,6 +1037,7 @@ segarkanTombolSuara();
 $('keluar').addEventListener('click', ()=>{
   bunyiKeluar();
   try{ localStorage.removeItem('checkin-wali-nisn'); }catch(e){} // v9.3: keluar = akhiri sesi (reload tidak masuk lagi otomatis)
+  try{ localStorage.removeItem(KUNCI_TAB); }catch(e){} // v9.4: keluar = lupakan tab terakhir (login berikut mulai dari beranda)
   $('nisn').value='';
   $('kamar').classList.add('tersembunyi'); $('pintu').classList.remove('tersembunyi');
   $('kunciProfil').classList.add('tersembunyi'); $('kamar').classList.remove('kunci-aktif');
@@ -1070,7 +1080,7 @@ function bukaKamar(){
   perbaruiStatistik();
   muatJadwalSholat();
   renderPengingatku();
-  tampilView('beranda');
+  tampilView(bacaTabTersimpan() || 'beranda'); // v9.4: pulihkan tab terakhir (default beranda bila belum ada)
   gulir($('kamar'));
 }
 /* statistik kartu sapaan */
