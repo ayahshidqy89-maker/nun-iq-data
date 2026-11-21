@@ -596,7 +596,27 @@ var JADWAL_KHUSUS = [
   { kelas:"XI 6", mapel:"PAI", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" },
   { kelas:"XI 6", mapel:"PAQ", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" },
   { kelas:"XI 7", mapel:"PAI", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" },
-  { kelas:"XI 7", mapel:"PAQ", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" }
+  { kelas:"XI 7", mapel:"PAQ", tanggal:"2026-11-20", label:"Jumat, 20 November 2026", mulai:"08:00", selesai:"18:16" },
+  /* SUSULAN AHAD 22 Nov 2026 — keputusan Imron 22 Nov 01:43: beri kesempatan
+     mengerjakan lagi hari ini bagi 32 anak yang masih kurang >=1 mapel
+     (XI-1: 4, XI-2: 2, XI-3: 5, XI-4: 6, XI-5: 2, XI-6: 3, XI-7: 5, XI-8: 5;
+     I Putu Aditya tidak ikut — tidak mengambil PAI/PAQ). Jendela dibuka
+     00:00 sampai Maghrib 18:16 WITA; timer tetap 90 menit dari jam masuk +
+     tenggang 60 menit. Hanya berlaku tanggal itu. */
+  { kelas:"XI 1", mapel:"PAI", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 1", mapel:"PAQ", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 2", mapel:"PAQ", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 3", mapel:"PAI", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 3", mapel:"PAQ", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 4", mapel:"PAI", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 4", mapel:"PAQ", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 5", mapel:"PAI", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 6", mapel:"PAI", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 6", mapel:"PAQ", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 7", mapel:"PAI", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 7", mapel:"PAQ", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 8", mapel:"PAI", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" },
+  { kelas:"XI 8", mapel:"PAQ", tanggal:"2026-11-22", label:"Ahad, 22 November 2026", mulai:"00:00", selesai:"18:16" }
 ];
 var NAMA_HARI = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 function menitDariJam(j){ var p = j.split(":"); return parseInt(p[0],10)*60 + parseInt(p[1],10); }
