@@ -201,6 +201,10 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 .popup-kartu h3{font-family:'Poppins';font-size:16px;margin:0 0 10px;padding-right:36px}
 .popup-tutup{float:right;width:32px;height:32px;border-radius:50%;border:1px solid var(--garis);background:#fff;font-size:15px;font-weight:900;color:var(--redup);cursor:pointer}
 .popup-kartu .butir-pb{width:100%;margin-bottom:8px}
+/* v9.12 Belum: kartu tint + pil aksi + tinggi seragam */
+.popup-kartu .butir-pb.tugas{text-align:left;line-height:1.4;background:#F2F7FB;border:1px solid var(--garis);border-radius:14px;padding:10px 12px}
+.popup-kartu .butir-pb.tugas .teks-pb{display:block;min-height:2.8em}
+.popup-kartu .butir-pb.tugas .aksi-pb{float:right;background:var(--aksi);color:#fff;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800}
 .popup-baris{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--garis2);font-size:13.5px}
 .popup-baris b{font-weight:800}
 .popup-baris span{color:var(--redup);text-align:right;min-width:0;overflow-wrap:anywhere}
@@ -1292,9 +1296,9 @@ function perbaruiPemberitahuan(){
 }
 function tombolPb(b){
   const tgl = (b.tgl===hariIni()) ? 'hari ini' : tglTampil(b.tgl);
-  if(b.jenis==='checkin') return '<button type="button" class="butir-pb'+(b.rapel?' rapel':'')+'" onclick="mulaiRapelCheckin(\''+b.tgl+'\')">💬 Check-in '+tgl+' belum diisi<span class="aksi-pb">'+(b.rapel?'Isi rapel →':'Isi sekarang →')+'</span></button>';
-  if(b.jenis==='g7') return '<button type="button" class="butir-pb'+(b.rapel?' rapel':'')+'" onclick="mulaiRapelG7(\''+b.tgl+'\')">🌱 G7KAIH '+tgl+' belum diisi<span class="aksi-pb">'+(b.rapel?'Isi rapel →':'Isi checklist →')+'</span></button>';
-  return '<button type="button" class="butir-pb" onclick="tampilView(\'profil\')">🪪 Profilmu belum lengkap<span class="aksi-pb">Lengkapi →</span></button>';
+  if(b.jenis==='checkin') return '<button type="button" class="butir-pb tugas'+(b.rapel?' rapel':'')+'" onclick="mulaiRapelCheckin(\''+b.tgl+'\')"><span class="teks-pb">💬 Check-in '+tgl+' belum diisi</span><span class="aksi-pb">'+(b.rapel?'Isi rapel →':'Isi sekarang →')+'</span></button>';
+  if(b.jenis==='g7') return '<button type="button" class="butir-pb tugas'+(b.rapel?' rapel':'')+'" onclick="mulaiRapelG7(\''+b.tgl+'\')"><span class="teks-pb">🌱 G7KAIH '+tgl+' belum diisi</span><span class="aksi-pb">'+(b.rapel?'Isi rapel →':'Isi checklist →')+'</span></button>';
+  return '<button type="button" class="butir-pb tugas" onclick="tampilView(\'profil\')"><span class="teks-pb">🪪 Profilmu belum lengkap</span><span class="aksi-pb">Lengkapi →</span></button>';
 }
 function mulaiRapelCheckin(tgl){
   window.__rapelCheckin = (tgl===hariIni()) ? null : tgl;
