@@ -326,7 +326,7 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 .pilihan-suara{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
 .pil-suara{border:2px solid var(--isi-garis);background:#fff;border-radius:999px;padding:9px 15px;font-weight:800;font-size:13.5px;color:var(--teks);cursor:pointer}
 .pil-suara.pilih{border-color:var(--aksi);background:#EAF6FE;color:var(--aksi-gelap)}
-.pil-suara:disabled{opacity:.45;cursor:not-allowed} /* v9.15: suara yang belum tersedia (Bayati + Qatami + Qassas + Abdurrahman Hsb) */
+.pil-suara:disabled{opacity:.45;cursor:not-allowed} /* v9.16: tidak ada lagi suara "(segera)" — semua 7 suara hidup; aturan dipertahankan bila nanti ada suara belum tersedia */
 .seksi-kecil{font-family:'Poppins';font-weight:800;font-size:14px;margin:16px 0 4px;color:var(--aksi-gelap)}
 /* ===== v9: Pengingatku ===== */
 .pengingat-item{display:flex;align-items:center;gap:10px;border:2px solid var(--garis);border-radius:16px;padding:11px 13px;margin-bottom:9px}
@@ -1702,38 +1702,34 @@ $('segarkanCurhat').addEventListener('click', async ()=>{
 
 
 /* ===== PENGINGAT SHOLAT v9 (SPEC v9 §3) ===== */
-/* v9.15 Adzan asli (archive.org) + rotasi harian — BUKAN lagi chime tes Connect. */
+/* v9.16 Adzan asli (archive.org) + rotasi harian — BUKAN lagi chime tes Connect. */
 // Sumber: Internet Archive (archive.org) — hotlink, butuh internet saat adzan berbunyi.
-// Diverifikasi 22 Nov 2026: 9 URL diunduh penuh + ffprobe OK (durasi 2:35–4:00, audio/mpeg).
-// 4 suara BELUM ketemu MP3-nya di archive.org (null — tombolnya nonaktif):
-//   Amir Tsakif Arsalan (Langgam Bayati) + Nasser Al-Qatami (v9.14);
-//   Muhammad Marwan Qassas (hanya video MP4 231 MB) + Ust. Abdurrahman Hsb
-//   (hanya video YouTube/FB/IG) — keduanya ditambah v9.15 atas perintah Imron ("berataannya").
-// Mustofa Atef (v9.15, 4:00, 192 kbps, 5.753.554 B): judul item "Mustafa Atef" — label
-//   "Mustofa Atef" mengikuti ejaan yang dipakai Imron.
-// Atribusi "Langgam Mesir = Syekh Muhammad Rifaat" BELUM terverifikasi (metadata tidak menyebut nama)
-//   — dilabel "Langgam Mesir" saja sampai ada bukti. Lisensi: sebagian besar item tidak mencantumkan
-//   lisensi eksplisit di metadata (hanya AdzanAroundTheWorld jelas CC BY-NC-ND 4.0);
-//   dokumen serahan mus (7 Nov 2026) menyatakan rekaman ini lisensi bebas/domain publik.
+// Perintah Imron 22 Nov 09:44: PERTAHANKAN cuma Muzammil + Salim, sisanya HAPUS,
+// cari suara merdu (khusus Shubuh) + Thoha al-Junaid. Katalog v9.16 = 7 suara, semuanya HIDUP.
+// Diverifikasi 22 Nov 2026: 7 URL diunduh penuh + ffprobe OK (durasi 2:23–5:32, audio/mpeg, 128 kbps).
+// 5/5 dari item AdzanAroundTheWorld (CC BY-NC-ND 4.0) — lisensi jelas.
+//   Thoha al-Junaid 2:43 (adzan biasa); Ust. Abu Hazim Muhsin 2:23 + Dr. Muhammad Lukman
+//   Al-Hafiz 4:08 (keduanya ADZAN SHUBUH — frasa "ash-sholaatu khoirum minan-nauum" terkonfirmasi
+//   transkripsi; Lukman diverifikasi ulang sendiri, Abu Hazim dari nama file "Adzan-Subuh" +
+//   transkripsi); Ust. Syamsul Effendi 5:32 (Bayati — melewati patokan 2–5 menit, perlu vonis
+//   telinga Imron); Ustaz Fahmi 4:42 (Nahawand Kurdi).
+// Dihapus v9.16: MetroTV, Mulla, Alafasy, Langgam Turki, Langgam Mesir, Adzan Madinah,
+// Mustofa Atef, Bayati (Arsalan), Qatami, Qassas, Abdurrahman Hsb.
 const SUARA_ADZAN = {
   'Muzammil Hasballah': 'https://archive.org/download/adzan-merdu-muzammil-hasballah-ammar-tv-mp-3cut.net/ADZAN%20MERDU%20Muzammil%20Hasballah%20-%20Ammar%20TV%20%28mp3cut.net%29.mp3',
   'Salim Bahanan': 'https://archive.org/download/AdzanMerduSalimBahananmp3cut.net/Adzan%20Merdu%20-%20Salim%20Bahanan%20%28mp3cut.net%29.mp3',
-  'Adzan TV (MetroTV)': 'https://archive.org/download/AdzanAroundTheWorld/Adzan-Metrotv.mp3',
-  'Ali Ahmed Mulla': 'https://archive.org/download/LiveAdhan/Sheikh%20Ali%20Bin%20Ahmed%20Mullah.mp3',
-  'Mishary Rashid Alafasy': 'https://archive.org/download/adhan-call-to-prayer-mishary-rashid-alafasy-fajr-maqam-hijaz-hd-320-kbps-1/Adhan%20%28Call%20to%20prayer%29%20_%20Mishary%20Rashid%20Alafasy%20_%20Fajr%20_%20Maqam%20Hijaz%20%E1%B4%B4%E1%B4%B0%20%28320%20kbps%29%20%281%29.mp3',
-  'Langgam Turki': 'https://archive.org/download/AdzanAroundTheWorld/AzanTurkiYangBuatkanAndaTergamam.mp3',
-  'Langgam Mesir': 'https://archive.org/download/TataCaraAdzan/Adzan%2C%20Mesir.mp3',
-  'Adzan Madinah': 'https://archive.org/download/TataCaraAdzan/Adzan%2C%20Madinah.mp3',
-  'Mustofa Atef': 'https://archive.org/download/adzan-mesir-terbaik-mustafa-atef/Adzan%20Mesir%20Terbaik%20Mustafa%20Atef.mp3',
-  'Amir Tsakif Arsalan': null,
-  'Nasser Al-Qatami': null,
-  'Muhammad Marwan Qassas': null,
-  'Ust. Abdurrahman Hsb': null
+  'Thoha al-Junaid': 'https://archive.org/download/AdzanAroundTheWorld/AdzanMuhammadThohaAlJunayd.mp3',
+  'Ust. Abu Hazim Muhsin': 'https://archive.org/download/AdzanAroundTheWorld/Adzan-SubuhUstadzAbuHazimMuhsin.mp3',
+  'Dr. Muhammad Lukman Al-Hafiz': 'https://archive.org/download/AdzanAroundTheWorld/AdzanTarannumNahawandDrMuhammadLukmanAl-hafizBinIbrahim.mp3',
+  'Ust. Syamsul Effendi': 'https://archive.org/download/AdzanAroundTheWorld/AdzanBayyatiUstSyamsulEffendi.mp3',
+  'Ustaz Fahmi': 'https://archive.org/download/AdzanAroundTheWorld/AzanNahwanKurdiUstazFahmi.mp3'
 };
+// Adzan Shubuh (mengandung "ash-sholaatu khoirum minan-nauum") — HANYA untuk Shubuh, tidak pernah untuk sholat lain.
+const SUARA_SHUBUH = ['Ust. Abu Hazim Muhsin', 'Dr. Muhammad Lukman Al-Hafiz'];
 const SUARA_TERSEDIA = Object.keys(SUARA_ADZAN).filter(k=>SUARA_ADZAN[k]);
 const SUARA_OTOMATIS = 'Otomatis';
 // Peta kategori lama (v9.13 ke bawah) → suara baru, supaya pengaturan siswa lama tetap jalan.
-const PETA_SUARA_LAMA = {'Nusantara':'Muzammil Hasballah','Banjar':'Salim Bahanan','Makkah':'Ali Ahmed Mulla','Madinah':'Adzan Madinah'};
+const PETA_SUARA_LAMA = {'Nusantara':'Muzammil Hasballah','Banjar':'Salim Bahanan'};
 const NAMA_SHOLAT = ['Shubuh','Dzhuhhr',"'Ashr",'Maghrib',"'Isya"];
 // Tabel cadangan — sumber: API Aladhan method 20, Banjarmasin, 20 Nov 2026
 // (dipakai hanya bila fetch gagal; waktu bergeser ~1 menit/hari).
@@ -1743,8 +1739,9 @@ function bacaPengaturanSholat(){
   try{ const v=JSON.parse(localStorage.getItem('pengaturan-sholat-'+nisnAktif)||'null'); if(v && typeof v==='object') return migrasikanPengaturanSholat(v); }catch(e){}
   return {aktif:true, suara:SUARA_OTOMATIS, perSholat:{Shubuh:true, Dzhuhhr:true, "'Ashr":true, Maghrib:true, "'Isya":true}};
 }
-/* v9.14: pengaturan lama (kategori Nusantara/Banjar/Makkah/Madinah) dipetakan ke suara baru;
-   nilai suara yang tidak dikenal kembali ke "Otomatis" — data siswa tidak hilang. */
+/* v9.14–v9.16: pengaturan lama (kategori Nusantara/Banjar) dipetakan ke suara baru;
+   Makkah/Madinah (v9.16 suaranya dihapus) + nilai suara yang tidak dikenal kembali ke
+   "Otomatis" — data siswa tidak hilang. */
 function migrasikanPengaturanSholat(v){
   if(v.suara && PETA_SUARA_LAMA[v.suara]) v.suara=PETA_SUARA_LAMA[v.suara];
   if(v.suara && v.suara!==SUARA_OTOMATIS && !SUARA_ADZAN[v.suara]) v.suara=SUARA_OTOMATIS;
@@ -1753,12 +1750,12 @@ function migrasikanPengaturanSholat(v){
   return v;
 }
 function simpanPengaturanSholat(p){ try{ localStorage.setItem('pengaturan-sholat-'+nisnAktif, JSON.stringify(p)); }catch(e){} }
-/* v9.14–v9.15: suara yang berbunyi untuk satu sholat. Bila siswa memilih satu suara tetap → itu yang dipakai.
+/* v9.16: suara yang berbunyi untuk satu sholat. Bila siswa memilih satu suara tetap → itu yang dipakai.
    Bila "Otomatis" (bawaan) → suara berganti tiap hari: 5 sholat memakai 5 suara berbeda, bergeser tiap hari.
-   Hari dihitung dari tanggal WITA supaya semua perangkat siswa sepakat. Alafasy (adzan Shubuh)
-   hanya dipakai untuk Shubuh (1 dari 9 hari), tidak pernah untuk sholat lain. Rumus: tanpa-Alafasy
-   memakai (D + indeks-sholat) % 8 — 5 sisa berurutan mod 8 pasti berbeda; Shubuh memakai Alafasy
-   bila D % 9 == 4, kalau tidak memakai daftar yang sama — jadi 5 suara hari itu selalu berbeda. */
+   Hari dihitung dari tanggal WITA supaya semua perangkat siswa sepakat. DUA adzan Shubuh (Abu Hazim
+   Muhsin + Lukman Al-Hafiz) dipakai HANYA untuk Shubuh, bergantian tiap hari (D % 2); 4 sholat lain
+   memakai 5 suara biasa dengan (D + indeks-sholat) % 5 — 4 sisa berurutan mod 5 pasti berbeda, dan
+   suara Shubuh tidak ada di daftar biasa — jadi 5 suara hari itu selalu berbeda. */
 function hariKeSejakAwal(){
   const w=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Makassar'}));
   const awal=new Date(w.getFullYear(),0,1);
@@ -1768,10 +1765,10 @@ function suaraUntukSholat(nama){
   const p=bacaPengaturanSholat();
   if(p.suara && p.suara!==SUARA_OTOMATIS && SUARA_ADZAN[p.suara]) return p.suara;
   const D=hariKeSejakAwal();
-  if(nama==='Shubuh' && D%SUARA_TERSEDIA.length===SUARA_TERSEDIA.indexOf('Mishary Rashid Alafasy')) return 'Mishary Rashid Alafasy';
-  const tanpaAlafasy=SUARA_TERSEDIA.filter(s=>s!=='Mishary Rashid Alafasy');
+  if(nama==='Shubuh') return SUARA_SHUBUH[D%SUARA_SHUBUH.length];
+  const suaraBiasa=SUARA_TERSEDIA.filter(s=>SUARA_SHUBUH.indexOf(s)<0);
   const idxSholat=NAMA_SHOLAT.indexOf(nama);
-  return tanpaAlafasy[(D+idxSholat)%tanpaAlafasy.length];
+  return suaraBiasa[(D+idxSholat)%suaraBiasa.length];
 }
 async function muatJadwalSholat(){
   const hari=hariIni();
@@ -1856,7 +1853,7 @@ function renderSuaraAdzan(){
   buatPil(SUARA_OTOMATIS, 'Otomatis (berganti tiap hari)', true);
   Object.keys(SUARA_ADZAN).forEach(nama=>{
     const url=SUARA_ADZAN[nama];
-    const label = nama==='Mishary Rashid Alafasy' ? nama+' (adzan Shubuh)' : nama;
+    const label = SUARA_SHUBUH.indexOf(nama)>=0 ? nama+' (adzan Shubuh)' : nama;
     buatPil(nama, url?label:label+' (segera)', !!url);
   });
   const s=$('saklarUtama'); if(s){ const pg=bacaPengaturanSholat(); s.textContent=pg.aktif?'Aktif':'Mati'; s.classList.toggle('nyala', !!pg.aktif); }
