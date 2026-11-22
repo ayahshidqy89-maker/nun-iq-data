@@ -1914,7 +1914,7 @@ function renderSuaraAdzan(){
     b.className='pil-suara'+(p.suara===nama?' pilih':'');
     b.textContent=label;
     b.disabled=!bisa;
-    b.onclick=()=>{ const pg=bacaPengaturanSholat(); pg.suara=nama; simpanPengaturanSholat(pg); renderSuaraAdzan(); };
+    b.onclick=()=>{ const pg=bacaPengaturanSholat(); pg.suara=nama; simpanPengaturanSholat(pg); renderSuaraAdzan(); pratinjauSuara(nama); };
     wadah.appendChild(b);
   };
   buatPil(SUARA_OTOMATIS, 'Otomatis (berganti tiap hari)', true);
@@ -1991,6 +1991,27 @@ $('sholatMini').addEventListener('click', (e)=>{ e.stopPropagation(); popupShola
 let audioAdzan=null;
 let urlBlobAdzan=null;
 let adzanGen=0;
+/* v9.22: ketuk nama muadzin LANGSUNG memutar pratinjau suaranya (laporan Imron
+   23 Nov 05:28 — sebelumnya ketuk pil hanya MENYIMPAN pilihan tanpa bunyi,
+   jadi ia harus menekan tombol Tes / mengotak-atik saklar berkali-kali baru
+   bunyi). Pratinjau mengabaikan saklar utama (seperti tombol Tes): saklar hanya
+   mengatur adzan OTOMATIS pada jam sholat, bukan bunyi yang ditekan manual. */
+// v9.22
+function pratinjauSuara(nama){
+  const st=$('statusAdzan');
+  let suara=nama, url=null;
+  if(nama===SUARA_OTOMATIS){
+    const sb=sholatBerikut(); const nm=sb?sb.nama:'Shubuh';
+    suara=suaraUntukSholat(nm); url=SUARA_ADZAN[suara];
+  } else {
+    url=SUARA_ADZAN[nama];
+  }
+  if(!url){ if(st) st.textContent='Pratinjau: suara "'+suara+'" belum tersedia.'; return; }
+  if(st) st.textContent='Memutar pratinjau: '+suara+'…';
+  putarAdzanURL(url, ()=>{
+    if(st) st.textContent='Pratinjau "'+suara+'" tidak bisa diputar — periksa koneksi internet.';
+  });
+}
 /* v9.20: Drive mengirim Content-Disposition: attachment BAHKAN untuk URL langsung
    (drive.usercontent.google.com), sehingga <audio src=URL> tidak bisa memutarnya di
    HP — browser menganggapnya berkas unduhan, bukan media. (archive.org TIDAK mengirim
@@ -1998,7 +2019,7 @@ let adzanGen=0;
    fetch (fetch mengabaikan disposition; CORS Drive + archive.org mengizinkan *), lalu
    putar dari blob: URL yang tidak punya disposition. Bila fetch gagal (mis. CORS),
    jatuh kembali ke cara lama (Audio langsung dari URL). */
-// v9.21
+// v9.22
 function putarAdzanURL(url, saatGagal){
   const gen=++adzanGen;
   let gagalDilaporkan=false;
