@@ -1751,18 +1751,36 @@ $('segarkanCurhat').addEventListener('click', async ()=>{
 //   M. Alvin Fauzil Adzim #3, Syekh Ziauddin #4 (akhir rekaman terpotong mendadak,
 //   sudah fade-out 200 ms), Ust. Daeng Syawal Mubarak #6, Afrizal #7 (5:47, terpanjang).
 //   Muzammil Hasballah DIPERTAHANKAN (perintah Imron).
+// v9.19 — PERBAIKAN putar (laporan Imron 22 Nov 11:20): 8 suara Drive "tidak bisa
+//   diputar" (Thoha, Mishary Kurdi, Termerdu, Alvin, Ziauddin, Daeng, Afrizal, Faiz)
+//   + Fahmi "masih ada jeda".
+//   (a) URL Drive diganti ke format LANGSUNG drive.usercontent.google.com/download
+//   (tanpa redirect 303 lewat drive.google.com/uc) — teruji unduh byte-persis +
+//   Range 206 untuk berataan 10 berkas, UA desktop + HP. Redirect diduga bikin
+//   play() gagal di HP Imron (Salim sempat jalan — satu-satunya Drive yang
+//   ter-cache/terunduh duluan; 3 archive.org jalan karena sudah ter-cache dari
+//   v9.16/v9.17). Akar pasti di HP Imron belum bisa direproduksi di VM (Chromium
+//   VM tidak bisa decode MP3 — semua 12 gagal di tes browser, termasuk archive.org).
+//   (b) BUG putarAdzanURL DIPERBAIKI: play() audio LAMA yang dibatalkan (pause saat
+//   pengguna menekan Tes lagi) dulu memanggil saatGagal-nya dan menimpa status jadi
+//   "tidak bisa diputar" padahal audio BARU sedang memuat — kini saatGagal hanya
+//   jalan bila audio itu masih yang aktif (guard audioAdzan===a).
+//   (c) Fahmi DIPOTONG: intro sunyi 8,25 dtk (RMS -36 dB → -20 dB di 8,25 dtk,
+//   takbir "Alloohhu Akbar" terverifikasi mulai 8,25 dtk) dibuang; berkas baru
+//   288,1 dtk, peak -15,0 dBFS, di-host Drive (ID 1BI0w7mY8aJdoEOaR2gayJyr1czFInona).
+//   Katalog tetap 12 suara.
 const SUARA_ADZAN = {
   'Muzammil Hasballah': 'https://archive.org/download/adzan-merdu-muzammil-hasballah-ammar-tv-mp-3cut.net/ADZAN%20MERDU%20Muzammil%20Hasballah%20-%20Ammar%20TV%20%28mp3cut.net%29.mp3',
-  'Salim Bahanan': 'https://drive.google.com/uc?export=download&id=1Y2UEnbIFbddacb4epwDhoKNEMzQkVBuR',
-  'Thoha al-Junaid': 'https://drive.google.com/uc?export=download&id=1PwU8Kum1s_7CAt5GNZ_m2aUno0_Qczhh',
-  'Ustaz Fahmi': 'https://archive.org/download/AdzanAroundTheWorld/AzanUstazFahmiMaqamNahawandKurdi.mp3',
-  'Adzan Termerdu': 'https://drive.google.com/uc?export=download&id=1wnfhHl7NsG6JyY63Est3685K-KJ8YH0k',
-  'Mishary Rashid Alafasy (Kurdi)': 'https://drive.google.com/uc?export=download&id=1ZbKjtzZfNkNqWImpfH9VBfw9X6EcxfEO',
-  'M. Alvin Fauzil Adzim': 'https://drive.google.com/uc?export=download&id=1R3rrQsPDT-y_AUFnH71VXV0uEtQCmTNW',
-  'Syekh Ziauddin': 'https://drive.google.com/uc?export=download&id=15wBWQdTTEhhHCffNJWmxu9EwrR1f14x9',
-  'Ust. Daeng Syawal Mubarak': 'https://drive.google.com/uc?export=download&id=1COkrYZsnxWqWT8nlIU9Dt7BBqdS_QY3_',
-  'Afrizal': 'https://drive.google.com/uc?export=download&id=1VBXx-aKVktfbiDQSsctdTf5K4a2Be51k',
-  'Faiz Al Atsary': 'https://drive.google.com/uc?export=download&id=13_SP-L_4AOmT45m3ThxBKHgwswdzVuZU',
+  'Salim Bahanan': 'https://drive.usercontent.google.com/download?id=1Y2UEnbIFbddacb4epwDhoKNEMzQkVBuR&export=download',
+  'Thoha al-Junaid': 'https://drive.usercontent.google.com/download?id=1PwU8Kum1s_7CAt5GNZ_m2aUno0_Qczhh&export=download',
+  'Ustaz Fahmi': 'https://drive.usercontent.google.com/download?id=1BI0w7mY8aJdoEOaR2gayJyr1czFInona&export=download',
+  'Adzan Termerdu': 'https://drive.usercontent.google.com/download?id=1wnfhHl7NsG6JyY63Est3685K-KJ8YH0k&export=download',
+  'Mishary Rashid Alafasy (Kurdi)': 'https://drive.usercontent.google.com/download?id=1ZbKjtzZfNkNqWImpfH9VBfw9X6EcxfEO&export=download',
+  'M. Alvin Fauzil Adzim': 'https://drive.usercontent.google.com/download?id=1R3rrQsPDT-y_AUFnH71VXV0uEtQCmTNW&export=download',
+  'Syekh Ziauddin': 'https://drive.usercontent.google.com/download?id=15wBWQdTTEhhHCffNJWmxu9EwrR1f14x9&export=download',
+  'Ust. Daeng Syawal Mubarak': 'https://drive.usercontent.google.com/download?id=1COkrYZsnxWqWT8nlIU9Dt7BBqdS_QY3_&export=download',
+  'Afrizal': 'https://drive.usercontent.google.com/download?id=1VBXx-aKVktfbiDQSsctdTf5K4a2Be51k&export=download',
+  'Faiz Al Atsary': 'https://drive.usercontent.google.com/download?id=13_SP-L_4AOmT45m3ThxBKHgwswdzVuZU&export=download',
   'Mishary Rashid Alafasy': 'https://archive.org/download/adhan-call-to-prayer-mishary-rashid-alafasy-fajr-maqam-hijaz-hd-320-kbps-1/Adhan%20%28Call%20to%20prayer%29%20_%20Mishary%20Rashid%20Alafasy%20_%20Fajr%20_%20Maqam%20Hijaz%20%E1%B4%B4%E1%B4%B0%20%28320%20kbps%29%20%281%29.mp3'
 };
 // Adzan Shubuh (mengandung "ash-sholaatu khoirum minan-nauum") — HANYA untuk Shubuh, tidak pernah untuk sholat lain.
@@ -1963,12 +1981,17 @@ $('sholatMini').addEventListener('click', (e)=>{ e.stopPropagation(); popupShola
 /* v9.14: adzan ASLI dari archive.org. Bila suara gagal dimuat (mis. offline), tampilkan pesan jujur —
    JANGAN lagi memakai chime Connect (itu bunyi tes, bukan adzan). */
 let audioAdzan=null;
+/* v9.19: saatGagal HANYA bila audio ini masih yang aktif — play() audio lama yang
+   dibatalkan (pengguna menekan Tes lagi selagi audio lama masih memuat) dulu ikut
+   memanggil saatGagal dan menimpa status jadi "tidak bisa diputar" padahal audio
+   baru sedang memuat. */
 function putarAdzanURL(url, saatGagal){
   try{
     if(audioAdzan){ try{ audioAdzan.pause(); }catch(e){} }
-    audioAdzan=new Audio(url);
-    const pr=audioAdzan.play();
-    if(pr && pr.catch) pr.catch(()=>{ if(saatGagal) saatGagal(); });
+    const a=new Audio(url);
+    audioAdzan=a;
+    const pr=a.play();
+    if(pr && pr.catch) pr.catch(()=>{ if(audioAdzan===a && saatGagal) saatGagal(); });
   }catch(e){ if(saatGagal) saatGagal(); }
 }
 function bunyiAdzan(nama){
