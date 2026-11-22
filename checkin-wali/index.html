@@ -326,7 +326,7 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 .pilihan-suara{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
 .pil-suara{border:2px solid var(--isi-garis);background:#fff;border-radius:999px;padding:9px 15px;font-weight:800;font-size:13.5px;color:var(--teks);cursor:pointer}
 .pil-suara.pilih{border-color:var(--aksi);background:#EAF6FE;color:var(--aksi-gelap)}
-.pil-suara:disabled{opacity:.45;cursor:not-allowed} /* v9.16: tidak ada lagi suara "(segera)" — semua 7 suara hidup; aturan dipertahankan bila nanti ada suara belum tersedia */
+.pil-suara:disabled{opacity:.45;cursor:not-allowed} /* v9.18: tidak ada lagi suara "(segera)" — semua 12 suara hidup; aturan dipertahankan bila nanti ada suara belum tersedia */
 .seksi-kecil{font-family:'Poppins';font-weight:800;font-size:14px;margin:16px 0 4px;color:var(--aksi-gelap)}
 /* ===== v9: Pengingatku ===== */
 .pengingat-item{display:flex;align-items:center;gap:10px;border:2px solid var(--garis);border-radius:16px;padding:11px 13px;margin-bottom:9px}
@@ -1702,30 +1702,71 @@ $('segarkanCurhat').addEventListener('click', async ()=>{
 
 
 /* ===== PENGINGAT SHOLAT v9 (SPEC v9 §3) ===== */
-/* v9.16 Adzan asli (archive.org) + rotasi harian — BUKAN lagi chime tes Connect. */
+/* v9.17 Adzan asli (archive.org) + rotasi harian — BUKAN lagi chime tes Connect. */
 // Sumber: Internet Archive (archive.org) — hotlink, butuh internet saat adzan berbunyi.
-// Perintah Imron 22 Nov 09:44: PERTAHANKAN cuma Muzammil + Salim, sisanya HAPUS,
-// cari suara merdu (khusus Shubuh) + Thoha al-Junaid. Katalog v9.16 = 7 suara, semuanya HIDUP.
-// Diverifikasi 22 Nov 2026: 7 URL diunduh penuh + ffprobe OK (durasi 2:23–5:32, audio/mpeg, 128 kbps).
-// 5/5 dari item AdzanAroundTheWorld (CC BY-NC-ND 4.0) — lisensi jelas.
-//   Thoha al-Junaid 2:43 (adzan biasa); Ust. Abu Hazim Muhsin 2:23 + Dr. Muhammad Lukman
-//   Al-Hafiz 4:08 (keduanya ADZAN SHUBUH — frasa "ash-sholaatu khoirum minan-nauum" terkonfirmasi
-//   transkripsi; Lukman diverifikasi ulang sendiri, Abu Hazim dari nama file "Adzan-Subuh" +
-//   transkripsi); Ust. Syamsul Effendi 5:32 (Bayati — melewati patokan 2–5 menit, perlu vonis
-//   telinga Imron); Ustaz Fahmi 4:42 (Nahawand Kurdi).
-// Dihapus v9.16: MetroTV, Mulla, Alafasy, Langgam Turki, Langgam Mesir, Adzan Madinah,
-// Mustofa Atef, Bayati (Arsalan), Qatami, Qassas, Abdurrahman Hsb.
+// Perintah Imron 22 Nov 10:22–10:23 (vonis telinga atas v9.16): Thoha KDA WORK,
+// Fahmi minta versi bersih, Shubuh ganti ke Mishary yang merdu, Syamsul hapus,
+// cari tambahan + Ziyad Patel. Katalog v9.17 AKHIR = 5 suara, semuanya HIDUP
+// (Muammar + Nuriastro sempat masuk lalu dihapus atas perintah Imron 10:53).
+//   Thoha KDA WORK — penyebab: 10 dtk pertama file v9.16 -41,2 dB (hampir sunyi).
+//   Ganti ke Adzan-MuhammadTahaAl-junaid.mp3 (2:33, 192 kbps, CC BY-NC-ND 4.0) —
+//   keras dari detik 0 (-22,8 dB), transkripsi awal langsung "Alloohhu Akbar".
+//   Fahmi: file kembar AzanUstazFahmiMaqamNahawandKurdi.mp3 (4:56, CC BY-NC-ND 4.0) —
+//   kemungkinan besar bersih (tidak ada bismillah terdeteksi di semua percobaan transkripsi,
+//   konten pertama yang terbaca takbir berulang; vokal 5–13 dtk tidak tertangkap Whisper —
+//   vonis akhir di telinga Imron). File lama (AzanNahwanKurdi, 4:42) diawali bismillah
+//   (telinga Imron) + intro sunyi, takbir baru ~35 dtk.
+//   Shubuh: Abu Hazim Muhsin + Lukman Al-Hafiz DIHAPUS; kembali ke Mishary Rashid Alafasy
+//   (Fajr, Maqam Hijaz, 3:44, 128 kbps — URL v9.14; frasa Shubuh "ash-sholaatu khoirum
+//   minan-nauum" TERBUKTI sendiri 22 Nov 10:49 via transkripsi per-30-dtk: hayya 'alal-falaah
+//   ~130–150 dtk, frasa Shubuh 2x ~150–200 dtk, takbir penutup ~200–210 dtk. Transkripsi
+//   berkas-utuh gagal (Whisper mengulang-ulang syahadat) — bukti dari potongan 30 dtk.)
+//   Syamsul Effendi DIHAPUS (5:32, terlalu lambat).
+//   Baru: H. Muammar ZA (4:15) + Imam Muda Nuriastro (3:53) — DITAMBAH lalu DIHAPUS
+//   lagi atas perintah Imron 22 Nov 10:53 ("Nuriastro lawan muamar hapus"). Katalog
+//   akhir v9.17 = 5 suara.
+//   Ziyad Patel TIDAK KETEMU MP3 adzan di archive.org (yang ada murattal/nasheed +
+//   rekaman sholat utuh) — tidak ditambahkan.
+// v9.18 — 9 suara dari 9 tautan YouTube Imron (chat utama, 22 Nov 10:51), dipotong
+// supaya langsung adzan + dinormalisasi peak -15 dBFS, di-host di Google Drive
+// (folder "Adzan Check-in Wali", tautan publik uc?export=download — teruji unduh
+// byte-persis 9/9). Katalog AKHIR = 12 suara, semuanya HIDUP.
+//   Salim Bahanan #5 MENGGANTIKAN berkas archive.org lama (duplikat — perintah Imron).
+//   #5 TIDAK dipotong: 3,5 dtk awal crescendo lembut — spektrumnya tidak menunjukkan
+//   fundamental vokal jelas (diduga intro), tapi Whisper hanya menangkap fragmen "am";
+//   diputuskan dipertahankan utuh; Imron diminta mendengarkan: bila intro, potong ke 3,5 dtk.
+//   Thoha al-Junaid #9 MENGGANTIKAN berkas archive.org lama (orang sama, rekaman baru
+//   dari tautan Imron, 148 dtk).
+//   Mishary Rashid (Kurdi) #2 = adzan BIASA, BUKAN Fajr: struktur terverifikasi sendiri
+//   (hayya 'alash-sholaah ~140–170 dtk, hayya 'alal-falaah ~170–200 dtk, langsung takbir
+//   penutup ~200–230 dtk — TIDAK ADA frasa "ash-sholaatu khoirum minan-nauum"). Jadi
+//   suara Shubuh TETAP Alafasy Fajr archive.org (terbukti); #2 masuk putaran biasa
+//   dengan label "Mishary Rashid Alafasy (Kurdi)". Bila Imron tetap menghendaki #2
+//   jadi suara Shubuh, pindahkan (satu baris).
+//   Faiz Al Atsary #8: muadzinnya Faiz (irama Qari' Ziyad Patel — Ziyad sendiri bukan
+//   penyanyinya); jeda sunyi antar frasa 3,4–14,7 dtk (12 jeda, ~84 dtk total) DIRAPATKAN
+//   (silenceremove, sisa jeda 1 dtk): 268,4 → 182,8 dtk, peak -15,4 dBFS, 0 jeda ≥1 dtk,
+//   syahadat terverifikasi utuh sesudah rapat.
+//   Baru: Adzan Termerdu #1 (muadzin tidak disebutkan — label 'Adzan Termerdu'),
+//   M. Alvin Fauzil Adzim #3, Syekh Ziauddin #4 (akhir rekaman terpotong mendadak,
+//   sudah fade-out 200 ms), Ust. Daeng Syawal Mubarak #6, Afrizal #7 (5:47, terpanjang).
+//   Muzammil Hasballah DIPERTAHANKAN (perintah Imron).
 const SUARA_ADZAN = {
   'Muzammil Hasballah': 'https://archive.org/download/adzan-merdu-muzammil-hasballah-ammar-tv-mp-3cut.net/ADZAN%20MERDU%20Muzammil%20Hasballah%20-%20Ammar%20TV%20%28mp3cut.net%29.mp3',
-  'Salim Bahanan': 'https://archive.org/download/AdzanMerduSalimBahananmp3cut.net/Adzan%20Merdu%20-%20Salim%20Bahanan%20%28mp3cut.net%29.mp3',
-  'Thoha al-Junaid': 'https://archive.org/download/AdzanAroundTheWorld/AdzanMuhammadThohaAlJunayd.mp3',
-  'Ust. Abu Hazim Muhsin': 'https://archive.org/download/AdzanAroundTheWorld/Adzan-SubuhUstadzAbuHazimMuhsin.mp3',
-  'Dr. Muhammad Lukman Al-Hafiz': 'https://archive.org/download/AdzanAroundTheWorld/AdzanTarannumNahawandDrMuhammadLukmanAl-hafizBinIbrahim.mp3',
-  'Ust. Syamsul Effendi': 'https://archive.org/download/AdzanAroundTheWorld/AdzanBayyatiUstSyamsulEffendi.mp3',
-  'Ustaz Fahmi': 'https://archive.org/download/AdzanAroundTheWorld/AzanNahwanKurdiUstazFahmi.mp3'
+  'Salim Bahanan': 'https://drive.google.com/uc?export=download&id=1Y2UEnbIFbddacb4epwDhoKNEMzQkVBuR',
+  'Thoha al-Junaid': 'https://drive.google.com/uc?export=download&id=1PwU8Kum1s_7CAt5GNZ_m2aUno0_Qczhh',
+  'Ustaz Fahmi': 'https://archive.org/download/AdzanAroundTheWorld/AzanUstazFahmiMaqamNahawandKurdi.mp3',
+  'Adzan Termerdu': 'https://drive.google.com/uc?export=download&id=1wnfhHl7NsG6JyY63Est3685K-KJ8YH0k',
+  'Mishary Rashid Alafasy (Kurdi)': 'https://drive.google.com/uc?export=download&id=1ZbKjtzZfNkNqWImpfH9VBfw9X6EcxfEO',
+  'M. Alvin Fauzil Adzim': 'https://drive.google.com/uc?export=download&id=1R3rrQsPDT-y_AUFnH71VXV0uEtQCmTNW',
+  'Syekh Ziauddin': 'https://drive.google.com/uc?export=download&id=15wBWQdTTEhhHCffNJWmxu9EwrR1f14x9',
+  'Ust. Daeng Syawal Mubarak': 'https://drive.google.com/uc?export=download&id=1COkrYZsnxWqWT8nlIU9Dt7BBqdS_QY3_',
+  'Afrizal': 'https://drive.google.com/uc?export=download&id=1VBXx-aKVktfbiDQSsctdTf5K4a2Be51k',
+  'Faiz Al Atsary': 'https://drive.google.com/uc?export=download&id=13_SP-L_4AOmT45m3ThxBKHgwswdzVuZU',
+  'Mishary Rashid Alafasy': 'https://archive.org/download/adhan-call-to-prayer-mishary-rashid-alafasy-fajr-maqam-hijaz-hd-320-kbps-1/Adhan%20%28Call%20to%20prayer%29%20_%20Mishary%20Rashid%20Alafasy%20_%20Fajr%20_%20Maqam%20Hijaz%20%E1%B4%B4%E1%B4%B0%20%28320%20kbps%29%20%281%29.mp3'
 };
 // Adzan Shubuh (mengandung "ash-sholaatu khoirum minan-nauum") — HANYA untuk Shubuh, tidak pernah untuk sholat lain.
-const SUARA_SHUBUH = ['Ust. Abu Hazim Muhsin', 'Dr. Muhammad Lukman Al-Hafiz'];
+const SUARA_SHUBUH = ['Mishary Rashid Alafasy'];
 const SUARA_TERSEDIA = Object.keys(SUARA_ADZAN).filter(k=>SUARA_ADZAN[k]);
 const SUARA_OTOMATIS = 'Otomatis';
 // Peta kategori lama (v9.13 ke bawah) → suara baru, supaya pengaturan siswa lama tetap jalan.
@@ -1750,12 +1791,12 @@ function migrasikanPengaturanSholat(v){
   return v;
 }
 function simpanPengaturanSholat(p){ try{ localStorage.setItem('pengaturan-sholat-'+nisnAktif, JSON.stringify(p)); }catch(e){} }
-/* v9.16: suara yang berbunyi untuk satu sholat. Bila siswa memilih satu suara tetap → itu yang dipakai.
+/* v9.18: suara yang berbunyi untuk satu sholat. Bila siswa memilih satu suara tetap → itu yang dipakai.
    Bila "Otomatis" (bawaan) → suara berganti tiap hari: 5 sholat memakai 5 suara berbeda, bergeser tiap hari.
-   Hari dihitung dari tanggal WITA supaya semua perangkat siswa sepakat. DUA adzan Shubuh (Abu Hazim
-   Muhsin + Lukman Al-Hafiz) dipakai HANYA untuk Shubuh, bergantian tiap hari (D % 2); 4 sholat lain
-   memakai 5 suara biasa dengan (D + indeks-sholat) % 5 — 4 sisa berurutan mod 5 pasti berbeda, dan
-   suara Shubuh tidak ada di daftar biasa — jadi 5 suara hari itu selalu berbeda. */
+   Hari dihitung dari tanggal WITA supaya semua perangkat siswa sepakat. SATU adzan Shubuh (Alafasy)
+   dipakai HANYA untuk Shubuh (setiap hari); 4 sholat lain memakai 11 suara biasa dengan
+   (D + indeks-sholat) % 11 — 4 sisa berurutan mod 11 pasti berbeda, dan suara Shubuh tidak ada
+   di daftar biasa — jadi 5 suara hari itu selalu berbeda. */
 function hariKeSejakAwal(){
   const w=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Makassar'}));
   const awal=new Date(w.getFullYear(),0,1);
