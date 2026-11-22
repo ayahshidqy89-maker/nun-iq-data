@@ -1786,9 +1786,9 @@ const SUARA_ADZAN = {
   'Mishary Rashid Alafasy (Kurdi)': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/02-mishary-rashid-alafasy-kurdi.mp3',
   'M. Alvin Fauzil Adzim': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/03-m-alvin-fauzil-adzim.mp3',
   'Syekh Ziauddin': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/04-syekh-ziauddin-aceh.mp3',
-  'Ust. Daeng Syawal Mubarak': 'https://drive.usercontent.google.com/download?id=1COkrYZsnxWqWT8nlIU9Dt7BBqdS_QY3_&export=download',
+  'Ust. Daeng Syawal Mubarak': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/06-daeng-syawal-mubarak-kurdi-kashmir.mp3',
   'Afrizal': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/07-afrizal-bilal.mp3',
-  'Faiz Al Atsary': 'https://drive.usercontent.google.com/download?id=13_SP-L_4AOmT45m3ThxBKHgwswdzVuZU&export=download',
+  'Faiz Al Atsary': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/08-faiz-al-atsary-ziyad-patel-rapat.mp3',
   'Mishary Rashid Alafasy': 'https://archive.org/download/adhan-call-to-prayer-mishary-rashid-alafasy-fajr-maqam-hijaz-hd-320-kbps-1/Adhan%20%28Call%20to%20prayer%29%20_%20Mishary%20Rashid%20Alafasy%20_%20Fajr%20_%20Maqam%20Hijaz%20%E1%B4%B4%E1%B4%B0%20%28320%20kbps%29%20%281%29.mp3'
 };
 // Adzan Shubuh (mengandung "ash-sholaatu khoirum minan-nauum") — HANYA untuk Shubuh, tidak pernah untuk sholat lain.
@@ -2019,7 +2019,7 @@ function pratinjauSuara(nama){
    fetch (fetch mengabaikan disposition; CORS Drive + archive.org mengizinkan *), lalu
    putar dari blob: URL yang tidak punya disposition. Bila fetch gagal (mis. CORS),
    jatuh kembali ke cara lama (Audio langsung dari URL). */
-// v9.23
+// v9.24
 function putarAdzanURL(url, saatGagal){
   const gen=++adzanGen;
   let gagalDilaporkan=false;
@@ -2035,12 +2035,13 @@ function putarAdzanURL(url, saatGagal){
   }
   try{ if(audioAdzan){ try{ audioAdzan.pause(); }catch(e){} } }catch(e){}
   try{ if(urlBlobAdzan){ try{ URL.revokeObjectURL(urlBlobAdzan); }catch(e){} urlBlobAdzan=null; } }catch(e){}
-  /* v9.23: archive.org distream langsung (bunyi mulai <1 dtk). fetch+blob
-     mengunduh SELURUH berkas dulu baru bunyi — di jaringan lambat (318 KB/s
-     di HP Imron, 23 Nov 05:34) Muzammil 7,5 MB butuh ~24 detik diam padahal
-     status sudah menulis "memutar" — makanya ditekan berkali-kali baru bunyi.
-     Drive tetap lewat fetch+blob karena Audio langsung dari drive.usercontent
-     gagal di HP Imron (v9.20). */
+  /* v9.24: SEMUA 12 suara kini di archive.org dan distream langsung (bunyi mulai
+     <1 dtk). Daeng + Faiz pindah dari Drive ke archive.org (laporan Imron 23 Nov
+     05:48: Daeng kada ada suara, Faiz kada kawa diplay — karena Drive harus
+     mengunduh seluruh berkas dulu; di 1,5 KB/s butuh 30–50 menit). Sekaligus:
+     ke-12 berkas dinormalisasi kerasnya ke level Mishary Shubuh (Fajr -9,83 LUFS;
+     sebelumnya Salim -29,6 LUFS — 20 dB lebih pelan). Jalur fetch+blob di bawah
+     kini hanya cadangan bila ada URL non-archive.org. */
   if(url.indexOf('archive.org')>=0){ putarLangsung(); return; }
   try{
     fetch(url).then(function(resp){
