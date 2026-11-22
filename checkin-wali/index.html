@@ -1769,17 +1769,25 @@ $('segarkanCurhat').addEventListener('click', async ()=>{
 //   takbir "Alloohhu Akbar" terverifikasi mulai 8,25 dtk) dibuang; berkas baru
 //   288,1 dtk, peak -15,0 dBFS, di-host Drive (ID 1BI0w7mY8aJdoEOaR2gayJyr1czFInona).
 //   Katalog tetap 12 suara.
+// v9.21 — MIGRASI ke archive.org (diagnosis 23 Nov 03:04: fetch ke
+//   drive.usercontent.google.com GAGAL di HP/jaringan Imron, padahal archive.org
+//   bisa diputar). 8 dari 10 berkas SUDAH LIVE di item archive.org
+//   "adzan-checkin-wali-smapat-2026" (terverifikasi byte-persis via curl: 200,
+//   audio/mpeg): 01 Termerdu, 02 Mishary Kurdi, 03 Alvin, 04 Ziauddin, 05 Salim,
+//   07 Afrizal, 09 Junaid, 10 Fahmi-potong. 2 berkas MASIH MACET di uploader
+//   archive.org ("network problem", tanpa ingestion task): 06 Daeng + 08 Faiz-rapat
+//   — keduanya MASIH di URL Drive sebagai fallback sampai berhasil diunggah.
 const SUARA_ADZAN = {
   'Muzammil Hasballah': 'https://archive.org/download/adzan-merdu-muzammil-hasballah-ammar-tv-mp-3cut.net/ADZAN%20MERDU%20Muzammil%20Hasballah%20-%20Ammar%20TV%20%28mp3cut.net%29.mp3',
-  'Salim Bahanan': 'https://drive.usercontent.google.com/download?id=1Y2UEnbIFbddacb4epwDhoKNEMzQkVBuR&export=download',
-  'Thoha al-Junaid': 'https://drive.usercontent.google.com/download?id=1PwU8Kum1s_7CAt5GNZ_m2aUno0_Qczhh&export=download',
-  'Ustaz Fahmi': 'https://drive.usercontent.google.com/download?id=1BI0w7mY8aJdoEOaR2gayJyr1czFInona&export=download',
-  'Adzan Termerdu': 'https://drive.usercontent.google.com/download?id=1wnfhHl7NsG6JyY63Est3685K-KJ8YH0k&export=download',
-  'Mishary Rashid Alafasy (Kurdi)': 'https://drive.usercontent.google.com/download?id=1ZbKjtzZfNkNqWImpfH9VBfw9X6EcxfEO&export=download',
-  'M. Alvin Fauzil Adzim': 'https://drive.usercontent.google.com/download?id=1R3rrQsPDT-y_AUFnH71VXV0uEtQCmTNW&export=download',
-  'Syekh Ziauddin': 'https://drive.usercontent.google.com/download?id=15wBWQdTTEhhHCffNJWmxu9EwrR1f14x9&export=download',
+  'Salim Bahanan': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/05-salim-bahanan.mp3',
+  'Thoha al-Junaid': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/09-muhammad-taha-al-junaid.mp3',
+  'Ustaz Fahmi': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/10-fahmi-twin-potong.mp3',
+  'Adzan Termerdu': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/01-adzan-termerdu-tanpa-nama.mp3',
+  'Mishary Rashid Alafasy (Kurdi)': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/02-mishary-rashid-alafasy-kurdi.mp3',
+  'M. Alvin Fauzil Adzim': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/03-m-alvin-fauzil-adzim.mp3',
+  'Syekh Ziauddin': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/04-syekh-ziauddin-aceh.mp3',
   'Ust. Daeng Syawal Mubarak': 'https://drive.usercontent.google.com/download?id=1COkrYZsnxWqWT8nlIU9Dt7BBqdS_QY3_&export=download',
-  'Afrizal': 'https://drive.usercontent.google.com/download?id=1VBXx-aKVktfbiDQSsctdTf5K4a2Be51k&export=download',
+  'Afrizal': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/07-afrizal-bilal.mp3',
   'Faiz Al Atsary': 'https://drive.usercontent.google.com/download?id=13_SP-L_4AOmT45m3ThxBKHgwswdzVuZU&export=download',
   'Mishary Rashid Alafasy': 'https://archive.org/download/adhan-call-to-prayer-mishary-rashid-alafasy-fajr-maqam-hijaz-hd-320-kbps-1/Adhan%20%28Call%20to%20prayer%29%20_%20Mishary%20Rashid%20Alafasy%20_%20Fajr%20_%20Maqam%20Hijaz%20%E1%B4%B4%E1%B4%B0%20%28320%20kbps%29%20%281%29.mp3'
 };
@@ -1990,7 +1998,7 @@ let adzanGen=0;
    fetch (fetch mengabaikan disposition; CORS Drive + archive.org mengizinkan *), lalu
    putar dari blob: URL yang tidak punya disposition. Bila fetch gagal (mis. CORS),
    jatuh kembali ke cara lama (Audio langsung dari URL). */
-// v9.20
+// v9.21
 function putarAdzanURL(url, saatGagal){
   const gen=++adzanGen;
   let gagalDilaporkan=false;
