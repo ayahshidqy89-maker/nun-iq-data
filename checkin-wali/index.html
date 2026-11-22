@@ -1981,18 +1981,45 @@ $('sholatMini').addEventListener('click', (e)=>{ e.stopPropagation(); popupShola
 /* v9.14: adzan ASLI dari archive.org. Bila suara gagal dimuat (mis. offline), tampilkan pesan jujur —
    JANGAN lagi memakai chime Connect (itu bunyi tes, bukan adzan). */
 let audioAdzan=null;
-/* v9.19: saatGagal HANYA bila audio ini masih yang aktif — play() audio lama yang
-   dibatalkan (pengguna menekan Tes lagi selagi audio lama masih memuat) dulu ikut
-   memanggil saatGagal dan menimpa status jadi "tidak bisa diputar" padahal audio
-   baru sedang memuat. */
+let urlBlobAdzan=null;
+let adzanGen=0;
+/* v9.20: Drive mengirim Content-Disposition: attachment BAHKAN untuk URL langsung
+   (drive.usercontent.google.com), sehingga <audio src=URL> tidak bisa memutarnya di
+   HP — browser menganggapnya berkas unduhan, bukan media. (archive.org TIDAK mengirim
+   disposition itu — makanya 2 suara archive.org bisa diputar.) Solusi: unduh dulu lewat
+   fetch (fetch mengabaikan disposition; CORS Drive + archive.org mengizinkan *), lalu
+   putar dari blob: URL yang tidak punya disposition. Bila fetch gagal (mis. CORS),
+   jatuh kembali ke cara lama (Audio langsung dari URL). */
+// v9.20
 function putarAdzanURL(url, saatGagal){
+  const gen=++adzanGen;
+  let gagalDilaporkan=false;
+  function gagalSekali(){ if(!gagalDilaporkan && gen===adzanGen && saatGagal){ gagalDilaporkan=true; saatGagal(); } }
+  function putarLangsung(){
+    if(gen!==adzanGen) return;
+    try{
+      const a2=new Audio(url);
+      audioAdzan=a2;
+      const pr2=a2.play();
+      if(pr2 && pr2.catch) pr2.catch(gagalSekali);
+    }catch(e){ gagalSekali(); }
+  }
   try{
     if(audioAdzan){ try{ audioAdzan.pause(); }catch(e){} }
-    const a=new Audio(url);
-    audioAdzan=a;
-    const pr=a.play();
-    if(pr && pr.catch) pr.catch(()=>{ if(audioAdzan===a && saatGagal) saatGagal(); });
-  }catch(e){ if(saatGagal) saatGagal(); }
+    if(urlBlobAdzan){ try{ URL.revokeObjectURL(urlBlobAdzan); }catch(e){} urlBlobAdzan=null; }
+    fetch(url).then(function(resp){
+      if(!resp.ok) throw new Error('HTTP '+resp.status);
+      return resp.blob();
+    }).then(function(blob){
+      if(gen!==adzanGen) return;
+      const b=(blob && blob.type) ? blob : new Blob([blob], {type:'audio/mpeg'});
+      urlBlobAdzan=URL.createObjectURL(b);
+      const a=new Audio(urlBlobAdzan);
+      audioAdzan=a;
+      const pr=a.play();
+      if(pr && pr.catch) pr.catch(gagalSekali);
+    }).catch(putarLangsung);
+  }catch(e){ gagalSekali(); }
 }
 function bunyiAdzan(nama){
   const st=$('statusSholat');
