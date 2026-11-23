@@ -1777,8 +1777,14 @@ $('segarkanCurhat').addEventListener('click', async ()=>{
 //   07 Afrizal, 09 Junaid, 10 Fahmi-potong. 2 berkas MASIH MACET di uploader
 //   archive.org ("network problem", tanpa ingestion task): 06 Daeng + 08 Faiz-rapat
 //   — keduanya MASIH di URL Drive sebagai fallback sampai berhasil diunggah.
+// v9.25 — Muzammil PINDAH ke item BARU milik ayahshidqy89
+//   "adzan-muzammil-hasballah-smapat-2026" (dibuat 23 Nov 2026, terverifikasi
+//   curl: berkas 2.998.766 byte = versi normalisasi -10,78 LUFS). Item lama
+//   "adzan-merdu-muzammil-hasballah-ammar-tv-mp-3cut.net" milik Mr MAHMUDI
+//   (m4hm11d1@gmail.com) — akun ente KDA BISA mengeditnya, makanya dibuatkan
+//   item baru, bukan mengganti berkas di item lama.
 const SUARA_ADZAN = {
-  'Muzammil Hasballah': 'https://archive.org/download/adzan-merdu-muzammil-hasballah-ammar-tv-mp-3cut.net/ADZAN%20MERDU%20Muzammil%20Hasballah%20-%20Ammar%20TV%20%28mp3cut.net%29.mp3',
+  'Muzammil Hasballah': 'https://archive.org/download/adzan-muzammil-hasballah-smapat-2026/ADZAN%20MERDU%20Muzammil%20Hasballah%20-%20Ammar%20TV%20%28mp3cut.net%29.mp3',
   'Salim Bahanan': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/05-salim-bahanan.mp3',
   'Thoha al-Junaid': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/09-muhammad-taha-al-junaid.mp3',
   'Ustaz Fahmi': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/10-fahmi-twin-potong.mp3',
@@ -2019,7 +2025,7 @@ function pratinjauSuara(nama){
    fetch (fetch mengabaikan disposition; CORS Drive + archive.org mengizinkan *), lalu
    putar dari blob: URL yang tidak punya disposition. Bila fetch gagal (mis. CORS),
    jatuh kembali ke cara lama (Audio langsung dari URL). */
-// v9.24
+// v9.25
 function putarAdzanURL(url, saatGagal){
   const gen=++adzanGen;
   let gagalDilaporkan=false;
@@ -2035,13 +2041,15 @@ function putarAdzanURL(url, saatGagal){
   }
   try{ if(audioAdzan){ try{ audioAdzan.pause(); }catch(e){} } }catch(e){}
   try{ if(urlBlobAdzan){ try{ URL.revokeObjectURL(urlBlobAdzan); }catch(e){} urlBlobAdzan=null; } }catch(e){}
-  /* v9.24: SEMUA 12 suara kini di archive.org dan distream langsung (bunyi mulai
+  /* v9.25: SEMUA 12 suara kini di archive.org dan distream langsung (bunyi mulai
      <1 dtk). Daeng + Faiz pindah dari Drive ke archive.org (laporan Imron 23 Nov
      05:48: Daeng kada ada suara, Faiz kada kawa diplay — karena Drive harus
-     mengunduh seluruh berkas dulu; di 1,5 KB/s butuh 30–50 menit). Sekaligus:
-     ke-12 berkas dinormalisasi kerasnya ke level Mishary Shubuh (Fajr -9,83 LUFS;
-     sebelumnya Salim -29,6 LUFS — 20 dB lebih pelan). Jalur fetch+blob di bawah
-     kini hanya cadangan bila ada URL non-archive.org. */
+     mengunduh seluruh berkas dulu; di 1,5 KB/s butuh 30–50 menit). Muzammil
+     pindah ke item baru milik ayahshidqy89 (item lama milik Mr MAHMUDI, kada
+     bisa diedit). Sekaligus: ke-12 berkas dinormalisasi kerasnya ke level
+     Mishary Shubuh (Fajr -9,83 LUFS; sebelumnya Salim -29,6 LUFS — 20 dB lebih
+     pelan). Jalur fetch+blob di bawah kini hanya cadangan bila ada URL
+     non-archive.org. */
   if(url.indexOf('archive.org')>=0){ putarLangsung(); return; }
   try{
     fetch(url).then(function(resp){
