@@ -1789,8 +1789,19 @@ $('segarkanCurhat').addEventListener('click', async ()=>{
 //   "adzan-merdu-muzammil-hasballah-ammar-tv-mp-3cut.net" milik Mr MAHMUDI
 //   (m4hm11d1@gmail.com) — akun ente KDA BISA mengeditnya, makanya dibuatkan
 //   item baru, bukan mengganti berkas di item lama.
+// v9.27 — Muzammil PINDAH LAGI ke item UTAMA (adzan-checkin-wali-smapat-2026,
+//   sebagai 11-muzammil-hasballah.mp3, 2.998.766 byte, terverifikasi metadata
+//   24 Nov 03:51): server item lama (ia601505) kadang SANGAT lambat — TTFB 14
+//   detik (laporan Imron 24 Nov 03:12: Muzammil "masih kda langsung adzan";
+//   rekamannya sendiri mulai nyaring dari 0,1 detik, jadi bukan isi berkas).
+//   Item lama tetap ada (tidak dihapus), hanya tidak dipakai lagi.
+//   Salim v9.27: intro diperbaiki — rekaman ASLI fade-in ~1,5 detik (0–0,1 dtk
+//   -91 dB, sunyi digital); dipotong sunyi awal + intro diangkat +15 dB
+//   (0–0,1 dtk kini -41,7 dB, 0,5–1 dtk -14 dB), keras keseluruhan tetap
+//   -10,46 LUFS, puncak aman -1,27 dBTP. Berkas diganti di item utama
+//   (2.742.189 byte, terverifikasi metadata 24 Nov 03:51).
 const SUARA_ADZAN = {
-  'Muzammil Hasballah': 'https://archive.org/download/adzan-muzammil-hasballah-smapat-2026/ADZAN%20MERDU%20Muzammil%20Hasballah%20-%20Ammar%20TV%20%28mp3cut.net%29.mp3',
+  'Muzammil Hasballah': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/11-muzammil-hasballah.mp3',
   'Salim Bahanan': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/05-salim-bahanan.mp3',
   'Thoha al-Junaid': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/09-muhammad-taha-al-junaid.mp3',
   'Ustaz Fahmi': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/10-fahmi-twin-potong.mp3',
