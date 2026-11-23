@@ -1947,6 +1947,7 @@ function renderSuaraAdzan(){
     buatPil(nama, url?label:label+' (segera)', !!url);
   });
   const s=$('saklarUtama'); if(s){ const pg=bacaPengaturanSholat(); s.textContent=pg.aktif?'Aktif':'Mati'; s.classList.toggle('nyala', !!pg.aktif); }
+  pramuatSuaraBerikutnya();
 }
 function perbaruiHitungMundur(){
   const sb=sholatBerikut();
@@ -2014,6 +2015,38 @@ $('sholatMini').addEventListener('click', (e)=>{ e.stopPropagation(); popupShola
 let audioAdzan=null;
 let urlBlobAdzan=null;
 let adzanGen=0;
+/* v9.28: PRAMUAT — "langsung adzan, jangan ada jeda apapun" (Imron 24 Nov
+   04:13). Sebelumnya tiap putar membuat Audio baru dari URL, jadi browser
+   harus menunggu unduhan awal (~1,5–2 detik TTFB archive.org) sebelum bunyi
+   pertama terdengar — itu jeda yang dirasakan saat ketuk nama muadzin maupun
+   saat adzan otomatis tiba. Sekarang suara untuk sholat BERIKUTNYA dimuat di
+   latar sejak halaman dibuka (sekali, ~3 MB) dan tiap suara yang pernah
+   disiapkan dipakai ulang dari cache — ketuk = langsung bunyi. Suara lain
+   dimuat latar satu demi satu sesudahnya supaya semua pratinjau juga
+   langsung. Cache hanya di memori (hilang bila tab ditutup); tidak mengubah
+   data siswa apa pun. */
+let _cacheAudioAdzan={};
+let _pramuatLatarJalan=false;
+function siapkanAudioAdzan(nama){
+  const url=SUARA_ADZAN[nama];
+  if(!url) return null;
+  if(_cacheAudioAdzan[url]) return _cacheAudioAdzan[url];
+  try{
+    const a=new Audio(url);
+    try{ a.preload='auto'; }catch(e){}
+    try{ if(typeof a.load==='function') a.load(); }catch(e){}
+    _cacheAudioAdzan[url]=a;
+    return a;
+  }catch(e){ return null; }
+}
+function pramuatSuaraBerikutnya(){
+  const sb=sholatBerikut();
+  if(sb) siapkanAudioAdzan(suaraUntukSholat(sb.nama));
+  if(_pramuatLatarJalan) return;
+  _pramuatLatarJalan=true;
+  const lain=Object.keys(SUARA_ADZAN).filter(n=>!_cacheAudioAdzan[SUARA_ADZAN[n]]);
+  lain.forEach((n,i)=>{ setTimeout(()=>{ siapkanAudioAdzan(n); }, 2000+i*1000); });
+}
 /* v9.22: ketuk nama muadzin LANGSUNG memutar pratinjau suaranya (laporan Imron
    23 Nov 05:28 — sebelumnya ketuk pil hanya MENYIMPAN pilihan tanpa bunyi,
    jadi ia harus menekan tombol Tes / mengotak-atik saklar berkali-kali baru
@@ -2050,7 +2083,9 @@ function putarAdzanURL(url, saatGagal){
   function putarLangsung(){
     if(gen!==adzanGen) return;
     try{
-      const a2=new Audio(url);
+      const aC=_cacheAudioAdzan[url];
+      const a2=aC||new Audio(url);
+      if(aC){ try{ a2.currentTime=0; }catch(e){} }
       audioAdzan=a2;
       const pr2=a2.play();
       if(pr2 && pr2.catch) pr2.catch(gagalSekali);
