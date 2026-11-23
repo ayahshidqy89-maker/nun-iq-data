@@ -370,7 +370,7 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
     <div class="ar">إِنَّ مِنْ خِيَارِكُمْ أَحْسَنَكُمْ أَخْلَاقًا</div>
     <div class="tr">"Sesungguhnya di antara yang terbaik dari kalian adalah yang paling baik akhlaknya."<br>(HR. Bukhari dan Muslim)</div>
   </div>
-  <p class="petunjuk">NISN kamu 10 angka — ada di kartu pelajar. Centang "Ingat saya" supaya besok langsung masuk tanpa ketik NISN lagi.</p>
+  <p class="petunjuk">NISN kamu 10 angka — ada di kartu pelajar. Centang "Ingat saya" supaya besok langsung masuk tanpa ketik NISN lagi. Tekan "Keluar" pun NISN-mu tetap tersimpan di perangkat ini.</p>
 </div>
 
 <!-- ============ KAMAR ============ -->
@@ -1101,6 +1101,11 @@ function catatStreak(nisn){
 
 /* ===== LOGIN ===== */
 let siswa=null, nisnAktif='';
+/* v9.26: NISN yang diingat DIPISAH dari sesi aktif — tekan Keluar mengakhiri sesi
+   (kamar tidak terbuka sendiri) TAPI NISN tetap tertanam di kotak login, tinggal
+   tekan Masuk. Sebelum v9.26, Keluar menghapus NISN-nya juga sehingga tiap buka
+   wajib ketik ulang (keluhan Imron 24 Nov 2026 waktu mengetes sebagai Novi). */
+const KUNCI_NISN='checkin-wali-nisn', KUNCI_SESI='checkin-wali-sesi';
 function galat(t){ bunyi('Galat'); const g=$('galatLogin'); g.textContent=t; g.classList.add('tampil'); $('pintu').classList.remove('goyang'); void $('pintu').offsetWidth; $('pintu').classList.add('goyang'); }
 function masukKamar(){
   const v=$('nisn').value.trim();
@@ -1109,7 +1114,7 @@ function masukKamar(){
   if(!s){ galat('NISN tidak ditemukan. Pastikan 10 angkanya benar — atau tanyakan ke Pak Imron.'); return; }
   nisnAktif=v; siswa=s;
   bunyi('Masuk');
-  try{ if($('ingatSaya') && $('ingatSaya').checked){ localStorage.setItem('checkin-wali-nisn', v); } else { localStorage.removeItem('checkin-wali-nisn'); } }catch(e){}
+  try{ if($('ingatSaya') && $('ingatSaya').checked){ localStorage.setItem(KUNCI_NISN, v); localStorage.setItem(KUNCI_SESI, '1'); } else { localStorage.removeItem(KUNCI_NISN); localStorage.removeItem(KUNCI_SESI); } }catch(e){}
   $('pintu').classList.add('tersembunyi');
   $('kamar').classList.remove('tersembunyi');
   lanjutSesudahLogin();
@@ -1117,7 +1122,8 @@ function masukKamar(){
 /* v9.3: pulihkan sesi saat halaman dimuat (termasuk sesudah hard refresh) — NISN tersimpan di localStorage */
 function pulihkanSesi(){
   try{
-    const ingat=localStorage.getItem('checkin-wali-nisn');
+    if(!localStorage.getItem(KUNCI_SESI)) return false; // v9.26: sesi berakhir bila sudah tekan Keluar — kamar tidak terbuka sendiri
+    const ingat=localStorage.getItem(KUNCI_NISN);
     if(!ingat || !SISWA[ingat]) return false;
     nisnAktif=ingat; siswa=SISWA[ingat];
     $('pintu').classList.add('tersembunyi');
@@ -1138,9 +1144,9 @@ $('tombolSuara').addEventListener('click', ()=>{
 segarkanTombolSuara();
 $('keluar').addEventListener('click', ()=>{
   bunyiKeluar();
-  try{ localStorage.removeItem('checkin-wali-nisn'); }catch(e){} // v9.3: keluar = akhiri sesi (reload tidak masuk lagi otomatis)
+  try{ localStorage.removeItem(KUNCI_SESI); }catch(e){} // v9.26: keluar = akhiri sesi SAJA — NISN tetap tertanam (tinggal tekan Masuk); sebelum v9.26 NISN ikut dihapus
   try{ localStorage.removeItem(KUNCI_TAB); }catch(e){} // v9.4: keluar = lupakan tab terakhir (login berikut mulai dari beranda)
-  $('nisn').value='';
+  try{ const ingat=localStorage.getItem(KUNCI_NISN); if(ingat) $('nisn').value=ingat; }catch(e){} // v9.26: kotak login tetap terisi NISN yang diingat
   $('kamar').classList.add('tersembunyi'); $('pintu').classList.remove('tersembunyi');
   $('kunciProfil').classList.add('tersembunyi'); $('kamar').classList.remove('kunci-aktif');
   $('percakapan').innerHTML=''; $('pilihan').innerHTML='';
@@ -2267,11 +2273,11 @@ if(!window.__intervalSholat){
   setInterval(()=>{ perbaruiHitungMundur(); pemicuAdzan(); pemicuPengingatku(); }, 1000);
 }
 
-/* ===== ISI NISN YANG DIINGAT + PULIHKAN SESI (v9.3) ===== */
+/* ===== ISI NISN YANG DIINGAT + PULIHKAN SESI (v9.3; v9.26: sesi dipisah dari NISN) ===== */
 (function(){
-  const ingat=localStorage.getItem('checkin-wali-nisn');
+  const ingat=localStorage.getItem(KUNCI_NISN);
   if(ingat) $('nisn').value=ingat;
-  if(ingat) pulihkanSesi(); // hard refresh / buka ulang: langsung masuk kamar, tanpa login lagi
+  if(ingat) pulihkanSesi(); // hard refresh / buka ulang: langsung masuk kamar, tanpa login lagi (hanya bila sesi masih aktif; sesudah Keluar, tetap di layar login dengan NISN terisi)
 })();
 </script>
 </body>
