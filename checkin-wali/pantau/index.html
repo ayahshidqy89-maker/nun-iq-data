@@ -177,6 +177,10 @@ label.lbl{display:block;font-weight:800;font-size:13.5px;margin:18px 0 8px}
 </div>
 
 <script>
+/* ===== v7.1 (26 Nov 2026): esc() — teks bebas siswa (ketHadir, kendala "Lainnya") + nama
+   roster WAJIB di-escape sebelum ditempel ke innerHTML (stored XSS, laporan Safe-Anything).
+   Fungsi sama seperti Room (index.html:1582). ===== */
+function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 /* ===== DATA SISWA (15 anak) ===== */
 const SISWA = [
   {nisn:'0079425140', nama:'Muhammad Halim Pratama', panggilan:'Halim', kelas:'XII 2', biodata:false},
@@ -483,11 +487,11 @@ function render(ckBaris, chBaris, g7Baris, hari){
   let pw='';
   if(jBantuan>0){
     const siapa=SISWA.filter(s=>{ const e=perNama[norm(s.nama)+'|hariini']; return e && e.bantuan && e.bantuan.indexOf('Ya')===0; }).map(s=>s.nama);
-    pw+='<div class="peringat merah">🚨 <b>'+siapa.length+' anak minta bantuan hari ini:</b> '+siapa.join(', ')+' — segera hubungi.</div>';
+    pw+='<div class="peringat merah">🚨 <b>'+siapa.length+' anak minta bantuan hari ini:</b> '+siapa.map(esc).join(', ')+' — segera hubungi.</div>';
   }
-  if(jBerat.length) pw+='<div class="peringat kuning">💛 <b>Kabar berat hari ini (1–2):</b> '+jBerat.join(', ')+'.</div>';
-  if(belum.length) pw+='<div class="peringat kuning">⏰ <b>Belum check-in hari ini ('+belum.length+'):</b> '+belum.join(', ')+'.</div>';
-  if(belumG7.length) pw+='<div class="peringat kuning">🌱 <b>Belum isi G7KAIH hari ini ('+belumG7.length+'):</b> '+belumG7.join(', ')+' — ingatkan di japri.</div>';
+  if(jBerat.length) pw+='<div class="peringat kuning">💛 <b>Kabar berat hari ini (1–2):</b> '+jBerat.map(esc).join(', ')+'.</div>';
+  if(belum.length) pw+='<div class="peringat kuning">⏰ <b>Belum check-in hari ini ('+belum.length+'):</b> '+belum.map(esc).join(', ')+'.</div>';
+  if(belumG7.length) pw+='<div class="peringat kuning">🌱 <b>Belum isi G7KAIH hari ini ('+belumG7.length+'):</b> '+belumG7.map(esc).join(', ')+' — ingatkan di japri.</div>';
   $('peringatan').innerHTML=pw;
   // kehadiran — pola 7 hari + perlu perhatian (v5)
   const kemarinISO = isoKemarin(hari);
@@ -512,7 +516,7 @@ function render(ckBaris, chBaris, g7Baris, hari){
       let hp='<div class="peringat merah">🚨 <b>'+perhatian.length+' anak perlu perhatian:</b></div>';
       perhatian.forEach(pp=>{
         const dikecualikan = DIKECUALIKAN_MERAH.indexOf(pp.nisn)>=0;
-        hp+='<div class="anak'+(dikecualikan?'':' perlu-merah')+'"><div class="baris-atas"><div><div class="nm">'+pp.nama+'</div><div class="kls">Kelas '+pp.kelas+'</div></div>'+(dikecualikan?'':'<span class="lencana merah">🔴 Perlu perhatian</span>')+'</div><div>'+pp.alasan.join(' • ')+'</div><div class="muted">Pola 7 hari: '+pp.pola.pola.join(' ')+' (H'+pp.pola.hitung.Hadir+' T'+pp.pola.hitung.Terlambat+' I'+pp.pola.hitung.Izin+' S'+pp.pola.hitung.Sakit+' A'+pp.pola.hitung.Alpa+')</div></div>';
+        hp+='<div class="anak'+(dikecualikan?'':' perlu-merah')+'"><div class="baris-atas"><div><div class="nm">'+esc(pp.nama)+'</div><div class="kls">Kelas '+esc(pp.kelas)+'</div></div>'+(dikecualikan?'':'<span class="lencana merah">🔴 Perlu perhatian</span>')+'</div><div>'+pp.alasan.map(esc).join(' • ')+'</div><div class="muted">Pola 7 hari: '+pp.pola.pola.join(' ')+' (H'+pp.pola.hitung.Hadir+' T'+pp.pola.hitung.Terlambat+' I'+pp.pola.hitung.Izin+' S'+pp.pola.hitung.Sakit+' A'+pp.pola.hitung.Alpa+')</div></div>';
       });
       elP.innerHTML=hp;
     }
@@ -534,16 +538,16 @@ function render(ckBaris, chBaris, g7Baris, hari){
     const g7e=g7PerNisn[s.nisn+'|hariini'] || g7PerNisn[s.nisn];
     const g7Sudah=!!g7PerNisn[s.nisn+'|hariini'];
     const infaq=infaqMingguan[s.nisn]||0;
-    html+='<tr><td><b>'+s.nama+'</b><br><span class="muted">'+s.kelas+' • '+(s.panggilan||'—')+' • Agama: '+(AGAMA[s.nisn]||'—')+' • Biodata '+(s.biodata?'✓':'✗')+'</span></td>';
+    html+='<tr><td><b>'+esc(s.nama)+'</b><br><span class="muted">'+esc(s.kelas)+' • '+esc(s.panggilan||'—')+' • Agama: '+(AGAMA[s.nisn]||'—')+' • Biodata '+(s.biodata?'✓':'✗')+'</span></td>';
     if(e){
-      html+='<td>'+(sudah?'<span class="lencana ok">✓ Hari ini</span>':'<span class="lencana belum">Terakhir '+tglTampil(e.tgl)+'</span>')+(e.rapel?' <span class="lencana rapel">🔁 rapel</span>':'')+'<br>Kabar: '+(KABAR[e.kabar]?KABAR[e.kabar][0]+' '+KABAR[e.kabar][1]:'-')+'<br>Kendala: '+(e.kendala||'—')+'<br>Bantuan: '+(e.bantuan||'—')+'</td>';
+      html+='<td>'+(sudah?'<span class="lencana ok">✓ Hari ini</span>':'<span class="lencana belum">Terakhir '+tglTampil(e.tgl)+'</span>')+(e.rapel?' <span class="lencana rapel">🔁 rapel</span>':'')+'<br>Kabar: '+(KABAR[e.kabar]?KABAR[e.kabar][0]+' '+KABAR[e.kabar][1]:'-')+'<br>Kendala: '+esc(e.kendala||'—')+'<br>Bantuan: '+esc(e.bantuan||'—')+'</td>';
     } else {
       html+='<td><span class="lencana belum">Belum pernah</span></td>';
     }
     const pola=polaPerSiswa[s.nisn];
     const eHariIni=perNama[norm(s.nama)+'|hariini'];
     const ketHariIni=eHariIni?eHariIni.ketHadir:'';
-    html+='<td>'+badgeHadir(pola.hariIni)+(ketHariIni?'<br><span class="muted">'+ketHariIni+'</span>':'')+'<br><span class="muted">7 hari: '+pola.pola.join(' ')+'</span><br><span class="muted">H'+pola.hitung.Hadir+' T'+pola.hitung.Terlambat+' I'+pola.hitung.Izin+' S'+pola.hitung.Sakit+' A'+pola.hitung.Alpa+'</span></td>';
+    html+='<td>'+badgeHadir(pola.hariIni)+(ketHariIni?'<br><span class="muted">'+esc(ketHariIni)+'</span>':'')+'<br><span class="muted">7 hari: '+pola.pola.join(' ')+'</span><br><span class="muted">H'+pola.hitung.Hadir+' T'+pola.hitung.Terlambat+' I'+pola.hitung.Izin+' S'+pola.hitung.Sakit+' A'+pola.hitung.Alpa+'</span></td>';
     if(g7e){
       const persen=Math.round(g7e.jumlah/7*100);
       html+='<td><b>'+g7e.jumlah+'/7</b>'+(g7Sudah?'':' (terakhir '+tglTampil(g7e.tgl)+')')+(g7e.rapel?' <span class="lencana rapel">🔁 rapel</span>':'')+'<div class="mini-bar"><i style="width:'+persen+'%"></i></div>'+(g7e.daftar.length?'<span class="muted">'+g7e.daftar.slice(0,3).join(', ')+(g7e.daftar.length>3?'…':'')+'</span>':'')+'</td>';
@@ -570,9 +574,9 @@ function render(ckBaris, chBaris, g7Baris, hari){
   let hc='<p class="muted">Isi curhat tidak ditampilkan di sini — hanya Musaa\'id yang membacanya. Yang tampil di bawah hanya jumlah per anak.</p>';
   if(!pernahCurhat.length) hc+='<p class="muted">Belum ada curhat masuk.</p>';
   pernahCurhat.forEach(x=>{
-    hc+='<div class="anak"><div class="baris-atas"><div><div class="nm">'+x.s.nama+'</div><div class="kls">Kelas '+x.s.kelas+(x.terakhir?' • Terakhir: '+tglTampil(x.terakhir):'')+'</div></div><span class="lencana ok">💌 '+x.jumlah+' curhat</span>'+(x.baru?'<span class="lencana ok">baru hari ini</span>':'')+'</div></div>';
+    hc+='<div class="anak"><div class="baris-atas"><div><div class="nm">'+esc(x.s.nama)+'</div><div class="kls">Kelas '+esc(x.s.kelas)+(x.terakhir?' • Terakhir: '+tglTampil(x.terakhir):'')+'</div></div><span class="lencana ok">💌 '+x.jumlah+' curhat</span>'+(x.baru?'<span class="lencana ok">baru hari ini</span>':'')+'</div></div>';
   });
-  if(belumPernahCurhat.length) hc+='<p class="muted">Belum pernah curhat: '+belumPernahCurhat.map(x=>x.s.nama).join(', ')+'.</p>';
+  if(belumPernahCurhat.length) hc+='<p class="muted">Belum pernah curhat: '+belumPernahCurhat.map(x=>esc(x.s.nama)).join(', ')+'.</p>';
   $('daftarCurhat').innerHTML=hc;
 }
 
@@ -593,7 +597,7 @@ function renderPolaG7(g7Baris, hari){
   const infaqKunci='Berinfaq/bershodaqohh (uang, barang, atau bantuan)';
   const nolInfaq=SISWA.filter(s=>(AGAMA[s.nisn]||'')==='Islam' && !(perAnak[s.nisn]&&perAnak[s.nisn][infaqKunci])).map(s=>s.nama);
   let h='<div class="pola-rincian"><b>Infaq minggu ini:</b> '+(hitung[infaqKunci]||0)+' kali dicentang (semua anak).';
-  h+= nolInfaq.length ? '<br>⚠️ <b>Belum pernah infaq minggu ini:</b> '+nolInfaq.join(', ')+' — Imron membina lewat japri.' : '<br>✓ Semua anak Muslim sudah pernah infaq minggu ini.';
+  h+= nolInfaq.length ? '<br>⚠️ <b>Belum pernah infaq minggu ini:</b> '+nolInfaq.map(esc).join(', ')+' — Imron membina lewat japri.' : '<br>✓ Semua anak Muslim sudah pernah infaq minggu ini.';
   h+='<br><b>Rincian paling jarang minggu ini:</b> ';
   const semuaSub=[];
   Object.keys(G7_RINCIAN).forEach(k=>{ if(k==='Beribadah (non-Muslim)') return; G7_RINCIAN[k].forEach(x=>{ if(!semuaSub.includes(x)) semuaSub.push(x); }); });

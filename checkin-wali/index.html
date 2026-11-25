@@ -65,7 +65,7 @@ button{font-family:inherit;cursor:pointer}
 .logo-wali{flex:none;width:50px;height:50px;border-radius:50%;box-shadow:0 10px 22px -12px rgba(23,33,43,.45)}
 .kepala .nama{font-family:'Poppins';font-weight:800;font-size:14.5px;line-height:1.25}
 .kepala .tag{font-size:12.5px;color:var(--redup);margin-top:2px}
-.pil{margin-left:auto;flex:none;background:#E6F9EE;color:var(--sukses-gelap);font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:6px 10px;border-radius:999px}
+.pil{margin-left:auto;flex:none;background:#E6F9EE;color:#0F766E;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:6px 10px;border-radius:999px} /* v9.31: teal #128C7E (3,77:1) -> #0F766E (4,99:1) */
 .pil.biru{background:#E6F4FD;color:var(--aksi-gelap)}
 /* judul + sub */
 .judul{font-size:28px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
@@ -86,6 +86,27 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 .tombol.hijau{background:var(--sukses);box-shadow:0 16px 30px -12px rgba(37,211,102,.6)}
 .tombol.putih{background:#fff;color:var(--aksi-gelap);border:2px solid var(--isi-garis);box-shadow:none}
 .tombol.kecil{width:auto;padding:0 22px;min-height:46px;font-size:14.5px}
+/* ===== v9.31 (26 Nov 2026): aksesibilitas pintu masuk — kontras + font rem ===== */
+/* CTA #masuk: putih di atas --aksi-gelap (#0B6FA4) = 5,49:1 (sebelumnya #2AABEE = 2,57:1) */
+#masuk{background:var(--aksi-gelap);box-shadow:0 16px 30px -12px rgba(11,111,164,.65)}
+/* Bila font sistem besar, pil "Masuk" di kepala turun baris — jangan meluber ke luar layar */
+#pintu .kepala{flex-wrap:wrap}
+/* Teks pintu masuk mengikuti font sistem: px -> rem (1rem=16px), hanya di dalam #pintu — Room/Pantau tidak disentuh */
+#pintu .judul{font-size:1.75rem}
+#pintu .sub{font-size:.875rem}
+#pintu .kepala .nama{font-size:.906rem}
+#pintu .kepala .tag{font-size:.781rem}
+#pintu .pil{font-size:.688rem}
+#pintu label.lbl{font-size:.844rem}
+#pintu .kolom{font-size:.938rem}
+#pintu .kolom.tengah{font-size:1.375rem}
+#pintu .galat{font-size:.844rem}
+#pintu .ingat{font-size:.813rem}
+#pintu .tombol{font-size:1rem}
+#pintu .hadits .ar{font-size:1.188rem}
+#pintu .hadits .tr{font-size:.781rem}
+#pintu .hadits .lbl-h{font-size:.688rem}
+#pintu .petunjuk{font-size:.781rem}
 /* galat */
 .galat{display:none;background:var(--galat-bg);border:1px solid var(--galat-garis);color:var(--galat-teks);border-radius:16px;padding:12px 14px;font-size:13.5px;font-weight:600;margin-top:12px;line-height:1.45}
 .galat.tampil{display:block}
@@ -93,7 +114,7 @@ textarea.kolom{min-height:96px;resize:vertical;line-height:1.5;font-weight:500}
 .hadits{margin-top:18px;background:linear-gradient(165deg,#FFF9EF,#FDF3E3);border:1px solid #F3E3C2;border-radius:20px;padding:14px 16px;text-align:center}
 .hadits .ar{font-size:19px;line-height:1.9;color:#7A5A1F;direction:rtl}
 .hadits .tr{font-size:12.5px;color:var(--redup);margin-top:6px;line-height:1.5}
-.hadits .lbl-h{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#B98A1F;margin-bottom:8px}
+.hadits .lbl-h{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#7A5A1F;margin-bottom:8px} /* v9.31: emas #B98A1F (2,98:1) -> coklat #7A5A1F (6,06:1) di atas #FFF9EF */
 .petunjuk{text-align:center;font-size:12.5px;color:var(--redup);margin-top:14px;line-height:1.5}
 /* streak */
 .streak{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#FFF3D6,#FFE9B8);border:1px solid #F3D98B;border-radius:18px;padding:11px 14px;margin-bottom:14px;font-size:13.5px;font-weight:700;color:#7A5A1F}
@@ -1176,7 +1197,7 @@ function bukaKamar(){
   const km=bacaHari(nisnAktif, kemarinStr());
   if(km){
     $('kemarin').classList.remove('tersembunyi');
-    $('kemarin').innerHTML='<b>Kemarin ('+tglTampil(kemarinStr())+'):</b> '+(km.kehadiran?('kehadiran '+km.kehadiran+' • '):'')+'kabar '+ (KABAR[km.kabar]?KABAR[km.kabar][0]+' '+KABAR[km.kabar][1]:'-') + ' • '+hitungG7(km.kebaikan||[])+' dari 7 kebiasaan • '+(km.kendala||'—');
+    $('kemarin').innerHTML='<b>Kemarin ('+tglTampil(kemarinStr())+'):</b> '+(km.kehadiran?('kehadiran '+km.kehadiran+' • '):'')+'kabar '+ (KABAR[km.kabar]?KABAR[km.kabar][0]+' '+KABAR[km.kabar][1]:'-') + ' • '+hitungG7(km.kebaikan||[])+' dari 7 kebiasaan • '+esc(km.kendala||'—');
   } else $('kemarin').classList.add('tersembunyi');
   // sudah check-in hari ini?
   const sudah=bacaHari(nisnAktif, hariIni());
@@ -1490,7 +1511,7 @@ function tampilSudah(data, streak, iso){
   $('percakapan').innerHTML='';
   gelembungMus('Jazaakallaahu khoyron katsiiron, '+panggil(siswa)+'! Check-in '+(tglS!==hariIni() ? ('rapel untuk '+tglTampil(tglS)) : 'hari ini')+' sudah sampai ke Pak Imron. Semoga besok lebih baik lagi. 🌟');
   const kb = (data.kebaikan && data.kebaikan.length) ? data.kebaikan : bacaG7(nisnAktif, tglS);
-  $('ringkasHariIni').innerHTML=labelTgl+tglTampil(tglS)+'): '+(data.kehadiran?('kehadiran '+data.kehadiran+(data.ketHadir?' ('+data.ketHadir+')':'')+' • '):'')+'kabar '+(KABAR[data.kabar]?KABAR[data.kabar][0]+' '+KABAR[data.kabar][1]:'-')+' • '+hitungG7(kb)+' dari 7 kebiasaan • '+(data.kendala||'—');
+  $('ringkasHariIni').innerHTML=labelTgl+tglTampil(tglS)+'): '+(data.kehadiran?('kehadiran '+data.kehadiran+(data.ketHadir?' ('+esc(data.ketHadir)+')':'')+' • '):'')+'kabar '+(KABAR[data.kabar]?KABAR[data.kabar][0]+' '+KABAR[data.kabar][1]:'-')+' • '+hitungG7(kb)+' dari 7 kebiasaan • '+esc(data.kendala||'—');
   const st = (streak!==undefined)? streak : hitungStreak(nisnAktif).jumlah;
   $('teksStreakSukses').textContent = st>1 ? ('🔥 Kamu sudah check-in '+st+' hari berturut-turut!') : '🔥 Hari pertama rentetanmu — lanjutkan besok!';
   $('areaSudah').classList.remove('tersembunyi');
@@ -1815,6 +1836,14 @@ $('segarkanCurhat').addEventListener('click', async ()=>{
 //   baru sudah live tapi tidak sampai ke telinganya. Perbaikan: alamat Salim
 //   + Muzammil diberi ?v=929 supaya browser mengunduh berkas baru. Imron
 //   cukup TUTUP lalu BUKA LAGI halaman aplikasi.
+// v9.31 — 26 Nov 2026: aksesibilitas pintu masuk (uji persona mobile-web).
+//   CTA #masuk: putih di #2AABEE (2,57:1) -> putih di --aksi-gelap #0B6FA4
+//   (5,49:1). Teks #pintu px -> rem supaya mengikuti font sistem HP (200%
+//   kini membesar; Room/Pantau tidak disentuh). Label hadits #B98A1F (2,98:1)
+//   -> #7A5A1F (6,06:1); pil "Masuk" #128C7E (3,77:1) -> #0F766E (4,99:1).
+//   Keamanan (laporan Safe-Anything): ketHadir + kendala di ringkasan siswa
+//   (kemarin + hari ini) kini lewat esc(); Pantau v7.1: esc() baru + semua
+//   ketHadir/kendala/bantuan/nama di tabel + peringatan + curhat di-escape.
 const SUARA_ADZAN = {
   'Muzammil Hasballah': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/11-muzammil-hasballah.mp3?v=929',
   'Salim Bahanan': 'https://archive.org/download/adzan-checkin-wali-smapat-2026/05-salim-bahanan.mp3?v=929',
